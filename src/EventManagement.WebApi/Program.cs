@@ -1,5 +1,18 @@
+using EventManagement.Application;
+using EventManagement.Infrastructure;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog();
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
