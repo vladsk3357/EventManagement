@@ -1,0 +1,38 @@
+﻿using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Pagination;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace EventManagement.Application.Events.Queries.GetAttendees;
+
+public sealed record GetAttendeesQuery(int EventId, int Page, int PageSize) 
+    : PagedRequest(Page, PageSize), IRequest<PagedList<AttendeeDto>>;
+
+internal sealed class GetAttendeesQueryHandler 
+    : IRequestHandler<GetAttendeesQuery, PagedList<AttendeeDto>>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IUserService _userService;
+
+    public GetAttendeesQueryHandler(IApplicationDbContext context, IUserService userService)
+    {
+        _context = context;
+        _userService = userService;
+    }
+
+    public async Task<PagedList<AttendeeDto>> Handle(GetAttendeesQuery request, CancellationToken cancellationToken)
+    {
+        var subscriptionsQuery = _context.Attendees.Where(s => s.EventId == request.EventId);
+
+        var totalCount = await subscriptionsQuery.CountAsync(cancellationToken);
+        var attendeesIds = await subscriptionsQuery.Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(s => s.UserId)
+            .ToListAsync(cancellationToken);
+
+        var users = await _userService.GetUsersByIdListAsync(attendeesIds, cancellationToken);
+        var dtos = users.Select(u => u.ToDto()).ToList();
+
+        return PagedList<AttendeeDto>.Create(dtos, request.Page, request.PageSize, totalCount);
+    }
+}   

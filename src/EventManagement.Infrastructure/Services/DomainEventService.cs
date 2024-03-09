@@ -9,18 +9,18 @@ namespace EventManagement.Infrastructure.Services;
 internal class DomainEventService : IDomainEventService
 {
     private readonly ILogger<DomainEventService> _logger;
-    private readonly IPublisher _mediator;
+    private readonly IPublisher _publisher;
 
-    public DomainEventService(ILogger<DomainEventService> logger, IPublisher mediator)
+    public DomainEventService(ILogger<DomainEventService> logger, IPublisher publisher)
     {
         _logger = logger;
-        _mediator = mediator;
+        _publisher = publisher;
     }
 
     public async Task Publish(DomainEvent domainEvent)
     {
         _logger.LogInformation("Publishing domain event. Event - {event}", domainEvent.GetType().Name);
-        await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
+        await _publisher.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
     }
 
     private static INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)

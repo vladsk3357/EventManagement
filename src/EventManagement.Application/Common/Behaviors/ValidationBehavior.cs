@@ -1,12 +1,14 @@
-﻿using FluentValidation;
+﻿using EventManagement.Application.Common.Errors;
+using FluentResults;
+using FluentValidation;
 using MediatR;
-using ValidationException = EventManagement.Application.Common.Exceptions.ValidationException;
-
 
 namespace EventManagement.Application.Common.Behaviors;
 
-internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-     where TRequest : notnull
+public class ValidationBehavior<TRequest, TResponse>
+        : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
+        where TResponse : ResultBase, new()
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -30,8 +32,13 @@ internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
                 .SelectMany(r => r.Errors)
                 .ToList();
 
-            if (failures.Any())
-                throw new ValidationException(failures);
+            foreach(var failure in failures)
+            {
+                var result = new TResponse();
+                result.Reasons.Add(new ValidationError(failure));
+
+                return result;
+            }
         }
         return await next();
     }
