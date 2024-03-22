@@ -43,7 +43,7 @@ internal sealed class GetSubscribersQueryHandler : IRequestHandler<GetSubscriber
 
         var users = await _userService.GetUsersByIdListAsync(subscribers.Select(s => s.UserId), cancellationToken);
         var usersDict = users.ToDictionary(u => u.Id);
-        var attendeesDto = subscribers.Select(a => new SubscriberDto(a.Id, usersDict[a.UserId].UserName, usersDict[a.UserId].Name, a.Created))
+        var attendeesDto = subscribers.Select(a => new SubscriberDto(a.UserId, usersDict[a.UserId].UserName, usersDict[a.UserId].Name, a.Created))
             .ToList();
 
         return PagedList<SubscriberDto>.Create(attendeesDto, request.Page, request.PageSize, totalCount);

@@ -15,4 +15,6 @@ public class Community : AuditableEntity
     public string? ShortDescription { get; set; }
 
     public string? Description { get; set; }
+
+    public ICollection<Subscription> Subscriptions { get; set; } = default!;
 }

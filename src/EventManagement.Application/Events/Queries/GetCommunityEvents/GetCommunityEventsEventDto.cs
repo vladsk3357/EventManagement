@@ -3,4 +3,6 @@
 public sealed record GetCommunityEventsEventDto(
     int Id,
     string Name,
-    bool IsCurrent);
+    int AttendeesCount,
+    DateTime StartDate,
+    string Location);

@@ -31,6 +31,9 @@ internal sealed class UnsubscribeCommunityCommandHandler : IRequestHandler<Unsub
             .FirstOrDefaultAsync(s => s.UserId == userId && s.CommunityId == request.CommunityId, cancellationToken)
             ?? throw new ValidationException("Користувач не підписаний на спільноту");
 
+        if (community.OrganizerId == userId)
+            throw new ValidationException("Організатор не може відписатися від своєї спільноти");
+
         _context.Subscriptions.Remove(userCommunity);
 
         await _context.SaveChangesAsync(cancellationToken);

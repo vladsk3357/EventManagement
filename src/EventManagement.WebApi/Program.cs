@@ -1,7 +1,11 @@
 using EventManagement.Application;
+using EventManagement.Application.Common.Interfaces;
 using EventManagement.Infrastructure;
+using EventManagement.WebApi.Filters;
 using EventManagement.WebApi.GraphApi;
-using GraphQL;
+using EventManagement.WebApi.Services;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -13,17 +17,49 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
 
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>());
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
-builder.Services.AddGraphQL(b => b
-            .AddSystemTextJson()
-            .AddSchema<Schema>()
-            .AddGraphTypes(typeof(Schema).Assembly));
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+            options.SuppressModelStateInvalidFilter = true);
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+builder.Services.AddSingleton<ILinksService, LinksService>();
+
+builder.Services.AddGraphApi();
 
 var app = builder.Build();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
-app.UseGraphQL();
 
+app.UseAuthentication();
+//app.UseAuthorization();
+app.UseGraphQL();
+if (app.Environment.IsDevelopment())
+{
+    app.UseGraphQLAltair();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapControllerRoute(
+    name: "EmailConfirmation",
+    pattern: "users/confirmation",
+    defaults: new {controller = "Users", action = "Confirmation"});
+app.MapControllerRoute(
+    name: "ResetPassword",
+    pattern: "users/reset-password",
+    defaults: new { controller = "Users", action = "ResetPassword" });
+
+app.UseCors();
 app.Run();

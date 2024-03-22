@@ -2,7 +2,7 @@
 
 namespace EventManagement.WebApi.GraphApi;
 
-internal class Query : ObjectGraphType<object>
+internal class Query : ObjectGraphType
 {
     public Query()
     {

@@ -1,6 +1,7 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
+using EventManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,14 @@ internal sealed class CreateEventCommandHandler
         entity.OrganizerId = userId;
 
         await _context.Events.AddAsync(entity, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _context.Attendees.AddAsync(new Attendee
+        {
+            EventId = entity.Id,
+            UserId = userId,
+            Status = AttendeeStatus.Confirmed,
+        }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return new CreateEventResultDto(entity.Id);

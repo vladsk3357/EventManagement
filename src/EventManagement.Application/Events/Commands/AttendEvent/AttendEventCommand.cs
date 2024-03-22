@@ -28,8 +28,10 @@ internal sealed class AttendEventCommandHandler : IRequestHandler<AttendEventCom
         var communityEvent = await _context.Events.AsNoTracking().FirstOrDefaultAsync(e => e.Id == request.EventId, cancellationToken)
             ?? throw new InvalidRequestException(nameof(request.EventId), "Події не існує.");
 
-        var existingAttendee = await _context.GetAttendeeAsync(request.EventId, userId, cancellationToken)
-            ?? throw new InvalidRequestException(nameof(request.EventId), "Коритувач вже відвідує цю подію.");
+        var existingAttendee = await _context.GetAttendeeAsync(request.EventId, userId, cancellationToken);
+
+        if (existingAttendee is not null)
+            throw new InvalidRequestException(nameof(request.EventId), "Коритувач вже відвідує цю подію.");
 
         if (communityEvent.Attendance.Limit is not null)
         {

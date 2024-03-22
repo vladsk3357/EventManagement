@@ -31,6 +31,9 @@ internal sealed class GetCommunityDetailsQueryHandler : IRequestHandler<GetCommu
         var subscribersCount = await _context.Subscriptions
             .CountAsync(cs => cs.CommunityId == community.Id, cancellationToken);
 
-        return GetCommunityDetailsQueryMapper.ToDto(community, subscribersCount);
+        var isSubscribed = await _context.Subscriptions
+            .AnyAsync(cs => cs.CommunityId == community.Id && cs.UserId == userId, cancellationToken);
+
+        return GetCommunityDetailsQueryMapper.ToDto(community, subscribersCount, isSubscribed, community.OrganizerId == userId);
     }
 }

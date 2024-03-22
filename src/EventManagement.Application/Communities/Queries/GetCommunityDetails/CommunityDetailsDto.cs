@@ -6,4 +6,6 @@ public sealed record CommunityDetailsDto(
     string Location,
     string? ShortDescription,
     string? Description,
-    int SubscriberCount);
+    int SubscriberCount,
+    bool IsSubscribed,
+    bool IsOrganizer);

@@ -35,7 +35,7 @@ internal class IdentityService : IIdentityService
         {
             Email = input.Email,
             Name = input.Name,
-            UserName = input.Name.Replace(' ', '_') + "-" + Guid.NewGuid().ToString()
+            UserName = input.Email,
         };
 
         var entity = user.ToEntity();

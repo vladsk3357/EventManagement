@@ -2,10 +2,12 @@
 
 public class NonPagedList<T>
 {
-    public NonPagedList(IEnumerable<T> items)
+    public NonPagedList(ICollection<T> items)
     {
         Items = items;
     }
 
-    public IEnumerable<T> Items { get; }
+    public ICollection<T> Items { get; }
+
+    public int TotalCount => Items.Count;
 }
