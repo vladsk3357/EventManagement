@@ -5,13 +5,18 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BFB37256-68F9-40B7-8B7D-BD3EF31FF86E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagement.Domain", "src\EventManagement.Domain\EventManagement.Domain.csproj", "{71B06634-21D4-464E-8A74-AA64AA89C4A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagement.Domain", "src\EventManagement.Domain\EventManagement.Domain.csproj", "{71B06634-21D4-464E-8A74-AA64AA89C4A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagement.Infrastructure", "src\EventManagement.Infrastructure\EventManagement.Infrastructure.csproj", "{CDFC9FFC-5284-4699-9A10-A8D0C9FC0D9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagement.Infrastructure", "src\EventManagement.Infrastructure\EventManagement.Infrastructure.csproj", "{CDFC9FFC-5284-4699-9A10-A8D0C9FC0D9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagement.Application", "src\EventManagement.Application\EventManagement.Application.csproj", "{C7F4BB5F-5482-4031-A448-70DAF24E00A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagement.Application", "src\EventManagement.Application\EventManagement.Application.csproj", "{C7F4BB5F-5482-4031-A448-70DAF24E00A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagement.WebApi", "src\EventManagement.WebApi\EventManagement.WebApi.csproj", "{CE11FF73-77DD-4782-B079-7D5E7AEFFE51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagement.WebApi", "src\EventManagement.WebApi\EventManagement.WebApi.csproj", "{CE11FF73-77DD-4782-B079-7D5E7AEFFE51}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181} = {FB8CE0B8-C84D-4B54-8BD9-B195C8737181}
+	EndProjectSection
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "eventmanagement.frontend", "src\EventManagement.Frontend\eventmanagement.frontend.esproj", "{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +40,12 @@ Global
 		{CE11FF73-77DD-4782-B079-7D5E7AEFFE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE11FF73-77DD-4782-B079-7D5E7AEFFE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE11FF73-77DD-4782-B079-7D5E7AEFFE51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +55,7 @@ Global
 		{CDFC9FFC-5284-4699-9A10-A8D0C9FC0D9C} = {BFB37256-68F9-40B7-8B7D-BD3EF31FF86E}
 		{C7F4BB5F-5482-4031-A448-70DAF24E00A6} = {BFB37256-68F9-40B7-8B7D-BD3EF31FF86E}
 		{CE11FF73-77DD-4782-B079-7D5E7AEFFE51} = {BFB37256-68F9-40B7-8B7D-BD3EF31FF86E}
+		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181} = {BFB37256-68F9-40B7-8B7D-BD3EF31FF86E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {177BEC79-B2F6-41B1-8641-DB28A46C1E2C}

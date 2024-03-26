@@ -1,8 +1,10 @@
-﻿using GraphQL.Types;
+﻿using EventManagement.WebApi.GraphApi.Common;
+using EventManagement.WebApi.GraphApi.Profile;
+using GraphQL.Types;
 
 namespace EventManagement.WebApi.GraphApi;
 
-internal class Mutation : ObjectGraphType<object>
+internal class Mutation : ObjectGraphType
 {
     public Mutation()
     {
@@ -10,5 +12,7 @@ internal class Mutation : ObjectGraphType<object>
 
         Field<StringGraphType>("Ping")
             .Resolve(context => "Pong");
+
+        Field<ProfileMutationType>("Profile").ResolveEmpty();
     }
 }
