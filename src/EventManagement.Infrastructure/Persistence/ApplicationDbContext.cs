@@ -4,6 +4,8 @@ using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Common;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Form;
+using EventManagement.Domain.Entities.Form.Answer;
 using EventManagement.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +44,16 @@ internal class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IAppli
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
     public DbSet<Session> Sessions => Set<Session>();
+
+    public DbSet<Form> Forms => Set<Form>();
+
+    public DbSet<CommunitySubscriptionForm> CommunitySubscriptionForms => Set<CommunitySubscriptionForm>();
+
+    public DbSet<EventAttendanceForm> EventRegistrationForms => Set<EventAttendanceForm>();
+
+    public DbSet<CommunityForm> CommunityForms => Set<CommunityForm>();
+
+    public DbSet<FormAnswer> FormAnswers => Set<FormAnswer>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

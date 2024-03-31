@@ -1,6 +1,7 @@
 ﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Form;
 using MediatR;
 
 namespace EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
@@ -33,6 +34,17 @@ internal sealed class CreateCommunityCommandHandler : IRequestHandler<CreateComm
             UserId = _currentUserAccessor.UserId
         };
         await _context.Subscriptions.AddAsync(subscription, cancellationToken);
+
+        var form = new Form
+        {
+            Type = FormType.CommunitySubscription,
+        };
+        var communitySubscriptionForm = new CommunitySubscriptionForm
+        {
+            CommunityId = entity.Id,
+            Form = form
+        };
+        await _context.CommunitySubscriptionForms.AddAsync(communitySubscriptionForm, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return new CreateCommunityResultDto(entity.Id);

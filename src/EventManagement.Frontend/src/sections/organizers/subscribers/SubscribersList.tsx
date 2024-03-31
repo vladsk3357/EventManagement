@@ -43,7 +43,6 @@ const SubscribersList = () => {
 export default SubscribersList;
 
 function useColumns(): GridColDef[] {
-  const { communityId } = useParams();
   const { mutate: deleteSubscriber } = useDeleteSubscriberMutation();
   const { user } = useContext(UserContext);
 

@@ -7,30 +7,19 @@ const CommunitiesDropdown = () => {
   const { communityId } = useParams();
   const navigate = useNavigate();
   const { data, isFetched } = useOrganizerCommunitiesList();
-  const [selectedCommunityId, setSelectedCommunityId] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    setSelectedCommunityId(communityId);
-  }, [communityId]);
-
-  useEffect(() => {
-    if (selectedCommunityId) {
-      navigate(`/organizers/${selectedCommunityId}/dashboard`);
-    }
-  }, [selectedCommunityId]);
-
-  if (!isFetched)
+  if (!isFetched || !communityId)
     return null;
 
   return (
     <FormControl>
       <Select
         labelId="communities-dropdown-label"
-        value={selectedCommunityId}
-        onChange={e => setSelectedCommunityId(e.target.value as string)}
+        value={communityId}
+        onChange={e => navigate(`/organizers/${e.target.value as string}/dashboard`)}
       >
         {data?.items.map(community => (
-          <MenuItem value={community.id}>{community.name}</MenuItem>
+          <MenuItem key={community.id} value={community.id}>{community.name}</MenuItem>
         ))}
       </Select>
     </FormControl>

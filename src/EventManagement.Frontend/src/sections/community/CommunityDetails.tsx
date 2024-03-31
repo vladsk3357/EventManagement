@@ -7,7 +7,6 @@ import { TabContext, TabList } from "@mui/lab";
 import DescriptionTabPanel from "./DescriptionTabPanel";
 import EventsTabPanel from "./EventsTabPanel";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import SettingsIcon from '@mui/icons-material/Settings';
 import SubscribeCommunityButton from "./SubscribeCommunityButton";
 import UnsubscribeCommunityButton from "./UnsubscribeCommunityButton";
 import CommunityOrganizerButtons from "./CommunityOrganizerButtons";
@@ -17,7 +16,6 @@ const CommunityDetails = () => {
   const communityId = Number(communityIdParam);
   const { data } = useCommunityDetails(communityId);
   const [tabIndex, setTabIndex] = useState('2');
-  const { mutate, isPending } = useSubscribeToCommunity();
 
   const handleChange = (event: SyntheticEvent, newTabIndex: string) => {
     setTabIndex(newTabIndex);
@@ -55,7 +53,11 @@ const CommunityDetails = () => {
               ) : data.isSubscribed ? (
                 <UnsubscribeCommunityButton communityId={communityId} />
               ) : (
-                <SubscribeCommunityButton communityId={communityId} />
+                <SubscribeCommunityButton
+                  isShowForm={data.requiresFormAnswer}
+                  communityId={communityId}
+                  formId={data.formId}
+                />
               ))}
             </Box>
           </Grid>
@@ -98,18 +100,6 @@ export type GetCommunityDetailsQueryResult = {
   subscriberCount: number;
   isSubscribed: boolean;
   isOrganizer: boolean;
-}
-
-function useSubscribeToCommunity() {
-  const { communityId } = useParams();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: () => axios.post(`/api/communities/${communityId}/subscribe`),
-    onSuccess: () => {
-      queryClient.setQueryData(['community', { id: communityId }], (data: GetCommunityDetailsQueryResult) => {
-        return { ...data, isSubscribed: true };
-      });
-    },
-  });
+  requiresFormAnswer: boolean;
+  formId: number;
 }

@@ -22,6 +22,8 @@ import SubscribersPage from './pages/organizers/community/SubscribersPage';
 import CommunityPage from './pages/community/CommunityPage';
 import MyCommunitiesPage from './pages/myCommunities/MyCommunitiesPage';
 import EventPage from './pages/event/EventPage';
+import CommunitySubscriptionFormPage from './pages/organizers/community/CommunitySubscriptionFormPage';
+import CommunitySubscriptionFormAnswerDetailsPage from './pages/organizers/community/CommunitySubscriptionFormAnswerDetailsPage';
 
 // ----------------------------------------------------------------------
 
@@ -62,11 +64,13 @@ export default function Router() {
       path: 'organizers/:communityId',
       element: <CommunityLayout />,
       children: [
-        { path: 'dashboard', element: <CommunityDashboardPage />, index: true },
+        { path: 'dashboard', element: <CommunityDashboardPage />, },
         { path: 'events', element: <CommunityEventsPage /> },
         { path: 'events/create', element: <CreateEventPage /> },
         { path: 'settings', element: <SettingsPage /> },
         { path: 'members', element: <SubscribersPage /> },
+        { path: 'registrations', element: <CommunitySubscriptionFormPage /> },
+        { path: 'registrations/:answerId', element: <CommunitySubscriptionFormAnswerDetailsPage /> },
       ],
     },
     {

@@ -110,8 +110,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Domain")
                         .IsRequired()
@@ -208,6 +207,160 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.HasIndex("OrganizerId");
 
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.Answer.FormAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FieldAnswers")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FormAnswers");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.CommunityForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommunityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommunityId")
+                        .IsUnique();
+
+                    b.HasIndex("FormId")
+                        .IsUnique();
+
+                    b.ToTable("CommunityForms");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.CommunitySubscriptionForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommunityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommunityId")
+                        .IsUnique();
+
+                    b.HasIndex("FormId")
+                        .IsUnique();
+
+                    b.ToTable("CommunitySubscriptionForms");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.EventAttendanceForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.HasIndex("FormId")
+                        .IsUnique();
+
+                    b.ToTable("EventRegistrationForms");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.Form", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Fields")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Forms");
                 });
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Session", b =>
@@ -629,6 +782,74 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.Navigation("Community");
                 });
 
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.Answer.FormAnswer", b =>
+                {
+                    b.HasOne("EventManagement.Domain.Entities.Form.Form", "Form")
+                        .WithMany("Answers")
+                        .HasForeignKey("FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Form");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.CommunityForm", b =>
+                {
+                    b.HasOne("EventManagement.Domain.Entities.Community", "Community")
+                        .WithMany("Forms")
+                        .HasForeignKey("CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventManagement.Domain.Entities.Form.Form", "Form")
+                        .WithOne()
+                        .HasForeignKey("EventManagement.Domain.Entities.Form.CommunityForm", "FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Community");
+
+                    b.Navigation("Form");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.CommunitySubscriptionForm", b =>
+                {
+                    b.HasOne("EventManagement.Domain.Entities.Community", "Community")
+                        .WithOne("SubscriptionForm")
+                        .HasForeignKey("EventManagement.Domain.Entities.Form.CommunitySubscriptionForm", "CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventManagement.Domain.Entities.Form.Form", "Form")
+                        .WithOne()
+                        .HasForeignKey("EventManagement.Domain.Entities.Form.CommunitySubscriptionForm", "FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Community");
+
+                    b.Navigation("Form");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.EventAttendanceForm", b =>
+                {
+                    b.HasOne("EventManagement.Domain.Entities.Event", "Event")
+                        .WithOne("AttendanceForm")
+                        .HasForeignKey("EventManagement.Domain.Entities.Form.EventAttendanceForm", "EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventManagement.Domain.Entities.Form.Form", "Form")
+                        .WithOne()
+                        .HasForeignKey("EventManagement.Domain.Entities.Form.EventAttendanceForm", "FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("Form");
+                });
+
             modelBuilder.Entity("EventManagement.Domain.Entities.Session", b =>
                 {
                     b.HasOne("EventManagement.Domain.Entities.Event", "Event")
@@ -654,7 +875,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("EventManagement.Domain.Entities.Subscription", b =>
                 {
                     b.HasOne("EventManagement.Domain.Entities.Community", "Community")
-                        .WithMany()
+                        .WithMany("Subscriptions")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -728,9 +949,27 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("EventManagement.Domain.Entities.Community", b =>
+                {
+                    b.Navigation("Forms");
+
+                    b.Navigation("SubscriptionForm")
+                        .IsRequired();
+
+                    b.Navigation("Subscriptions");
+                });
+
             modelBuilder.Entity("EventManagement.Domain.Entities.Event", b =>
                 {
+                    b.Navigation("AttendanceForm")
+                        .IsRequired();
+
                     b.Navigation("Attendees");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Form.Form", b =>
+                {
+                    b.Navigation("Answers");
                 });
 #pragma warning restore 612, 618
         }

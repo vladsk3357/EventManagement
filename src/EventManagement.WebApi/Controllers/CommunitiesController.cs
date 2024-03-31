@@ -10,9 +10,14 @@ namespace EventManagement.WebApi.Controllers;
 public class CommunitiesController : ApiControllerBase
 {
     [HttpPost("{id}/subscribe")]
-    public async Task<ActionResult> Subscribe(int id)
+    public async Task<ActionResult> Subscribe(int id, SubscribeCommunityCommand? command)
     {
-        await Mediator.Send(new SubscribeCommunityCommand(id));
+        if (command is not null && id != command.CommunityId)
+            return BadRequest();
+
+        command ??= new SubscribeCommunityCommand(id);
+
+        await Mediator.Send(command);
         return NoContent();
     }
 

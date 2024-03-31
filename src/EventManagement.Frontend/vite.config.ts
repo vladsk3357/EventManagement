@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
+import dns from 'dns';
 
 const baseFolder =
     process.env.APPDATA !== undefined && process.env.APPDATA !== ''
@@ -20,6 +21,8 @@ if (!certificateName) {
 
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+
+dns.setDefaultResultOrder('ipv4first');
 
 // https://vitejs.dev/config/
 export default defineConfig({

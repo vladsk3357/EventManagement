@@ -4,7 +4,7 @@ namespace EventManagement.Application.Communities.Queries.GetCommunityDetails;
 
 internal static class GetCommunityDetailsQueryMapper
 {
-    public static CommunityDetailsDto ToDto(Community community, int subscriberCount, bool isSubscribed, bool isOrganizer) => new(
+    public static CommunityDetailsDto ToDto(Community community, int subscriberCount, bool isSubscribed, bool isOrganizer, bool requiresFormAnswer, int formId) => new(
             community.Id,
             community.Name,
             community.Location,
@@ -12,6 +12,8 @@ internal static class GetCommunityDetailsQueryMapper
             community.Description,
             subscriberCount,
             isSubscribed,
-            isOrganizer
+            isOrganizer,
+            requiresFormAnswer,
+            formId
         );
 }

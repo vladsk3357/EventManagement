@@ -13,12 +13,8 @@ public sealed class EditCommunityCommandValidator : AbstractValidator<EditCommun
             .NotEmpty().WithMessage("Назва обов'язкова")
             .MaximumLength(100).WithMessage("Максимальна довжина назви 100 символів");
 
-        RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("Опис обов'язковий")
-            .MaximumLength(500).WithMessage("Максимальна довжина опису 500 символів");
-
         RuleFor(x => x.ShortDescription)
-            .MaximumLength(100).WithMessage("Максимальна довжина короткого опису 100 символів");
+            .MaximumLength(400).WithMessage("Максимальна довжина короткого опису 400 символів");
 
         RuleFor(x => x.Location)
             .NotEmpty().WithMessage("Локація обов'язкова")

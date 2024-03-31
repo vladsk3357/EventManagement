@@ -25,7 +25,10 @@ internal sealed class GetCommunityDetailsQueryHandler : IRequestHandler<GetCommu
     {
         var userId = _currentUserAccessor.UserId;
 
-        var community = await _context.Communities.FindAsync(new object?[] { request.Id }, cancellationToken)
+        var community = await _context.Communities
+            .Include(c => c.SubscriptionForm)
+            .ThenInclude(f => f.Form)
+            .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Community), request.Id);
 
         var subscribersCount = await _context.Subscriptions
@@ -34,6 +37,10 @@ internal sealed class GetCommunityDetailsQueryHandler : IRequestHandler<GetCommu
         var isSubscribed = await _context.Subscriptions
             .AnyAsync(cs => cs.CommunityId == community.Id && cs.UserId == userId, cancellationToken);
 
-        return GetCommunityDetailsQueryMapper.ToDto(community, subscribersCount, isSubscribed, community.OrganizerId == userId);
+        var requiresFormAnswer = community.SubscriptionForm.Form.Fields.Count != 0;
+
+        var formId = community.SubscriptionForm.FormId;
+
+        return GetCommunityDetailsQueryMapper.ToDto(community, subscribersCount, isSubscribed, community.OrganizerId == userId, requiresFormAnswer, formId);
     }
 }

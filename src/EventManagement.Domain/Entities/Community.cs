@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Domain.Entities;
+﻿using EventManagement.Domain.Entities.Form;
+
+namespace EventManagement.Domain.Entities;
 
 public class Community : AuditableEntity
 {
@@ -17,4 +19,8 @@ public class Community : AuditableEntity
     public string? Description { get; set; }
 
     public ICollection<Subscription> Subscriptions { get; set; } = default!;
+
+    public CommunitySubscriptionForm SubscriptionForm { get; set; } = default!;
+
+    public ICollection<CommunityForm> Forms { get; set; } = default!;
 }

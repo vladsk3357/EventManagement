@@ -27,9 +27,6 @@ internal sealed class CommunityConfiguration : IEntityTypeConfiguration<Communit
         builder.Property(e => e.ShortDescription)
             .HasMaxLength(400);
 
-        builder.Property(e => e.Description)
-            .HasMaxLength(2000);
-
         builder.Property(e => e.CreatedBy)
             .HasMaxLength(450);
 
