@@ -8,4 +8,6 @@ public sealed record CommunityDetailsDto(
     string? Description,
     int SubscriberCount,
     bool IsSubscribed,
-    bool IsOrganizer);
+    bool IsOrganizer,
+    bool RequiresFormAnswer,
+    int FormId);

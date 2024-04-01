@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Domain.Entities;
+﻿using EventManagement.Domain.Entities.Form;
+
+namespace EventManagement.Domain.Entities;
 
 public class Event : AuditableEntity
 {
@@ -23,4 +25,6 @@ public class Event : AuditableEntity
     public EventAttendance Attendance { get; set; } = default!;
 
     public ICollection<Attendee> Attendees { get; set; }
+
+    public EventAttendanceForm AttendanceForm { get; set; } = default!;
 }

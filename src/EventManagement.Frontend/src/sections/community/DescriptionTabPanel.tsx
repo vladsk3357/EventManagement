@@ -11,7 +11,7 @@ const DescriptionTabPanel = ({ value, description }: Props) => {
     <TabPanel value={value}>
       <Box>
         <Typography variant="h6" gutterBottom>Опис</Typography>
-        {description}
+        {description && <div dangerouslySetInnerHTML={{ __html: description }}></div>}
       </Box>
     </TabPanel>
   );

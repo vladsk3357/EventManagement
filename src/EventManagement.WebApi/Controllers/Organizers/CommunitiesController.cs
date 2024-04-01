@@ -4,6 +4,10 @@ using EventManagement.Application.Organizers.Communities.Commands.DeleteCommunit
 using EventManagement.Application.Organizers.Communities.Commands.EditCommunity;
 using EventManagement.Application.Organizers.Communities.Queries.GetCommunities;
 using EventManagement.Application.Organizers.Communities.Queries.GetCommunity;
+using EventManagement.Application.Organizers.CommunitySubscriptionForms.Commands.EditCommunitySubscriptionForm;
+using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.GetCommunitySubscriptionForm;
+using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.GetCommunitySubscriptionFormAnswerDetails;
+using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.GetCommunitySubscriptionFormAnswers;
 using EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 using EventManagement.Application.Organizers.Events.Queries.GetEvents;
 using EventManagement.Application.Organizers.Subscribers.Queries.GetSubscribers;
@@ -69,5 +73,33 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     public async Task<PagedList<SubscriberDto>> GetSubscribersAsync(int communityId, int page, int pageSize)
     {
         return await Mediator.Send(new GetSubscribersQuery(communityId, page, pageSize));
+    }
+
+    [HttpGet("{communityId}/subscription-form")]
+    public async Task<GetCommunitySubscriptionFormDto> GetSubscriptionFormAsync(int communityId)
+    {
+        return await Mediator.Send(new GetCommunitySubscriptionFormQuery(communityId));
+    }
+
+    [HttpPut("{communityId}/subscription-form")]
+    public async Task<IActionResult> UpdateSubscriptionFormAsync(int communityId, EditCommunitySubscriptionFormCommand command)
+    {
+        if (communityId != command.CommunityId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpGet("{communityId}/subscription-form/answers")]
+    public async Task<PagedList<FormAnswerDto>> GetSubscriptionFormAnswersAsync(int communityId, int page, int pageSize)
+    {
+        return await Mediator.Send(new GetCommunitySubscriptionFormAnswersQuery(communityId, page, pageSize));
+    }
+
+    [HttpGet("{communityId}/subscription-form/answers/{answerId}")]
+    public async Task<GetCommunitySubscriptionFormAnswerDetailsDto> GetSubscriptionFormAnswerDetailsAsync(int communityId, int answerId)
+    {
+        return await Mediator.Send(new GetCommunitySubscriptionFormAnswerDetailsQuery(communityId, answerId));
     }
 }

@@ -45,7 +45,7 @@ const navConfig = (communityId: string) => {
     },
     {
       title: 'Реєстраційна форма',
-      path: `${baseUrl}/registration-form`,
+      path: `${baseUrl}/registrations`,
       icon: <ShieldIcon />,
     },
     {

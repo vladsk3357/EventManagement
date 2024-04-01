@@ -1,9 +1,11 @@
-import { Button, CircularProgress, Grid } from "@mui/material";
+import { Button, CircularProgress, Grid, InputLabel } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FormContainer, TextFieldElement } from "react-hook-form-mui";
+import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import { useParams } from "react-router-dom";
 import { axios } from '../../../api';
 import { useMemo } from "react";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 type FormInputs = {
   name: string;
@@ -14,24 +16,16 @@ type FormInputs = {
   description: string;
 }
 
-const SettingsForm = () => {
+type Props = {
+  defaultValues: FormInputs;
+};
+
+const SettingsForm = ({ defaultValues }: Props) => {
   const { communityId } = useParams();
-  const { data, isFetching, isFetched } = useGetCommunitySettingsQuery();
   const { mutate } = saveCommunitySettings();
 
-  const defaultValues: FormInputs | undefined = useMemo(() => {
-    if (!data)
-      return undefined;
-
-    return {
-      name: data.name,
-      location: data.location,
-      domain: data.domain,
-      url: data.url,
-      shortDescription: data.shortDescription,
-      description: data.description || '',
-    };
-  }, [data]);
+  const form = useForm<FormInputs>({ defaultValues, mode: 'onBlur' });
+  const { setValue, getValues } = form;
 
   const onSubmit = (data: FormInputs) => {
     const variables = createMutationVariables(data, Number(communityId));
@@ -39,63 +33,45 @@ const SettingsForm = () => {
   };
 
   return (
-    <>
-      {isFetching && <CircularProgress />}
-      {!isFetching && isFetched && (
-        <FormContainer<FormInputs>
-          defaultValues={defaultValues}
-          onSuccess={onSubmit}
-          reValidateMode="onBlur"
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6} mb={2}>
-              <TextFieldElement name="name" label="Назва спільноти" fullWidth required />
-            </Grid>
-            <Grid item xs={12} md={6} mb={2}>
-              <TextFieldElement name="location" label="Локація" fullWidth required />
-            </Grid>
-            <Grid item xs={12} mb={2}>
-              <TextFieldElement name="domain" label="Напрямок спільноти" fullWidth required />
-            </Grid>
-            <Grid item xs={12} mb={2}>
-              <TextFieldElement name="url" label="URL сторінки спільноти" fullWidth required />
-            </Grid>
-            <Grid item xs={12} mb={2}>
-              <TextFieldElement name="shortDescription" label="Коротко опишіть спільноту" fullWidth multiline />
-            </Grid>
-            <Grid item xs={12} mb={2}>
-              <TextFieldElement name="description" label="Опишіть спільноту" fullWidth multiline required />
-            </Grid>
-            <Grid item xs={12} mb={2}>
-              <Button variant="contained" type="submit">Зберегти зміни</Button>
-            </Grid>
-          </Grid>
-        </FormContainer >
-      )}
-    </>
+    <FormContainer<FormInputs>
+      onSuccess={onSubmit}
+      formContext={form}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6} mb={2}>
+          <TextFieldElement name="name" label="Назва спільноти" fullWidth required />
+        </Grid>
+        <Grid item xs={12} md={6} mb={2}>
+          <TextFieldElement name="location" label="Локація" fullWidth required />
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <TextFieldElement name="domain" label="Напрямок спільноти" fullWidth required />
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <TextFieldElement name="url" label="URL сторінки спільноти" fullWidth required />
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <TextFieldElement name="shortDescription" label="Коротко опишіть спільноту" fullWidth multiline />
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <InputLabel>Опис спільноти</InputLabel>
+          <CKEditor
+            editor={ClassicEditor}
+            data={getValues().description}
+            onChange={(event, editor) => {
+              setValue('description', editor.getData());
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <Button variant="contained" type="submit">Зберегти зміни</Button>
+        </Grid>
+      </Grid>
+    </FormContainer >
   );
 };
 
 export default SettingsForm;
-
-function useGetCommunitySettingsQuery() {
-  const { communityId } = useParams();
-
-  return useQuery({
-    queryKey: ['community', communityId],
-    queryFn: () => axios.get<GetCommunityQueryResponse>(`/api/organizers/communities/${communityId}`).then(res => res.data)
-  });
-}
-
-type GetCommunityQueryResponse = {
-  id: number;
-  name: string;
-  location: string;
-  domain: string;
-  url: string;
-  shortDescription?: string;
-  description?: string;
-}
 
 function saveCommunitySettings() {
   const { communityId } = useParams();

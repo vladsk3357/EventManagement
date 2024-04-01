@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container, Stack, Typography } from '@mui/material';
-import { SettingsForm } from '../../../sections/organizers/settings';
+import { Settings } from '../../../sections/organizers/settings';
 
 const SettingsPage = () => {
   return (
@@ -16,7 +16,7 @@ const SettingsPage = () => {
             Налаштування
           </Typography>
         </Stack>
-        <SettingsForm />
+        <Settings />
       </Container>
     </>
   );
