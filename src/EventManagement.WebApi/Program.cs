@@ -1,6 +1,7 @@
 using EventManagement.Application;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Infrastructure;
+using EventManagement.WebApi.Converters;
 using EventManagement.WebApi.Filters;
 using EventManagement.WebApi.GraphApi;
 using EventManagement.WebApi.Services;
@@ -17,7 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
 
-builder.Services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>());
+builder.Services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>())
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new CommunitySubscriptionFormFieldDtoJsonConverter());
+    });
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 

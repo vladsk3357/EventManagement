@@ -8,7 +8,7 @@ namespace EventManagement.Application.Organizers.CommunitySubscriptionForms.Comm
 
 public sealed record EditCommunitySubscriptionFormCommand(
        int CommunityId,
-       IList<CommunitySubscriptionFormFormFieldDto> Fields) : IRequest;
+       IList<CommunitySubscriptionFormFieldDto> Fields) : IRequest;
 
 internal class EditCommunitySubscriptionFormCommandHandler
     : IRequestHandler<EditCommunitySubscriptionFormCommand>
@@ -26,46 +26,7 @@ internal class EditCommunitySubscriptionFormCommandHandler
 
     public async Task Handle(EditCommunitySubscriptionFormCommand request, CancellationToken cancellationToken)
     {
-        var formFields = new List<FormFieldBase>();
-        foreach (var field in request.Fields)
-        {
-            FormFieldBase formField = field.Type switch
-            {
-                FormFieldNames.ShortText => new ShortTextFormField
-                {
-                    Name = field.Name,
-                    Description = field.Description,
-                    IsRequired = field.IsRequired,
-                    Order = field.Order,
-                },
-                FormFieldNames.LongText => new LongTextFormField
-                {
-                    Name = field.Name,
-                    Description = field.Description,
-                    IsRequired = field.IsRequired,
-                    Order = field.Order,
-                },
-                FormFieldNames.SingleOption => new SingleOptionFormField
-                {
-                    Name = field.Name,
-                    Description = field.Description,
-                    IsRequired = field.IsRequired,
-                    Order = field.Order,
-                    Options = field.Properties!.Options,
-                },
-                FormFieldNames.MultipleOptions => new MultipleOptionsFormField
-                {
-                    Name = field.Name,
-                    Description = field.Description,
-                    IsRequired = field.IsRequired,
-                    Order = field.Order,
-                    Options = field.Properties!.Options,
-                },
-                _ => throw new NotSupportedException($"Field type '{field.Type}' is not supported.")
-            };
-
-            formFields.Add(formField);
-        }
+        List<FormFieldBase> formFields = MapToFormFields(request.Fields);
 
         var form = new Form
         {
@@ -77,8 +38,8 @@ internal class EditCommunitySubscriptionFormCommandHandler
             .Include(f => f.Form)
             .Include(f => f.Community)
             .SingleOrDefaultAsync(
-                f => f.CommunityId == request.CommunityId 
-                && f.Community.OrganizerId == _currentUserAccessor.UserId, 
+                f => f.CommunityId == request.CommunityId
+                && f.Community.OrganizerId == _currentUserAccessor.UserId,
                 cancellationToken);
 
         if (storedForm is not null)
@@ -99,6 +60,52 @@ internal class EditCommunitySubscriptionFormCommandHandler
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    private static List<FormFieldBase> MapToFormFields(IEnumerable<CommunitySubscriptionFormFieldDto> fields)
+    {
+        var formFields = new List<FormFieldBase>();
+        foreach (var field in fields)
+        {
+            FormFieldBase formField = field switch
+            {
+                ShortTextFormFieldDto f => new ShortTextFormField
+                {
+                    Name = f.Name,
+                    Description = f.Description,
+                    IsRequired = f.IsRequired,
+                    Order = f.Order,
+                },
+                LongTextFormFieldDto f => new LongTextFormField
+                {
+                    Name = f.Name,
+                    Description = f.Description,
+                    IsRequired = f.IsRequired,
+                    Order = f.Order,
+                },
+                SingleOptionFormFieldDto f => new SingleOptionFormField
+                {
+                    Name = f.Name,
+                    Description = f.Description,
+                    IsRequired = field.IsRequired,
+                    Order = f.Order,
+                    Options = f.Options,
+                },
+                MultipleOptionsFormFieldDto f => new MultipleOptionsFormField
+                {
+                    Name = f.Name,
+                    Description = f.Description,
+                    IsRequired = f.IsRequired,
+                    Order = f.Order,
+                    Options = f.Options,
+                },
+                _ => throw new NotSupportedException($"Field type '{field.Type}' is not supported.")
+            };
+
+            formFields.Add(formField);
+        }
+
+        return formFields;
     }
 
     private static void UpdateForm(Form storedForm, Form form)

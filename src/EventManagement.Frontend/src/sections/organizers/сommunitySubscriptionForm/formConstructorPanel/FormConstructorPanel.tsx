@@ -18,29 +18,30 @@ const FormConstructorPanel = ({ value }: Props) => {
   const { mutate, isPending } = useEditCommunitySubscriptionForm(communityId);
 
   const handleSubmit = useCallback((data: FormInputs) => {
-    mutate({
-      fields: data.fields.map(f => {
-        if (f.type === 'SingleOption' || f.type === 'MultipleOptions') {
-          return {
-            name: f.name,
-            description: f.description,
-            type: f.type,
-            isRequired: f.isRequired,
-            order: f.order,
-            properties: { options: f.options },
-          }
-        }
-        else {
-          return {
-            name: f.name,
-            description: f.description,
-            type: f.type,
-            isRequired: f.isRequired,
-            order: f.order,
-          }
-        }
-      }), communityId
-    });
+    // mutate({
+    //   fields: data.fields.map(f => {
+    //     if (f.type === 'SingleOption' || f.type === 'MultipleOptions') {
+    //       return {
+    //         name: f.name,
+    //         description: f.description,
+    //         type: f.type,
+    //         isRequired: f.isRequired,
+    //         order: f.order,
+    //         properties: { options: f.options },
+    //       }
+    //     }
+    //     else {
+    //       return {
+    //         name: f.name,
+    //         description: f.description,
+    //         type: f.type,
+    //         isRequired: f.isRequired,
+    //         order: f.order,
+    //       }
+    //     }
+    //   }), communityId
+    // });
+    mutate({ fields: data.fields, communityId });
   }, [mutate]);
 
   return (
@@ -69,30 +70,31 @@ function useGetCommunitySubscriptionForm(communityId: number) {
     queryKey: ['communitySubscriptionForm', { communityId }],
     queryFn: async () => {
       const res = await axios.get<GetCommunitySubscriptionFormQueryResult>(`/api/organizers/communities/${communityId}/subscription-form`);
-      return {
-        communityId: res.data.communityId,
-        fields: res.data.fields.map(f => {
-          if (f.type === "SingleOption" || f.type === "MultipleOptions") {
-            return {
-              name: f.name,
-              description: f.description,
-              isRequired: f.isRequired,
-              order: f.order,
-              type: f.type,
-              options: f.properties.options,
-            }
-          }
-          else {
-            return {
-              name: f.name,
-              description: f.description,
-              isRequired: f.isRequired,
-              order: f.order,
-              type: f.type,
-            }
-          }
-        })
-      };
+      return res.data;
+      // return {
+      //   communityId: res.data.communityId,
+      //   fields: res.data.fields.map(f => {
+      //     if (f.type === "SingleOption" || f.type === "MultipleOptions") {
+      //       return {
+      //         name: f.name,
+      //         description: f.description,
+      //         isRequired: f.isRequired,
+      //         order: f.order,
+      //         type: f.type,
+      //         options: f.properties.options,
+      //       }
+      //     }
+      //     else {
+      //       return {
+      //         name: f.name,
+      //         description: f.description,
+      //         isRequired: f.isRequired,
+      //         order: f.order,
+      //         type: f.type,
+      //       }
+      //     }
+      //   })
+      // };
     }
   });
 }
@@ -106,9 +108,9 @@ type FieldInput = {
 
 export type OptionFieldInput = FieldInput & {
   type: 'SingleOption' | 'MultipleOptions';
-  properties: {
-    options: string[];
-  };
+  // properties: {
+  // };
+  options: string[];
 }
 
 export type TextFieldInput = FieldInput & {

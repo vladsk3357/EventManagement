@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EventManagement.Application.Common.Exceptions;
+﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Domain.Entities.Form.FormField;
 using MediatR;
@@ -9,6 +8,10 @@ namespace EventManagement.Application.Organizers.CommunitySubscriptionForms.Quer
 
 public sealed record GetCommunitySubscriptionFormQuery(int CommunityId)
     : IRequest<GetCommunitySubscriptionFormDto>;
+
+public sealed record GetCommunitySubscriptionFormDto(
+    int CommunityId,
+    IReadOnlyList<CommunitySubscriptionFormFieldDto> Fields);
 
 internal sealed class GetCommunitySubscriptionFormQueryHandler
     : IRequestHandler<GetCommunitySubscriptionFormQuery, GetCommunitySubscriptionFormDto>
@@ -38,20 +41,38 @@ internal sealed class GetCommunitySubscriptionFormQueryHandler
 
         return new GetCommunitySubscriptionFormDto(
             form.CommunityId,
-            form.Form.Fields.OrderBy(f => f.Order).Select(f => new GetCommunitySubscriptionFormFormFieldDto(
-                f.Name,
-                f.Description,
-                f.IsRequired,
-                f.Type,
-                f.Order,
-                GetFieldTypeSpecificProperties(f))).ToList());
+            form.Form.Fields.OrderBy(f => f.Order).Select(MapToDto).ToList());
     }
 
-    private static FieldTypeSpecificProperties? GetFieldTypeSpecificProperties(FormFieldBase formField)
+    private static CommunitySubscriptionFormFieldDto MapToDto(FormFieldBase formField)
         => formField switch
         {
-            SingleOptionFormField singleOptionFormField => new FieldTypeSpecificProperties(singleOptionFormField.Options),
-            MultipleOptionsFormField multipleOptionsFormField => new FieldTypeSpecificProperties(multipleOptionsFormField.Options),
-            _ => null
+            ShortTextFormField shortTextFormField => new ShortTextFormFieldDto(
+                shortTextFormField.Name,
+                shortTextFormField.Description,
+                shortTextFormField.IsRequired,
+                FormFieldNames.ShortText,
+                shortTextFormField.Order),
+            LongTextFormField longTextFormField => new LongTextFormFieldDto(
+                longTextFormField.Name,
+                longTextFormField.Description,
+                longTextFormField.IsRequired,
+                FormFieldNames.LongText,
+                longTextFormField.Order),
+            SingleOptionFormField singleOptionFormField => new SingleOptionFormFieldDto(
+                singleOptionFormField.Name,
+                singleOptionFormField.Description,
+                singleOptionFormField.IsRequired,
+                FormFieldNames.SingleOption,
+                singleOptionFormField.Order,
+                singleOptionFormField.Options),
+            MultipleOptionsFormField multipleOptionsFormField => new MultipleOptionsFormFieldDto(
+                multipleOptionsFormField.Name,
+                multipleOptionsFormField.Description,
+                multipleOptionsFormField.IsRequired,
+                FormFieldNames.MultipleOptions,
+                multipleOptionsFormField.Order,
+                multipleOptionsFormField.Options),
+            _ => throw new NotSupportedException($"Form field type {formField.Type} is not supported.")
         };
 }
