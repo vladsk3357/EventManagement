@@ -1,5 +1,6 @@
 using EventManagement.Application;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Organizers.Events;
 using EventManagement.Infrastructure;
 using EventManagement.WebApi.Converters;
 using EventManagement.WebApi.Filters;
@@ -22,6 +23,7 @@ builder.Services.AddControllersWithViews(options => options.Filters.Add<ApiExcep
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new CommunitySubscriptionFormFieldDtoJsonConverter());
+        options.JsonSerializerOptions.Converters.Add(new EventVenueDtoJsonConverter());
     });
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();

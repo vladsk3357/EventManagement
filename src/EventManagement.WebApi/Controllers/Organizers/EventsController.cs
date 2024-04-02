@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Organizers.Events.Commands.DeleteEvent;
 using EventManagement.Application.Organizers.Events.Commands.EditEvent;
+using EventManagement.Application.Organizers.Events.Queries.GetEvent;
 using EventManagement.Application.Organizers.Speakers.Queries.GetSpeakers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,12 @@ namespace EventManagement.WebApi.Controllers.Organizers;
 
 public sealed class EventsController : OrganizersApiControllerBase
 {
+    [HttpGet("{id}")]
+    public async Task<EventDto> GetEventAsync(int id)
+    {
+        return await Mediator.Send(new GetEventQuery(id));
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEventAsync(int id)
     {

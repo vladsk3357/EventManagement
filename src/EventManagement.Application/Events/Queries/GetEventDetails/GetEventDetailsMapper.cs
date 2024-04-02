@@ -1,4 +1,4 @@
-﻿using EventManagement.Domain.Entities;
+﻿using EventManagement.Domain.Entities.CommunityEvent;
 
 namespace EventManagement.Application.Events.Queries.GetEventDetails;
 
@@ -12,7 +12,7 @@ internal static class GetEventDetailsMapper
             entity.Description,
             entity.StartDate,
             entity.EndDate,
-            entity.Location,
+            ((OnlineEventVenue)entity.Venue).Url,
             attendeesCount,
             isAttendable,
             isAttending,

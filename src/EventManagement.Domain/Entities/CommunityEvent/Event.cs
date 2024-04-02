@@ -1,6 +1,6 @@
 ﻿using EventManagement.Domain.Entities.Form;
 
-namespace EventManagement.Domain.Entities;
+namespace EventManagement.Domain.Entities.CommunityEvent;
 
 public class Event : AuditableEntity
 {
@@ -14,7 +14,7 @@ public class Event : AuditableEntity
 
     public DateTime EndDate { get; set; }
 
-    public string Location { get; set; } = default!;
+    public EventVenueBase Venue { get; set; } = default!;
 
     public int CommunityId { get; set; } = default!;
 
@@ -24,7 +24,7 @@ public class Event : AuditableEntity
 
     public EventAttendance Attendance { get; set; } = default!;
 
-    public ICollection<Attendee> Attendees { get; set; }
+    public ICollection<Attendee> Attendees { get; set; } = [];
 
     public EventAttendanceForm AttendanceForm { get; set; } = default!;
 }

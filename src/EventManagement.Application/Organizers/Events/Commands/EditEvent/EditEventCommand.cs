@@ -1,9 +1,12 @@
-﻿using EventManagement.Application.Common.Exceptions;
+﻿using System;
+using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EventManagement.Application.Organizers.Events.Commands.EditEvent;
 
@@ -14,9 +17,9 @@ public sealed record EditEventCommand(
     string Description,
     DateTime StartDate,
     DateTime EndDate,
-    EditEventAttendanceDto Attendance,
-    int CommunityId,
-    string Location) : IRequest;
+    AttendanceDto Attendance,
+    EventVenueDto Venue,
+    int CommunityId) : IRequest;
 
 internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand>
 {
@@ -44,7 +47,12 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
     private static void UpdateEventWithCommand(Event @event, EditEventCommand request)
     {
         @event.Name = request.Name;
-        @event.Location = request.Location;
+        @event.Venue = request.Venue switch
+        {
+            OnlineEventVenueDto online => new OnlineEventVenue { Url = online.Url },
+            OfflineEventVenueDto offline => new OfflineEventVenue { Location = offline.Location },
+            _ => throw new NotImplementedException(),
+        };
         @event.Description = request.Description;
         @event.StartDate = request.StartDate;
         @event.EndDate = request.EndDate;

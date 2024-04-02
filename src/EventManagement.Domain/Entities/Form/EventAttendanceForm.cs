@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Domain.Entities.Form;
+﻿using EventManagement.Domain.Entities.CommunityEvent;
+
+namespace EventManagement.Domain.Entities.Form;
 
 public class EventAttendanceForm
 {

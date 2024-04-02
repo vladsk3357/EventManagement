@@ -4,7 +4,7 @@ import SimpleLayout from './layouts/simple';
 import HomeLayout from './layouts/home';
 import DefaultLayout from './layouts/default';
 import SimpleOrganizersLayout from './layouts/organizers/SimpleOrganizersLayout';
-import CommunityLayout from './layouts/organizers/CommunityLayout';
+import OrganizersLayout from './layouts/organizers/OrganizersLayout';
 import RegistrationPage from './pages/profile/RegistrationPage';
 import LoginPage from './pages/profile/LoginPage';
 import Page404 from './pages/error/Page404';
@@ -24,6 +24,8 @@ import MyCommunitiesPage from './pages/myCommunities/MyCommunitiesPage';
 import EventPage from './pages/event/EventPage';
 import CommunitySubscriptionFormPage from './pages/organizers/community/CommunitySubscriptionFormPage';
 import CommunitySubscriptionFormAnswerDetailsPage from './pages/organizers/community/CommunitySubscriptionFormAnswerDetailsPage';
+import EventDetailsPage from './pages/organizers/events/EventDetailsPage';
+
 
 // ----------------------------------------------------------------------
 
@@ -62,10 +64,15 @@ export default function Router() {
     },
     {
       path: 'organizers/:communityId',
-      element: <CommunityLayout />,
+      element: <OrganizersLayout />,
       children: [
         { path: 'dashboard', element: <CommunityDashboardPage />, },
-        { path: 'events', element: <CommunityEventsPage /> },
+        {
+          path: 'events', children: [
+            { path: 'list', element: <CommunityEventsPage /> },
+            { path: ':eventId', element: <EventDetailsPage /> },
+          ]
+        },
         { path: 'events/create', element: <CreateEventPage /> },
         { path: 'settings', element: <SettingsPage /> },
         { path: 'members', element: <SubscribersPage /> },

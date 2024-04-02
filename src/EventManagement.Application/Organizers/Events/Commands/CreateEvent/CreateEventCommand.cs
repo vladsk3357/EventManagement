@@ -13,8 +13,8 @@ public sealed record CreateEventCommand(
     string Description,
     DateTime StartDate,
     DateTime EndDate,
-    CreateEventAttendanceDto Attendance,
-    CreateEventLocationDto Location,
+    AttendanceDto Attendance,
+    EventVenueDto Venue,
     int CommunityId) : IRequest<CreateEventResultDto>;
 
 internal sealed class CreateEventCommandHandler 

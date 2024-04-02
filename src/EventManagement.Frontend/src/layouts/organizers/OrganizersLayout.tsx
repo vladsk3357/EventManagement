@@ -2,8 +2,9 @@ import { useState } from "react";
 import CommunityNav from "./communityNav";
 import BaseLayout from "../base";
 import Header from "../../components/organizers/header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { styled } from "@mui/material";
+import EventNav from "./eventNav";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -27,16 +28,18 @@ const Main = styled('div')(({ theme }) => ({
   },
 }));
 
-const CommunityLayout = () => {
+const OrganizersLayout = () => {
   const [open, setOpen] = useState(false);
+  const { eventId } = useParams();
 
   return (
     <BaseLayout>
       <StyledRoot>
         <Header onOpenNav={() => setOpen(true)} />
-
-        <CommunityNav openNav={open} onCloseNav={() => setOpen(false)} />
-
+        {eventId ? (
+          <EventNav openNav={open} onCloseNav={() => setOpen(false)} />) : (
+          <CommunityNav openNav={open} onCloseNav={() => setOpen(false)} />
+        )}
         <Main>
           <Outlet />
         </Main>
@@ -45,4 +48,4 @@ const CommunityLayout = () => {
   );
 };
 
-export default CommunityLayout;
+export default OrganizersLayout;

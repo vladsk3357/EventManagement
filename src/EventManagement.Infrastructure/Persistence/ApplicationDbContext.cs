@@ -4,6 +4,7 @@ using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Common;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using EventManagement.Domain.Entities.Form;
 using EventManagement.Domain.Entities.Form.Answer;
 using EventManagement.Infrastructure.Identity;
