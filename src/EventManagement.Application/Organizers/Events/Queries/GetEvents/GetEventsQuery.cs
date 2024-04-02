@@ -3,7 +3,7 @@ using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Pagination;
 using EventManagement.Application.Common.Security;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +48,7 @@ internal sealed class GetEventsQueryHandler : IRequestHandler<GetEventsQuery, Pa
 
         var eventsDtosQuery = eventsQuery.Include(e => e.Attendees)
             .Select(e => new { Event = e, AttendeesCount = e.Attendees.Count() })
-            .Select(e => new GetEventsEventDto(e.Event.Id, e.Event.Name, e.Event.Location, e.Event.StartDate, e.AttendeesCount));
+            .Select(e => new GetEventsEventDto(e.Event.Id, e.Event.Name, ((OnlineEventVenue)e.Event.Venue).Url, e.Event.StartDate, e.AttendeesCount));
 
         return await PagedList<GetEventsEventDto>.CreateAsync(eventsDtosQuery, request.Page, request.PageSize);
     }

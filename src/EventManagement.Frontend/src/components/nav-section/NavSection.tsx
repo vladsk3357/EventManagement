@@ -1,8 +1,5 @@
-// @mui
 import { Box, BoxProps, List } from '@mui/material';
 import NavItem from './NavItem';
-
-// ----------------------------------------------------------------------
 
 type Props = BoxProps & {
   data: {

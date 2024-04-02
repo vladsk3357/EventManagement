@@ -13,9 +13,9 @@ type Props = {
   onCloseNav: () => void;
 };
 
-const CommunityNav = ({ openNav, onCloseNav }: Props) => {
+const EventNav = ({ openNav, onCloseNav }: Props) => {
   const { pathname } = useLocation();
-  const { communityId } = useParams();
+  const { communityId, eventId } = useParams();
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -33,7 +33,7 @@ const CommunityNav = ({ openNav, onCloseNav }: Props) => {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <NavSection data={navConfig(communityId!)} />
+      <NavSection data={navConfig(communityId!, eventId!)} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>
@@ -79,4 +79,4 @@ const CommunityNav = ({ openNav, onCloseNav }: Props) => {
   );
 };
 
-export default CommunityNav;
+export default EventNav;

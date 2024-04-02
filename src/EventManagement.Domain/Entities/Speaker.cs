@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Domain.Entities;
+﻿using EventManagement.Domain.Entities.CommunityEvent;
+
+namespace EventManagement.Domain.Entities;
 
 public class Speaker: AuditableEntity
 {

@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using EventManagement.Domain.Entities.Form;
 using EventManagement.Domain.Entities.Form.Answer;
 using Microsoft.EntityFrameworkCore;

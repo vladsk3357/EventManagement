@@ -1,15 +1,17 @@
-﻿namespace EventManagement.Application.Organizers.Events.Commands.CreateEvent;
+﻿using EventManagement.Domain.Entities.CommunityEvent;
+
+namespace EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 
 internal static class CreateEventCommandMapper
 {
-    public static Domain.Entities.Event ToEntity(this CreateEventCommand command) => new()
+    public static Event ToEntity(this CreateEventCommand command) => new()
     {
         Name = command.Name,
         Description = command.Description,
-        Location = command.Location.VenueType switch
+        Venue = command.Venue switch
         {
-            "online" => command.Location.Url!,
-            "offline" => command.Location.Location!,
+            OnlineEventVenueDto online => new OnlineEventVenue { Url = online.Url },
+            OfflineEventVenueDto offline => new OfflineEventVenue { Location = offline.Location },
             _ => throw new NotImplementedException(),
         },
         StartDate = command.StartDate,

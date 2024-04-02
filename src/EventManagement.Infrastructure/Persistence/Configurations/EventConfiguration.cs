@@ -1,4 +1,5 @@
-﻿using EventManagement.Domain.Entities;
+﻿using System.Text.Json;
+using EventManagement.Domain.Entities.CommunityEvent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,8 +20,11 @@ internal sealed class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(e => e.Name)
             .HasMaxLength(200);
 
-        builder.Property(e => e.Location)
-            .HasMaxLength(200);
+        var venueSerializerOptions = new JsonSerializerOptions();
+        builder.Property(e => e.Venue)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, venueSerializerOptions),
+                v => JsonSerializer.Deserialize<EventVenueBase>(v, venueSerializerOptions)!);
 
         builder.Property(e => e.Description)
             .HasMaxLength(2000);

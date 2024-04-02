@@ -15,10 +15,11 @@ internal sealed class FormConfiguration : IEntityTypeConfiguration<Form>
         builder.Property(e => e.Name)
             .HasMaxLength(200);
 
+        var fieldSerializerOptions = new JsonSerializerOptions();
         builder.Property(e => e.Fields)
             .HasConversion(
-                v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
-                v => JsonSerializer.Deserialize<List<FormFieldBase>>(v, new JsonSerializerOptions()));
+                v => JsonSerializer.Serialize(v, fieldSerializerOptions),
+                v => JsonSerializer.Deserialize<List<FormFieldBase>>(v, fieldSerializerOptions)!);
 
         builder.Property(e => e.CreatedBy)
             .HasMaxLength(450);
