@@ -1,7 +1,6 @@
 ﻿using EventManagement.Application.Organizers.Speakers.Commands.CreateSpeaker;
 using EventManagement.Application.Organizers.Speakers.Commands.DeleteSpeaker;
 using EventManagement.Application.Organizers.Speakers.Commands.EditSpeaker;
-using EventManagement.Application.Organizers.Speakers.Queries.GetSpeakers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.WebApi.Controllers.Organizers;

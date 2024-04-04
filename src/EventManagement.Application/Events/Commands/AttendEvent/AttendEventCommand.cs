@@ -30,7 +30,7 @@ internal sealed class AttendEventCommandHandler : IRequestHandler<AttendEventCom
 
         var existingAttendee = await _context.GetAttendeeAsync(request.EventId, userId, cancellationToken);
 
-        if (existingAttendee is not null)
+        if (existingAttendee?.Status == AttendeeStatus.Pending || existingAttendee?.Status == AttendeeStatus.Confirmed)
             throw new InvalidRequestException(nameof(request.EventId), "Коритувач вже відвідує цю подію.");
 
         if (communityEvent.Attendance.Limit is not null)

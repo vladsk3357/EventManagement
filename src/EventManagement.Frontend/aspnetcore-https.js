@@ -2,6 +2,7 @@
 import fs from 'fs';
 import child_process from 'child_process';
 import path from 'path';
+import process from 'process';
 
 const baseFolder =
   process.env.APPDATA !== undefined && process.env.APPDATA !== ''

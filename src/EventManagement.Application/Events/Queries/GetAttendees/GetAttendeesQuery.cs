@@ -22,10 +22,10 @@ internal sealed class GetAttendeesQueryHandler
 
     public async Task<PagedList<AttendeeDto>> Handle(GetAttendeesQuery request, CancellationToken cancellationToken)
     {
-        var subscriptionsQuery = _context.Attendees.Where(s => s.EventId == request.EventId);
+        var attendeesQuery = _context.Attendees.Where(s => s.EventId == request.EventId);
 
-        var totalCount = await subscriptionsQuery.CountAsync(cancellationToken);
-        var attendeesIds = await subscriptionsQuery.Skip((request.Page - 1) * request.PageSize)
+        var totalCount = await attendeesQuery.CountAsync(cancellationToken);
+        var attendeesIds = await attendeesQuery.Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
             .Select(s => s.UserId)
             .ToListAsync(cancellationToken);

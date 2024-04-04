@@ -25,6 +25,7 @@ import EventPage from './pages/event/EventPage';
 import CommunitySubscriptionFormPage from './pages/organizers/community/CommunitySubscriptionFormPage';
 import CommunitySubscriptionFormAnswerDetailsPage from './pages/organizers/community/CommunitySubscriptionFormAnswerDetailsPage';
 import EventDetailsPage from './pages/organizers/events/EventDetailsPage';
+import EventAttendeesListPage from './pages/organizers/events/EventAttendeesListPage';
 
 
 // ----------------------------------------------------------------------
@@ -70,7 +71,8 @@ export default function Router() {
         {
           path: 'events', children: [
             { path: 'list', element: <CommunityEventsPage /> },
-            { path: ':eventId', element: <EventDetailsPage /> },
+            { path: ':eventId/details', element: <EventDetailsPage /> },
+            { path: ':eventId/attendees/*', element: <EventAttendeesListPage /> },
           ]
         },
         { path: 'events/create', element: <CreateEventPage /> },
