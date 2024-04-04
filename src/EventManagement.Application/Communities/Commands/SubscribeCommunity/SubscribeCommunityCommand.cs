@@ -70,7 +70,7 @@ internal class SubscribeCommunityCommandHandler : IRequestHandler<SubscribeCommu
         await _context.Subscriptions.AddAsync(new Subscription
         {
             CommunityId = request.CommunityId,
-            UserId = userId
+            UserId = userId,
         }, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);

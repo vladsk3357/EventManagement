@@ -17,3 +17,9 @@ export const enum VenueType {
   Online = 'Online',
   Offline = 'Offline'
 }
+
+export const enum AttendeeStatus {
+  Pending = 0,
+  Confirmed = 1,
+  Cancelled = 2,
+}

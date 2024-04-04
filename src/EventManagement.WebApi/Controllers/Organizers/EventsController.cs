@@ -1,7 +1,10 @@
-﻿using EventManagement.Application.Organizers.Events.Commands.DeleteEvent;
+﻿using EventManagement.Application.Common.Pagination;
+using EventManagement.Application.Organizers.Events.Commands.DeleteEvent;
 using EventManagement.Application.Organizers.Events.Commands.EditEvent;
+using EventManagement.Application.Organizers.Events.Queries.GetAttendees;
 using EventManagement.Application.Organizers.Events.Queries.GetEvent;
 using EventManagement.Application.Organizers.Speakers.Queries.GetSpeakers;
+using EventManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.WebApi.Controllers.Organizers;
@@ -35,5 +38,11 @@ public sealed class EventsController : OrganizersApiControllerBase
     public async Task<GetSpeakersResult> GetSpeakers(int eventId)
     {
         return await Mediator.Send(new GetSpeakersQuery(eventId));
+    }
+
+    [HttpGet("{eventId}/attendees")]
+    public async Task<PagedList<AttendeeDto>> GetAttendees(int eventId, AttendeeStatus? status, int page, int pageSize)
+    {
+        return await Mediator.Send(new GetAttendeesQuery(eventId, status, page, pageSize));
     }
 }

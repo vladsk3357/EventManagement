@@ -2,6 +2,7 @@
 
 public sealed record AttendeeDto(
     int Id, 
+    string UserId,
     string UserName,
     string Name,
-    DateTime Date);
+    DateTime JoinDate);

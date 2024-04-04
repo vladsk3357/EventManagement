@@ -54,7 +54,7 @@ function useColumns(): GridColDef[] {
       width: 200,
       sortable: false,
       filterable: false,
-      renderCell: ({ value, row }) => <RouterLink to={`/organizers/${communityId}/events/${row.id}`}>{value}</RouterLink>,
+      renderCell: ({ value, row }) => <RouterLink to={`/organizers/${communityId}/events/${row.id}/details`}>{value}</RouterLink>,
     },
     {
       field: 'attendeesCount',

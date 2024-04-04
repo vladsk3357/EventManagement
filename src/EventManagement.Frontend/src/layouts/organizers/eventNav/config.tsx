@@ -17,7 +17,7 @@ const navConfig = (communityId: string, eventId: string) => {
     },
     {
       title: 'Деталі',
-      path: `${baseUrl}`,
+      path: `${baseUrl}/details`,
       icon: <EventIcon />,
     },
     {
