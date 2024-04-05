@@ -1,4 +1,4 @@
-﻿using EventManagement.Application.Organizers.Events.Commands.ChangeAttendeeStatus;
+﻿using EventManagement.Application.Organizers.Events.Commands.ConfirmAttendee;
 using EventManagement.Application.Organizers.Events.Commands.DeleteAttendee;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +14,9 @@ public class AttendeesController : OrganizersApiControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> ChangeAttendeeStatus(int id, ChangeAttendeeStatusCommand command)
+    public async Task<IActionResult> ConfirmAttendee(int id)
     {
-        if (id != command?.Id)
-            return BadRequest();
-
-        await Mediator.Send(command);
+        await Mediator.Send(new ConfirmAttendeeCommand(id));
         return NoContent();
     }
 }

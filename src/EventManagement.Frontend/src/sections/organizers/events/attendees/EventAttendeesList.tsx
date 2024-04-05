@@ -2,7 +2,7 @@ import { SyntheticEvent, useMemo, useState } from "react";
 import { TabContext, TabList } from "@mui/lab";
 import { Box, Tab, Tabs } from "@mui/material";
 import AttendeesListPanel from "./attendeesListPanel";
-import { Link, Route, Routes, useParams, useNavigate } from "react-router-dom";
+import { Link, Route, Routes, useParams, useNavigate, useLocation } from "react-router-dom";
 import WaitingListPanel from "./waitingListPanel/WaitingListPanel";
 
 const getUrls = (communityId: string, eventId: string) => [
@@ -11,7 +11,8 @@ const getUrls = (communityId: string, eventId: string) => [
 ]
 
 const EventAttendeesList = () => {
-  const [tabIndex, setTabIndex] = useState('0');
+  const location = useLocation()
+  const [tabIndex, setTabIndex] = useState(location.pathname.endsWith('waiting-list') ? '1' : '0');
   const { communityId, eventId } = useParams();
 
   const urls = useMemo(() => getUrls(communityId!, eventId!), [communityId, eventId]);
