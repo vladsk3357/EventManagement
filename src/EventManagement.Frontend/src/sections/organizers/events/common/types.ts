@@ -23,3 +23,11 @@ export const enum AttendeeStatus {
   Confirmed = 1,
   Cancelled = 2,
 }
+
+export type Speaker = {
+  id: number;
+  name: string;
+  title: string;
+  company: string;
+  bio: string;
+}

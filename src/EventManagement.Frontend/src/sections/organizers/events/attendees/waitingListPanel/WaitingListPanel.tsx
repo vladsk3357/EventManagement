@@ -3,12 +3,11 @@ import { DataGrid, GridActionsCellItem, GridColDef, GridPaginationModel } from "
 import { useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../../../api';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ActionCellItemWithConfirmation, PagedList } from "../../../common";
+import { PagedList } from "../../../common";
 import { useContext, useMemo } from "react";
 import { UserContext } from "../../../../../components/user";
-import DeleteIcon from '@mui/icons-material/Delete';
 import { AttendeeStatus } from "../../common/types";
-import { NoRowsOverlay } from "../common";
+import { NoRowsOverlay, useDeleteEventAttendeeMutation } from "../common";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
@@ -53,7 +52,10 @@ const WaitingListPanel = ({ value }: Props) => {
 export default WaitingListPanel;
 
 function useColumns(): GridColDef[] {
-  const { mutate: deleteAttendee } = useChangeAttendeeStatusMutation();
+  const { communityId, eventId } = useParams();
+  const { mutate: deleteAttendee } = useDeleteEventAttendeeMutation(communityId!, eventId!);
+  const { mutate: confirmAttendee } = useChangeAttendeeStatusMutation();
+
   const { user } = useContext(UserContext);
 
   return [
@@ -101,13 +103,13 @@ function useColumns(): GridColDef[] {
             icon={<CheckCircleIcon />}
             showInMenu
             label="Затвердити"
-            onClick={() => mutate({ id: row.id, status: AttendeeStatus.Confirmed })}
+            onClick={() => confirmAttendee(row.id)}
           />,
           <GridActionsCellItem
             icon={<CancelIcon />}
             showInMenu
             label="Відхилити"
-            onClick={() => mutate({ id: row.id, status: AttendeeStatus.Cancelled })}
+            onClick={() => deleteAttendee(row.id)}
           />,
         ];
       },
@@ -145,7 +147,7 @@ function useChangeAttendeeStatusMutation() {
   const { communityId, eventId } = useParams();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: number, status: AttendeeStatus }) => axios.put(`/api/organizers/attendees/${id}`, { id, status }),
+    mutationFn: (id: number) => axios.put(`/api/organizers/attendees/${id}`),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', communityId, 'event', eventId, 'attendees'] }),
   });
 }

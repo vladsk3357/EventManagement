@@ -8,6 +8,7 @@ import { useContext, useMemo } from "react";
 import { UserContext } from "../../../../../components/user";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AttendeeStatus } from "../../common/types";
+import { useDeleteEventAttendeeMutation } from "../common";
 
 type Props = {
   value: string;
@@ -47,7 +48,8 @@ const AttendeesListPanel = ({ value }: Props) => {
 export default AttendeesListPanel;
 
 function useColumns(): GridColDef[] {
-  const { mutate: deleteAttendee } = useDeleteEventAttendeeMutation();
+  const { communityId, eventId } = useParams();
+  const { mutate: deleteAttendee } = useDeleteEventAttendeeMutation(communityId!, eventId!);
   const { user } = useContext(UserContext);
 
   return [
@@ -130,14 +132,4 @@ type Attendee = {
   name: string;
   userName: string;
   joinDate: string;
-}
-
-function useDeleteEventAttendeeMutation() {
-  const queryClient = useQueryClient();
-  const { communityId, eventId } = useParams();
-
-  return useMutation({
-    mutationFn: (id: number) => axios.delete(`/api/organizers/attendees/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', communityId, 'event', eventId, 'attendees'] }),
-  });
 }

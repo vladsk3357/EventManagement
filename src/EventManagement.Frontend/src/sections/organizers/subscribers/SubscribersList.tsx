@@ -1,13 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../api';
-import { DataGrid, GridActionsCellItem, GridColDef, type GridPaginationModel } from '@mui/x-data-grid';
-import EditIcon from '@mui/icons-material/Edit';
-import BlockIcon from '@mui/icons-material/Block';
+import { DataGrid, GridColDef, type GridPaginationModel } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ActionCellItemWithConfirmation } from "../common";
 import { type PagedList } from "../../common/types";
-import { Link as RouterLink } from 'react-router-dom';
 import { UserContext } from "../../../components/user";
 import { useContext } from "react";
 
