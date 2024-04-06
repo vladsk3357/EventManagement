@@ -26,7 +26,7 @@ const EditSpeakerButton = ({ speaker }: Props) => {
         Редагувати
       </Button>
       <FormPopup
-        title="Додати нового спікера"
+        title="Редагувати спікера"
         onClose={() => setShowModal(false)}
         isPending={isPending}
         show={showModal}
@@ -44,7 +44,7 @@ function useEditSpeaker(onSuccess?: () => void) {
   const { eventId } = useParams();
 
   return useMutation({
-    mutationFn: async (variables: AddSpeakerMutationVariables) => {
+    mutationFn: async (variables: EditSpeakerMutationVariables) => {
       const { data } = await axios.put(`/api/organizers/speakers/${variables.id}`, variables);
       return data;
     },
@@ -57,4 +57,4 @@ function useEditSpeaker(onSuccess?: () => void) {
   });
 }
 
-type AddSpeakerMutationVariables = Speaker;
+type EditSpeakerMutationVariables = Speaker;

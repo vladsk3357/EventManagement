@@ -5,5 +5,6 @@ public sealed record SessionDto(
     string Title,
     DateTime StartTime,
     DateTime EndTime,
-    TimeSpan Duration,
+    double Duration,
+    string Description,
     ICollection<GetSessionsSpeakerDto> Speakers);

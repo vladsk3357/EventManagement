@@ -13,7 +13,7 @@ internal sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.HasIndex(e => e.EventId);
 
         builder.HasMany(e => e.Speakers)
-            .WithMany()
+            .WithMany(s => s.Sessions)
             .UsingEntity(
                 l => l.HasOne(typeof(Speaker)).WithMany().OnDelete(DeleteBehavior.Restrict),
                 r => r.HasOne(typeof(Session)).WithMany().OnDelete(DeleteBehavior.Cascade));

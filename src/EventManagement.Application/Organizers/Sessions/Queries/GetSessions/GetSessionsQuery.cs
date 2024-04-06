@@ -30,6 +30,7 @@ internal sealed class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery
             ?? throw new NotFoundException(nameof(Event), request.EventId);
 
         var sessionsQuery = _context.Sessions
+            .Include(s => s.Speakers)
             .Where(s => s.EventId == request.EventId);
 
         sessionsQuery = request.Date is null

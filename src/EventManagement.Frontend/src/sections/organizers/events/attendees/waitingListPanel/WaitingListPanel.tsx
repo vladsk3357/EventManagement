@@ -3,13 +3,14 @@ import { DataGrid, GridActionsCellItem, GridColDef, GridPaginationModel } from "
 import { useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../../../api';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PagedList } from "../../../common";
+import { NoRowsOverlay } from "../../../common";
 import { useContext, useMemo } from "react";
 import { UserContext } from "../../../../../components/user";
 import { AttendeeStatus } from "../../common/types";
-import { NoRowsOverlay, useDeleteEventAttendeeMutation } from "../common";
+import { useDeleteEventAttendeeMutation } from "../common";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { PagedList } from "../../../../common/types";
 
 type Props = {
   value: string;

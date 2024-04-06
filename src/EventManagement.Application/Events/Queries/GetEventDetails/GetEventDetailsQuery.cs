@@ -26,6 +26,9 @@ internal sealed class GetEventDetailsQueryHandler : IRequestHandler<GetEventDeta
     {
         var @event = await _context.Events.Include(e => e.Community)
             .Include(e => e.Attendees)
+            .Include(e => e.Speakers)
+            .Include(e => e.Sessions)
+            .ThenInclude(s => s.Speakers)
             .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken) 
             ?? throw new NotFoundException(nameof(Event), request.Id);
 

@@ -2,7 +2,7 @@ import moment from "moment";
 import { axios } from '../../../../api';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { EventForm, FormInputs, VenueType } from "../common";
+import { EventForm, FormInputs, GetEventQueryResult, OfflineVenue, OnlineVenue, useGetEventQuery, VenueType } from "../common";
 import { Box, CircularProgress } from "@mui/material";
 
 const EditEventForm = () => {
@@ -26,40 +26,6 @@ const EditEventForm = () => {
 };
 
 export default EditEventForm;
-
-function useGetEventQuery(eventId: number) {
-  return useQuery({
-    queryKey: ['organizers', 'event', eventId],
-    queryFn: async () => {
-      const { data } = await axios.get<GetEventQueryResult>(`/api/organizers/events/${eventId}`);
-      return data;
-    }
-  });
-}
-
-type GetEventQueryResult = {
-  id: number;
-  name: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-  attendance: {
-    limit: number | null;
-    shouldBeApproved: boolean;
-  },
-  venue: OnlineVenue | OfflineVenue;
-  communityId: number;
-};
-
-type OnlineVenue = {
-  type: VenueType.Online;
-  url: string;
-};
-
-type OfflineVenue = {
-  type: VenueType.Offline;
-  location: string;
-};
 
 function queryResultToFormInputs(data: GetEventQueryResult): FormInputs {
   return {

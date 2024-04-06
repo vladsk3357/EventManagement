@@ -3,12 +3,13 @@ import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../../../api';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ActionCellItemWithConfirmation, PagedList } from "../../../common";
+import { ActionCellItemWithConfirmation } from "../../../common";
 import { useContext, useMemo } from "react";
 import { UserContext } from "../../../../../components/user";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AttendeeStatus } from "../../common/types";
 import { useDeleteEventAttendeeMutation } from "../common";
+import { PagedList } from "../../../../common/types";
 
 type Props = {
   value: string;

@@ -5,14 +5,16 @@ import { axios } from "../../../../api";
 import { useParams } from "react-router-dom";
 import { Speaker } from "../common/types";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Session } from "./types";
+import { LoadingButton } from "@mui/lab";
 
 type Props = {
-  speaker: Speaker;
+  session: Session;
 }
 
-const DeleteSpeakerButton = ({ speaker }: Props) => {
+const DeleteSessionButton = ({ session }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useDeleteSpeaker(() => setShowModal(false));
+  const { mutate, isPending } = useDeleteSession(() => setShowModal(false));
   return (
     <>
       <Button
@@ -27,10 +29,10 @@ const DeleteSpeakerButton = ({ speaker }: Props) => {
         open={showModal}
         onClose={() => setShowModal(false)}
       >
-        <DialogTitle>Видалити спікера</DialogTitle>
+        <DialogTitle>Видалити доповідь</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Ви впевнені, що хочете видалити спікера?
+            Ви впевнені, що хочете видалити доповідь?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -41,35 +43,36 @@ const DeleteSpeakerButton = ({ speaker }: Props) => {
           >
             Скасувати
           </Button>
-          <Button
+          <LoadingButton
             variant="contained"
             color="error"
             onClick={() => {
-              mutate(speaker.id);
+              mutate(session.id);
             }}
+            loading={isPending}
           >
             Видалити
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog >
     </>
   );
 };
 
-export default DeleteSpeakerButton;
+export default DeleteSessionButton;
 
-function useDeleteSpeaker(onSuccess?: () => void) {
+function useDeleteSession(onSuccess?: () => void) {
   const queryClient = useQueryClient();
   const { eventId } = useParams();
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const { data } = await axios.delete(`/api/organizers/speakers/${id}`);
+      const { data } = await axios.delete(`/api/organizers/sessions/${id}`);
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["organizers", "speakers", eventId],
+        queryKey: ["organizers", "sessions", eventId],
       });
       onSuccess && onSuccess();
     },

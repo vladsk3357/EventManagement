@@ -1,24 +1,24 @@
 import { Helmet } from 'react-helmet-async';
 import { Container, Stack, Typography } from '@mui/material';
-import { EventDetails } from '../../../sections/organizers/events';
+import { EventSchedule } from '../../../sections/organizers/events';
 
-const EventDetailsPage = () => {
+const EventSchedulePage = () => {
   return (
     <>
       <Helmet>
-        <title>Подія | Events</title>
+        <title>Розклад | Events</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Деталі
+            Розклад
           </Typography>
         </Stack>
-        <EventDetails />
+        <EventSchedule />
       </Container>
     </>
   );
 };
 
-export default EventDetailsPage;
+export default EventSchedulePage;

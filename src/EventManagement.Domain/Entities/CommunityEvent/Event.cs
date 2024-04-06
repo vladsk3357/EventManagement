@@ -27,4 +27,8 @@ public class Event : AuditableEntity
     public ICollection<Attendee> Attendees { get; set; } = [];
 
     public EventAttendanceForm AttendanceForm { get; set; } = default!;
+
+    public ICollection<Session> Sessions { get; set; } = [];
+
+    public ICollection<Speaker> Speakers { get; set; } = [];
 }
