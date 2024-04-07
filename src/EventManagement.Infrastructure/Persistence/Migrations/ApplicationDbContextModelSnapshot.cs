@@ -724,13 +724,13 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("SessionSpeaker", b =>
                 {
-                    b.Property<int>("SessionId")
+                    b.Property<int>("SessionsId")
                         .HasColumnType("int");
 
                     b.Property<int>("SpeakersId")
                         .HasColumnType("int");
 
-                    b.HasKey("SessionId", "SpeakersId");
+                    b.HasKey("SessionsId", "SpeakersId");
 
                     b.HasIndex("SpeakersId");
 
@@ -852,7 +852,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("EventManagement.Domain.Entities.Session", b =>
                 {
                     b.HasOne("EventManagement.Domain.Entities.CommunityEvent.Event", "Event")
-                        .WithMany()
+                        .WithMany("Sessions")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -863,7 +863,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("EventManagement.Domain.Entities.Speaker", b =>
                 {
                     b.HasOne("EventManagement.Domain.Entities.CommunityEvent.Event", "Event")
-                        .WithMany()
+                        .WithMany("Speakers")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -937,7 +937,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("EventManagement.Domain.Entities.Session", null)
                         .WithMany()
-                        .HasForeignKey("SessionId")
+                        .HasForeignKey("SessionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -964,6 +964,10 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Attendees");
+
+                    b.Navigation("Sessions");
+
+                    b.Navigation("Speakers");
                 });
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Form.Form", b =>

@@ -17,4 +17,6 @@ public class Speaker: AuditableEntity
     public int EventId { get; set; } = default!;
 
     public Event Event { get; set; } = default!;
+
+    public ICollection<Session> Sessions { get; set; } = [];
 }

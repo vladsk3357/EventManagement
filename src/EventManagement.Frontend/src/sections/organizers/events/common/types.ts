@@ -18,6 +18,16 @@ export const enum VenueType {
   Offline = 'Offline'
 }
 
+export type OnlineVenue = {
+  type: VenueType.Online;
+  url: string;
+};
+
+export type OfflineVenue = {
+  type: VenueType.Offline;
+  location: string;
+};
+
 export const enum AttendeeStatus {
   Pending = 0,
   Confirmed = 1,

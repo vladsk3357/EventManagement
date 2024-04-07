@@ -1,4 +1,5 @@
-﻿using EventManagement.Domain.Entities.CommunityEvent;
+﻿using EventManagement.Application.Common.Models.Event;
+using EventManagement.Domain.Entities.CommunityEvent;
 
 namespace EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 

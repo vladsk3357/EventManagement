@@ -15,8 +15,8 @@ const VenueFormGroup = () => {
           { id: '2', label: 'Офлайн', value: VenueType.Offline, },
         ]}
       />
-      {venueType === VenueType.Online && <TextFieldElement name="url" label="Посилання на подію" required placeholder="https://example.com" />}
-      {venueType === VenueType.Offline && <TextFieldElement name="location" label="Назва локаії" required />}
+      {venueType === VenueType.Online && <TextFieldElement type="url" name="url" label="Посилання на подію" required placeholder="https://example.com" />}
+      {venueType === VenueType.Offline && <TextFieldElement name="location" label="Назва локації" required />}
     </>
   );
 };

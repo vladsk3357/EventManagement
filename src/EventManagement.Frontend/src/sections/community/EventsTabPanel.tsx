@@ -7,6 +7,8 @@ import { PagedList } from "../common/types";
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Link as RouterLink } from 'react-router-dom';
+import { Venue } from "../event/types";
+import moment from "moment";
 
 type Props = {
   value: string;
@@ -22,21 +24,21 @@ const EventsTabPanel = ({ value }: Props) => {
   return (
     <TabPanel value={value}>
       <Box>
-        <Typography variant="h4" gutterBottom>Події</Typography>
+        <Typography variant="h3" gutterBottom>Події</Typography>
         {isFetched && (
           <>
             <Grid container gap={3}>
               {
                 data!.items.map(event => (
-                  <Grid item xs={6} key={event.id}>
+                  <Grid item xs={12} key={event.id}>
                     <Card>
                       <RouterLink to={`/community/${communityId}/${event.id}`}>
                         <CardActionArea sx={{ minHeight: 200 }} >
                           <CardContent>
                             <Typography variant="h6">{event.name}</Typography>
                             <Typography variant="body2">{event.attendeesCount} учасників йде</Typography>
-                            <Typography variant="body2"><EventIcon /> {new Date(event.startDate).toLocaleDateString('uk-UA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', weekday: 'short' })}</Typography>
-                            <Typography variant="body2"><LocationOnIcon /> {event.location}</Typography>
+                            <Typography variant="body2"><EventIcon /> {moment(event.startDate).format("LL")}</Typography>
+                            <Typography variant="body2"><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.location}</Typography>
                           </CardContent>
                         </CardActionArea>
                       </RouterLink>
@@ -77,7 +79,7 @@ type Event = {
   id: number;
   name: string;
   attendeesCount: number;
-  location: string;
+  venue: Venue;
   startDate: string;
 };
 

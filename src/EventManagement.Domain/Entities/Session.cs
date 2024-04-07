@@ -20,5 +20,5 @@ public class Session : AuditableEntity
 
     public Event Event { get; set; } = default!;
 
-    public ICollection<Speaker> Speakers { get; set; } = new List<Speaker>();
+    public ICollection<Speaker> Speakers { get; set; } = [];
 }

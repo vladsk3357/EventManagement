@@ -8,9 +8,8 @@ internal static class CreateSessionCommandMapper
     {
         Title = command.Title,
         StartTime = command.StartTime,
-        Duration = command.Duration,
+        Duration = TimeSpan.FromMinutes(command.Duration),
         Description = command.Description,
         EventId = command.EventId,
-        Speakers = command.SpeakerIds.Select(id => new Speaker { Id = id }).ToList()
     };
 }

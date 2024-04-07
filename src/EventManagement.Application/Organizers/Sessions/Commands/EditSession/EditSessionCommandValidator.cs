@@ -8,15 +8,13 @@ public sealed class EditSessionCommandValidator : AbstractValidator<EditSessionC
     {
         RuleFor(x => x.Id).NotEmpty();
 
-        RuleFor(x => x.EventId).NotEmpty();
-
         RuleFor(x => x.Title).NotEmpty();
 
         RuleFor(x => x.Description).NotEmpty();
 
         RuleFor(x => x.StartTime).NotEmpty();
 
-        RuleFor(x => x.Duration).NotEmpty();
+        RuleFor(x => x.Duration).NotEmpty().GreaterThan(0);
 
         RuleFor(x => x.SpeakerIds).NotEmpty();
 

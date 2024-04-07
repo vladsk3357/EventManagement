@@ -1,4 +1,4 @@
-﻿namespace EventManagement.Application.Organizers.Events;
+﻿namespace EventManagement.Application.Common.Models.Event;
 
 public abstract record EventVenueDto(string Type);
 

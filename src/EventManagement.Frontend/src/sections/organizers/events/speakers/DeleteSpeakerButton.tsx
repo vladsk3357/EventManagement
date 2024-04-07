@@ -1,7 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useState } from "react";
-import FormPopup from "./FormPopup";
-import { FormInputs } from "./types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from "../../../../api";
 import { useParams } from "react-router-dom";

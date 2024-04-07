@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using EventManagement.Application.Organizers.Events;
+using EventManagement.Application.Common.Models.Event;
 using EventManagement.Domain.Entities.CommunityEvent;
 
 namespace EventManagement.WebApi.Converters;

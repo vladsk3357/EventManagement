@@ -19,7 +19,7 @@ public sealed class CreateSessionCommandValidator : AbstractValidator<CreateSess
 
         RuleFor(x => x.StartTime).NotEmpty();
 
-        RuleFor(x => x.Duration).NotEmpty();
+        RuleFor(x => x.Duration).NotEmpty().GreaterThan(0);
 
         RuleFor(x => x.SpeakerIds).NotEmpty();
 

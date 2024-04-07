@@ -87,8 +87,8 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
         </Grid>
         <Grid item xs={12} md={6} mb={2}>
           <Stack spacing={3} direction="row">
-            <DateTimePickerElement name="startDate" label="Дата початку" required />
-            <DateTimePickerElement name="endDate" label="Дата закінчення" required />
+            <DateTimePickerElement name="startDate" label="Дата початку" required ampm={false} />
+            <DateTimePickerElement name="endDate" label="Дата закінчення" required ampm={false} />
           </Stack>
         </Grid>
         <Grid item xs={12} mb={2}>

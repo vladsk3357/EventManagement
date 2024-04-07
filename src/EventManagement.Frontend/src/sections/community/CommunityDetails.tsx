@@ -29,7 +29,7 @@ const CommunityDetails = () => {
         <Grid container>
           <Grid item xs={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }}>
-              <Typography variant="h4">
+              <Typography variant="h2">
                 {data?.name}
               </Typography>
             </Stack>

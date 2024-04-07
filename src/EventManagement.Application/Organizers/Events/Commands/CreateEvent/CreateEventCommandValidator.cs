@@ -1,4 +1,5 @@
 ﻿using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Organizers.Events.Common;
 using FluentValidation;
 
