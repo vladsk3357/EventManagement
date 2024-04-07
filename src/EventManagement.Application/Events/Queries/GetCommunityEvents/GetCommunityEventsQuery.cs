@@ -1,4 +1,5 @@
 ﻿using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Pagination;
 using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
@@ -39,7 +40,7 @@ internal sealed class GetCommunityEventsQueryHandler : IRequestHandler<GetCommun
              e.Name,
              e.Attendees.Count,
              e.StartDate,
-             ((OnlineEventVenue)e.Venue).Url));
+             e.Venue.ToDto()));
 
         return await PagedList<GetCommunityEventsEventDto>.CreateAsync(dtos, request.Page, request.PageSize);
     }

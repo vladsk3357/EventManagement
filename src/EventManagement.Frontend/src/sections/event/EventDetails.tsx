@@ -1,12 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { useParams } from "react-router-dom";
-import { Container, Stack, Avatar, Grid, Typography, Box, Button, Tab, Tabs, Link, Skeleton, Card, CardHeader, CardContent } from "@mui/material";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Container, Stack, Grid, Typography, Box, Link, Skeleton, Card, CardContent, Paper } from "@mui/material";
 import AttendEventButton from "./AttendEventButton";
 import UnattendEventButton from "./UnattendEventButton";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import moment from "moment";
+import { AttendeeStatus, Schedule, Speaker, Venue } from "./types";
+import InformationPanel from "./InformationPanel";
+import { DescriptionSection, SchedulesSection, SpeakersSection } from "./sections";
 
 const EventDetails = () => {
   const { eventId: eventIdParam } = useParams();
@@ -19,108 +23,49 @@ const EventDetails = () => {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Avatar alt="photoURL" sx={{ width: 120, height: 120, mr: 2 }} />
-
-        <Grid container>
-          <Grid item xs={8}>
-            <Stack direction="row" sx={{ pt: 1, mb: 3 }}>
-              <Typography variant="h4">
-                {isLoading ? <Skeleton /> : data?.name}
-              </Typography>
+        {/* <Avatar alt="photoURL" sx={{ width: 120, height: 120, mr: 2 }} /> */}
+        <Grid container spacing={3}>
+          <Grid item xs={12} xl={8}>
+            <Stack direction="row" sx={{ pt: 1, mb: 3 }} spacing={2}>
+              <Box bgcolor="Background" textAlign="center" p={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="h2" color="ButtonText">
+                  {data.startDate.format("D MMM")}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="h2">{data.name}</Typography>
+              </Box>
             </Stack>
-            <Stack direction="row">
-              <LocationOnIcon />
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                {isLoading ? <Skeleton /> : data?.location}
-              </Typography>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                &#8226;
-              </Typography>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                {isLoading ? <Skeleton /> : `${data?.attendeesCount} учасників`}
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={4} sx={{ textAlign: 'right' }}>
-            <Box mb={3}>
-              {data && data.isAttendable && (data.isAttending ? (
-                <UnattendEventButton eventId={eventId} />
-              ) : (
-                <AttendEventButton eventId={eventId} isOrganizer={data.isAttending} />
-              ))}
+            <Box>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+              </Box>
+              <DescriptionSection description={data.description} />
+              {data.schedules.length > 0 && <SchedulesSection schedules={data.schedules} />}
+              {data.speakers.length > 0 && <SpeakersSection speakers={data.speakers} />}
             </Box>
           </Grid>
-          <Grid item xs={6}>
-            <Typography variant="h6">Дата початку: {data && data.startDate.format("LL")}</Typography>
-            <Typography variant="h6">Дата закінчення: {data && data.endDate.format("LL")}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="caption">Створено</Typography>
-            <Typography variant="h6">{data?.community.name}</Typography>
+          <Grid item xs={12} xl={4}>
+            <InformationPanel
+              startDate={data.startDate}
+              endDate={data.endDate}
+              attendanceCountLeft={data.attendanceCountLeft}
+              attendeeStatus={data.attendeeStatus}
+              eventId={eventId}
+              isOrganizer={data.isOrganizer}
+              venue={data.venue}
+              isAttendable={data.isAttendable}
+            />
+            <Box>
+              <Card>
+                <CardContent sx={{ p: 2 }}>
+                  <Typography variant="caption">ОРГАНІЗОВАНО</Typography>
+                  <Typography variant="subtitle2">{data.community.name}</Typography>
+                </CardContent>
+              </Card>
+            </Box>
           </Grid>
         </Grid>
       </Stack>
-      <Box>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-          {/* <Link href="#description"><Typography variant="body1" >Опис</Typography></Link>
-          <Link href="#schedule">Програма</Link>
-          <Link href="#speakers">Спікери</Link> */}
-          {/* <Tabs>
-            <Tab label="Опис" />
-            <Tab label="Програма" />
-          </Tabs> */}
-        </Box>
-        <Box mb={5}>
-          <Typography id="description" variant="h3" gutterBottom>Опис</Typography>
-          {data?.description && <div dangerouslySetInnerHTML={{ __html: data.description }}></div>}
-        </Box>
-        <Box mb={5}>
-          <Typography id="schedule" variant="h3" gutterBottom>Програма</Typography>
-          {data?.schedules.map(schedule => (
-            <Box key={schedule.date.toISOString(true)} mb={3}>
-              <Typography variant="h5" gutterBottom>{schedule.date.format("LL")}</Typography>
-              {schedule.sessions.map(session => (
-                <Card key={session.id} sx={{ mb: 2 }}>
-                  <CardContent>
-                    <Typography variant="body2">{session.startTime.format("LT")} - {session.endTime.format("LT")}</Typography>
-                    <Typography variant="subtitle1" gutterBottom>{session.title}</Typography>
-                    <Typography variant="body2">{session.speakers.map(speaker => speaker.name).join(', ')}</Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </Box>
-          ))}
-        </Box>
-        <Box mb={5}>
-          <Typography id="speakers" variant="h3" gutterBottom>Спікери</Typography>
-          <Grid container spacing={2}>
-            {/* {data?.speakers.map(speaker => (
-              <Grid key={speaker.id} item xs={12} sm={6} md={4} lg={3}>
-                <Card>
-                  <CardHeader
-                    avatar={<Avatar />}
-                    title={speaker.name}
-                    subheader={`${speaker.title}, ${speaker.company}`}
-                  />
-                  <CardContent>
-                    {speaker.bio}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))} */}
-            {data?.speakers.map(speaker => (
-              <Grid key={speaker.id} item xs={12} sm={6}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="subtitle1" gutterBottom>{speaker.name}</Typography>
-                    <Typography variant="body2">{speaker.title}, {speaker.company}</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Box>
     </Container>
   );
 };
@@ -143,8 +88,28 @@ function useEventDetails(eventId: number) {
           endTime: moment(ses.endTime),
         })),
       })),
-    })
+    } as EventDetails)
   })
+}
+
+type EventDetails = {
+  id: number;
+  name: string;
+  description: string;
+  startDate: moment.Moment;
+  endDate: moment.Moment;
+  venue: Venue;
+  attendeesCount: number;
+  attendeeStatus: AttendeeStatus | null;
+  isOrganizer: boolean;
+  attendanceCountLeft: number | null;
+  isAttendable: boolean;
+  community: {
+    id: number;
+    name: string;
+  }
+  schedules: Schedule[];
+  speakers: Speaker[];
 }
 
 export type EventDetailsQueryResultType = {
@@ -153,11 +118,12 @@ export type EventDetailsQueryResultType = {
   description: string;
   startDate: string;
   endDate: string;
-  location: string;
+  venue: Venue;
   attendeesCount: number;
-  isAttendable: boolean;
-  isAttending: boolean;
+  attendeeStatus: AttendeeStatus | null;
   isOrganizer: boolean;
+  isAttendable: boolean;
+  attendanceCountLeft: number | null;
   community: {
     id: number;
     name: string;

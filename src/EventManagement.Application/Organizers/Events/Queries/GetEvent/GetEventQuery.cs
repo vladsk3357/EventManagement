@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
@@ -47,15 +48,7 @@ internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
             @event.StartDate,
             @event.EndDate,
             new AttendanceDto(@event.Attendance.Limit, @event.Attendance.ShouldBeApproved),
-            MapEventVenue(@event.Venue),
+            @event.Venue.ToDto(),
             @event.CommunityId);
     }
-
-    private static EventVenueDto MapEventVenue(EventVenueBase venue) 
-        => venue switch
-        {
-            OnlineEventVenue onlineVenue => new OnlineEventVenueDto(EventVenueTypes.Online, onlineVenue.Url),
-            OfflineEventVenue offlineVenue => new OfflineEventVenueDto(EventVenueTypes.Offline, offlineVenue.Location),
-            _ => throw new NotSupportedException(),
-        };
 }

@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities;
 using MediatR;

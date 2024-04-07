@@ -1,7 +1,7 @@
 ﻿using EventManagement.Domain.Entities.CommunityEvent;
 using FluentValidation;
 
-namespace EventManagement.Application.Organizers.Events.Common;
+namespace EventManagement.Application.Common.Models.Event;
 
 internal class EventVenueDtoValidator<T> : AbstractValidator<T> where T : EventVenueDto
 {

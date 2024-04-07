@@ -7,7 +7,6 @@ import { axios } from "../../../../api";
 import { useParams } from "react-router-dom";
 import { Speaker } from "../common/types";
 import moment from "moment";
-import { minutesToTimeSpanString } from "./utilities";
 
 
 type Props = {

@@ -1,11 +1,12 @@
-﻿using EventManagement.Domain.Entities;
+﻿using EventManagement.Application.Common.Models.Event;
+using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.CommunityEvent;
 
 namespace EventManagement.Application.Events.Queries.GetEventDetails;
 
 internal static class GetEventDetailsMapper
 {
-    public static GetEventDetailsDto ToDto(this Event entity, int attendeesCount, bool isAttendable, bool isAttending, bool isOrganizer)
+    public static GetEventDetailsDto ToDto(this Event entity, int attendeesCount, bool isAttendable, AttendeeStatus? attendeeStatus, bool isOrganizer)
     {
         return new GetEventDetailsDto(
             entity.Id,
@@ -13,11 +14,12 @@ internal static class GetEventDetailsMapper
             entity.Description,
             entity.StartDate,
             entity.EndDate,
-            ((OnlineEventVenue)entity.Venue).Url,
+            entity.Venue.ToDto(),
             attendeesCount,
             isAttendable,
-            isAttending,
+            attendeeStatus,
             isOrganizer,
+            entity.Attendance.Limit is not null ? entity.Attendance.Limit - attendeesCount : null,
             new GetEventDetailsCommunityDto(entity.Community.Id, entity.Community.Name),
             entity.Sessions.ToScheduleDtos().ToList(),
             entity.Speakers.Select(s => s.ToDto()).ToList());
