@@ -1,12 +1,14 @@
 import { axios } from '../../../../api';
 import { useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { EventForm, FormInputs, VenueType } from "../common";
 
 const CreateEventForm = () => {
   const { communityId: communityIdParam } = useParams();
   const communityId = Number(communityIdParam);
-  const { mutate, isPending } = useCreateEventMutation(communityId);
+  const navigate = useNavigate();
+  const { mutate, isPending } = useCreateEventMutation(communityId,
+    () => navigate(`/organizers/${communityId}/events/list`));
 
   const onSubmit = (data: FormInputs) => {
     const variables = createMutationVariables(data, communityId);
@@ -60,9 +62,12 @@ type OfflineVenue = {
   location: string;
 };
 
-function useCreateEventMutation(communityId: number) {
+function useCreateEventMutation(communityId: number, onSuccess?: () => void) {
   return useMutation<CreateEventMutationResult, CreateEventMutationError, CreateEventMutationVariables>({
     mutationFn: variables => axios.post<CreateEventMutationResult>(`/api/organizers/communities/${communityId}/events`, variables).then(res => res.data),
+    onSuccess: () => {
+      onSuccess && onSuccess();
+    }
   });
 }
 

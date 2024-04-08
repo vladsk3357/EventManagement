@@ -1,4 +1,4 @@
-import { CheckboxButtonGroup, RadioButtonGroup, SwitchElement, TextFieldElement, useWatch } from "react-hook-form-mui";
+import { RadioButtonGroup, SwitchElement, TextFieldElement, useWatch } from "react-hook-form-mui";
 
 const AttendanceFormGroup = () => {
   const limit = useWatch({ name: 'limit' });
@@ -14,7 +14,7 @@ const AttendanceFormGroup = () => {
           { id: '2', label: 'Максимальна кількість учасників', value: 'limited' },
         ]}
       />
-      {limit === 'limited' && <TextFieldElement name="limitNumber" label="Осіб" required />}
+      {limit === 'limited' && <TextFieldElement type="number" name="limitNumber" label="Осіб" required />}
       <SwitchElement
         name="shouldBeApproved"
         label="Підтвердження участі"

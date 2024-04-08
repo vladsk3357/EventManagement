@@ -28,6 +28,7 @@ import EventDetailsPage from './pages/organizers/events/EventDetailsPage';
 import EventAttendeesListPage from './pages/organizers/events/EventAttendeesListPage';
 import EventSpeakersListPage from './pages/organizers/events/EventSpeakersListPage';
 import EventSchedulePage from './pages/organizers/events/EventSchedulePage';
+import MyEventsPage from './pages/myEvents/MyEventsPage';
 
 
 // ----------------------------------------------------------------------
@@ -40,6 +41,7 @@ export default function Router() {
       children: [
         { element: <HomePage />, index: true },
         { path: 'my-communities', element: <MyCommunitiesPage /> },
+        { path: 'my-events', element: <MyEventsPage /> },
       ],
     },
     {

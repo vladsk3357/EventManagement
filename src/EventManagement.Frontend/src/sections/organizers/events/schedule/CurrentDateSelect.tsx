@@ -43,9 +43,9 @@ const getDateRange = (firstDate: string, lastDate: string) => {
   const dates = [moment(date)];
   date = moment(date).set({ h: 0, m: 0 }).add(1, 'day');
 
-  while (date.isBefore(lastDate, 'day')) {
+  do {
     dates.push(date);
     date = moment(date).add(1, 'day');
-  }
+  } while (date.isBefore(lastDate, 'day'));
   return dates;
 };

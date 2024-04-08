@@ -24,7 +24,6 @@ internal sealed class GetMyCommunitiesQueryHandler : IRequestHandler<GetMyCommun
             .ThenInclude(c => c.Subscriptions)
             .Where(s => s.UserId == _currentUserAccessor.UserId)
             .Select(s => new GetMyCommunitiesDto(s.Community.Id, s.Community.Name, s.Community.Subscriptions.Count, s.Community.OrganizerId == _currentUserAccessor.UserId))
-            //.OrderBy(c => c.IsOwner)
             .ToListAsync(cancellationToken);
 
         return new NonPagedList<GetMyCommunitiesDto>(communities);

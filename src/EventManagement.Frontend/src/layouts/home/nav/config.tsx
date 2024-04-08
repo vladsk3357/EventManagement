@@ -1,8 +1,6 @@
 import PeopleIcon from '@mui/icons-material/People';
-// component
+import EventIcon from '@mui/icons-material/Event';
 import SvgColor from '../../../components/svg-color';
-
-// ----------------------------------------------------------------------
 
 const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
@@ -23,6 +21,11 @@ const navConfig: NavItem[] = [
     title: 'Мої спільноти',
     path: '/my-communities',
     icon: <PeopleIcon />,
+  },
+  {
+    title: 'Мої події',
+    path: '/my-events',
+    icon: <EventIcon />,
   },
 ];
 
