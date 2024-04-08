@@ -23,6 +23,7 @@ type UserContextType = {
   setTokens: (tokens: Tokens) => void;
   remove: () => void;
   requestUser: () => void;
+  tokens: Tokens | null;
 };
 
 export default createContext<UserContextType>({} as UserContextType);

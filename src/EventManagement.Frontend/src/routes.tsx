@@ -112,6 +112,14 @@ export default function Router() {
     // },
 
     {
+      path: 'profile',
+      element: <DefaultLayout />,
+      children: [
+        { element: <UserDetailsPage />, index: true },
+      ],
+    },
+
+    {
       path: '*',
       element: <Page404 />,
     },

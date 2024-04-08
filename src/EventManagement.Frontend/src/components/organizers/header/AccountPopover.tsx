@@ -77,6 +77,15 @@ export default function AccountPopover() {
           }
         }}
       >
+        <Box sx={{ my: 1.5, px: 2.5 }}>
+          <Typography variant="subtitle2" noWrap>
+            {user?.name}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {user?.email}
+          </Typography>
+        </Box>
+
         <Stack sx={{ p: 1 }}>
           <Link component={RouterLink} to="/profile" variant="body2" sx={{ textDecoration: 'none', color: 'inherit' }}>
             <MenuItem>

@@ -1,6 +1,6 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // components
@@ -10,6 +10,7 @@ import AccountPopover from './AccountPopover';
 import { MouseEventHandler } from 'react';
 import ShowOnEventsButton from './ShowOnEventsButton';
 import CommunitiesDropdown from './CommunitiesDropdown';
+import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +58,10 @@ export default function Header({ onOpenNav }: Props) {
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
-        <CommunitiesDropdown />
+        <Stack direction="row" spacing={3}>
+          <Link to="/"><Typography variant='h3'>Events</Typography></Link>
+          <CommunitiesDropdown />
+        </Stack>
         <Box sx={{ flexGrow: 1 }} />
         <Stack
           direction="row"

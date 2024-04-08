@@ -10,14 +10,42 @@ type Props = {
 
 const UserContextProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null>(null);
+  const [tokens, setTokens] = useState<Tokens | null>(() => {
+    if (!localStorage.getItem(ACCESS_TOKEN) || !localStorage.getItem(REFRESH_TOKEN))
+      return null;
+
+    return {
+      accessToken: localStorage.getItem(ACCESS_TOKEN)!,
+      refreshToken: localStorage.getItem(REFRESH_TOKEN)!,
+    };
+  });
 
   const { data, isSuccess, refetch, isFetching } = useQuery({
     queryKey: ['shortInfo'],
-    queryFn: () => {
-      return axios.get<GetProfileShortInfoQueryResult>('/api/profileinfo/short').then(res => res.data);
+    queryFn: async () => {
+      const res = await axios.get<GetProfileShortInfoQueryResult>('/api/profileinfo/short');
+      return res.data;
     },
     enabled: false
   });
+
+  useEffect(() => {
+    if (tokens) {
+      localStorage.setItem(ACCESS_TOKEN, tokens.accessToken);
+      localStorage.setItem(REFRESH_TOKEN, tokens.refreshToken);
+    } else {
+      localStorage.removeItem(ACCESS_TOKEN);
+      localStorage.removeItem(REFRESH_TOKEN);
+    }
+  }, [tokens]);
+
+  useEffect(() => {
+    if (tokens) {
+      refetch();
+    } else {
+      setUser(null);
+    }
+  }, [tokens]);
 
   useEffect(() => {
     if (isSuccess)
@@ -27,17 +55,16 @@ const UserContextProvider = ({ children }: Props) => {
   const context = {
     user,
     isFetching,
+    tokens,
     setUser: (user: User) => {
       setUser(user);
     },
-    setTokens: ({ accessToken, refreshToken }: Tokens) => {
-      localStorage.setItem(ACCESS_TOKEN, accessToken);
-      localStorage.setItem(REFRESH_TOKEN, refreshToken);
+    setTokens: (tokens: Tokens) => {
+      setTokens(tokens);
     },
     remove: () => {
-      localStorage.removeItem(ACCESS_TOKEN);
-      localStorage.removeItem(REFRESH_TOKEN);
-      setUser(null);
+      setTokens(null);
+      // setUser(null);
     },
     requestUser: () => refetch(),
   }
