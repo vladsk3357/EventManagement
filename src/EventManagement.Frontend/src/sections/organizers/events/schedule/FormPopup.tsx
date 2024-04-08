@@ -53,7 +53,7 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit, s
             <Grid item xs={12}>
               <TextFieldElement
                 name="title"
-                label="Посада"
+                label="Назва"
                 required
                 fullWidth
               />
@@ -65,10 +65,9 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit, s
                 label="Початок"
                 required
                 ampm={false}
-                // minTime={startDate}
-                // maxTime={endDate}
+                minTime={startDate}
+                maxTime={endDate}
                 disableIgnoringDatePartForTimeValidation
-                shouldDisableTime={(time: moment.Moment) => !time.isBetween(startDate, endDate)}
               />
             </Grid>
             <Grid item xs={6}>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EventManagement.Application.Organizers.Sessions.Queries.GetSessions;
 
 [Authorize]
-public sealed record GetSessionsQuery(int EventId, DateTime? Date) : IRequest<GetSessionsResult>;
+public sealed record GetSessionsQuery(int EventId) : IRequest<GetSessionsResult>;
 
 internal sealed class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery, GetSessionsResult>
 {
@@ -32,10 +32,6 @@ internal sealed class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery
         var sessionsQuery = _context.Sessions
             .Include(s => s.Speakers)
             .Where(s => s.EventId == request.EventId);
-
-        sessionsQuery = request.Date is null
-            ? sessionsQuery.Where(s => s.StartTime.Date == @event.StartDate.Date)
-            : sessionsQuery.Where(s => s.StartTime.Date == request.Date.Value.Date);
 
         var sessionDtos = await sessionsQuery
             .OrderBy(s => s.StartTime)

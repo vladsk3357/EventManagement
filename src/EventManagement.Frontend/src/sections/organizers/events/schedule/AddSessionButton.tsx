@@ -48,7 +48,7 @@ const AddSessionButton = ({ speakers, date, endDate, startDate }: Props) => {
         Додати доповідь
       </Button>
       <FormPopup
-        title="Додати нового спікера"
+        title="Додати нову доповідь"
         onClose={() => setShowModal(false)}
         isPending={isPending}
         show={showModal}

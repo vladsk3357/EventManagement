@@ -50,6 +50,6 @@ public sealed class EventsController : OrganizersApiControllerBase
     [HttpGet("{eventId}/sessions")]
     public async Task<GetSessionsResult> GetSessions(int eventId)
     {
-        return await Mediator.Send(new GetSessionsQuery(eventId, null));
+        return await Mediator.Send(new GetSessionsQuery(eventId));
     }
 }

@@ -1,24 +1,24 @@
 import { Container, Stack, Typography } from "@mui/material";
 import { Helmet } from "react-helmet-async";
-import { MyCommunitiesList } from "../../sections/myCommunities";
+import MyEventsList from "../../sections/myEvents";
 
-const MyCommunitiesPage = () => {
+const MyEventsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Мої спільноти | Events</title>
+        <title>Мої події | Events</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h3" gutterBottom>
-            Мої спільноти
+            Мої події
           </Typography>
         </Stack>
-        <MyCommunitiesList />
+        <MyEventsList />
       </Container>
     </>
   );
 };
 
-export default MyCommunitiesPage;
+export default MyEventsPage;
