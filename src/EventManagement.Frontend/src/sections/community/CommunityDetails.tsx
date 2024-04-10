@@ -46,8 +46,8 @@ const CommunityDetails = () => {
               </Typography>
             </Stack>
           </Grid>
-          <Grid item xs={4} sx={{ textAlign: 'right' }}>
-            <Box mb={3}>
+          <Grid item xs={4} >
+            <Box mb={3} sx={{ display: 'flex', justifyContent: 'end' }}>
               {data && (data.isOrganizer ? (
                 <CommunityOrganizerButtons communityId={communityId} />
               ) : data.isSubscribed ? (

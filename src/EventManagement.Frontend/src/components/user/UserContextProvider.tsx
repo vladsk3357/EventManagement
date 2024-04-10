@@ -21,7 +21,7 @@ const UserContextProvider = ({ children }: Props) => {
   });
 
   const { data, isSuccess, refetch, isFetching } = useQuery({
-    queryKey: ['shortInfo'],
+    queryKey: ['user', 'shortInfo'],
     queryFn: async () => {
       const res = await axios.get<GetProfileShortInfoQueryResult>('/api/profileinfo/short');
       return res.data;
