@@ -68,7 +68,7 @@ export default function AccountPopover() {
               p: 0,
               mt: 1.5,
               ml: 0.75,
-              width: 180,
+              width: 250,
               '& .MuiMenuItem-root': {
                 typography: 'body2',
                 borderRadius: 0.75,
@@ -89,14 +89,14 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {/* {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
-          </MenuItem>
-          ))} */}
           <Link component={RouterLink} to="/profile" variant="body2" sx={{ textDecoration: 'none', color: 'inherit' }}>
             <MenuItem>
               Профіль
+            </MenuItem>
+          </Link>
+          <Link component={RouterLink} to="/organizers" variant="body2" sx={{ textDecoration: 'none', color: 'inherit' }}>
+            <MenuItem>
+              Мої спільноти
             </MenuItem>
           </Link>
           <MenuItem onClick={() => remove()}>

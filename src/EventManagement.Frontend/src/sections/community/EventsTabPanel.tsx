@@ -1,5 +1,5 @@
 import { TabPanel } from "@mui/lab";
-import { Box, Card, CardActionArea, CardContent, Grid, Pagination, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, CircularProgress, Grid, Pagination, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { useParams, useSearchParams } from "react-router-dom";
@@ -25,6 +25,7 @@ const EventsTabPanel = ({ value }: Props) => {
     <TabPanel value={value}>
       <Box>
         <Typography variant="h3" gutterBottom>Події</Typography>
+        {isLoading && <CircularProgress />}
         {isFetched && (
           <>
             <Grid container gap={3}>

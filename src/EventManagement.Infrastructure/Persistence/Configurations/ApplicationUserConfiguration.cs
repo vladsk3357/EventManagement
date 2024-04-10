@@ -16,9 +16,6 @@ internal sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Ap
         builder.Property(e => e.Location)
             .HasMaxLength(200);
 
-        builder.Property(e => e.Language)
-            .HasMaxLength(200);
-
         builder.Property(e => e.Information)
             .HasMaxLength(1000);
     }

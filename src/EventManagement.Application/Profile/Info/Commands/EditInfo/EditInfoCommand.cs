@@ -5,24 +5,19 @@ namespace EventManagement.Application.Profile.Info.Commands.EditInfo;
 
 public sealed record EditInfoCommand(
     string UserName,
-    string PhoneNumber,
     string Name,
-    DateOnly Birthday,
     string Location,
-    string Information,
-    string Email) : IRequest<EditInfoResult>;
+    string Information) : IRequest<EditInfoResult>;
 
 internal sealed class EditInfoCommandHandler : IRequestHandler<EditInfoCommand, EditInfoResult>
 {
     private readonly ICurrentUserAccessor _currentUserAccessor;
     private readonly IUserService _userService;
-    private readonly IApplicationDbContext _context;
 
-    public EditInfoCommandHandler(ICurrentUserAccessor currentUserAccessor, IUserService userService, IApplicationDbContext context)
+    public EditInfoCommandHandler(ICurrentUserAccessor currentUserAccessor, IUserService userService)
     {
         _currentUserAccessor = currentUserAccessor;
         _userService = userService;
-        _context = context;
     }
 
     public async Task<EditInfoResult> Handle(EditInfoCommand request, CancellationToken cancellationToken)
