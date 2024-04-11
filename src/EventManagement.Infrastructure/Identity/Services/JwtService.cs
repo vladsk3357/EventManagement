@@ -4,7 +4,7 @@ using System.Text;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Entities;
-using EventManagement.Infrastructure.Identity.Options;
+using EventManagement.Infrastructure.Identity.Options.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

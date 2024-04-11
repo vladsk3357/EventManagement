@@ -1,10 +1,8 @@
 using EventManagement.Application;
 using EventManagement.Application.Common.Interfaces;
-using EventManagement.Application.Organizers.Events;
 using EventManagement.Infrastructure;
 using EventManagement.WebApi.Converters;
 using EventManagement.WebApi.Filters;
-using EventManagement.WebApi.GraphApi;
 using EventManagement.WebApi.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -41,8 +39,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<ILinksService, LinksService>();
 
-builder.Services.AddGraphApi();
-
 var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -50,11 +46,9 @@ app.UseStaticFiles();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-//app.UseAuthorization();
-app.UseGraphQL();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseGraphQLAltair();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

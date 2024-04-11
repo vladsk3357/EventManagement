@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace EventManagement.Infrastructure.Identity.Options;
+namespace EventManagement.Infrastructure.Identity.Options.Jwt;
 
 internal class JwtOptionsSetup : IConfigureOptions<JwtOptions>
 {

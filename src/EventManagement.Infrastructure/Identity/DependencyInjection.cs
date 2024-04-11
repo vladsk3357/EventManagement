@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using EventManagement.Application.Common.Interfaces;
-using EventManagement.Infrastructure.Identity.Options;
+using EventManagement.Infrastructure.Identity.Options.Jwt;
 using EventManagement.Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -15,17 +15,10 @@ internal static class DependencyInjection
 {
     public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.ConfigureOptions<IdentityOptionsSetup>();
         services.ConfigureOptions<JwtOptionsSetup>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<IJwtService, JwtService>();
-
-        //services.AddSingleton((serviceProvider) =>
-        //{
-        //    var identityOptions = serviceProvider.GetRequiredService<IOptions<Options.IdentityOptions>>();
-        //    return new FirebaseIdentityProvider(identityOptions.Value);
-        //});
 
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
