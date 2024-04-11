@@ -6,6 +6,7 @@ using EventManagement.WebApi.Filters;
 using EventManagement.WebApi.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -40,6 +41,13 @@ builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<ILinksService, LinksService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+    await dataContext.Database.MigrateAsync();
+}
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
