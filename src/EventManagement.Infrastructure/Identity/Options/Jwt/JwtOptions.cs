@@ -1,4 +1,4 @@
-﻿namespace EventManagement.Infrastructure.Identity.Options;
+﻿namespace EventManagement.Infrastructure.Identity.Options.Jwt;
 
 internal sealed class JwtOptions
 {
