@@ -74,7 +74,7 @@ export default function Router() {
         { path: 'dashboard', element: <CommunityDashboardPage />, },
         {
           path: 'events', children: [
-            { path: 'list', element: <CommunityEventsPage /> },
+            { path: 'list/*', element: <CommunityEventsPage /> },
             { path: ':eventId/details', element: <EventDetailsPage /> },
             { path: ':eventId/attendees/*', element: <EventAttendeesListPage /> },
             { path: ':eventId/speakers', element: <EventSpeakersListPage /> },
@@ -96,21 +96,6 @@ export default function Router() {
         { path: ':eventId', element: <EventPage /> },
       ],
     },
-
-    // {
-    //   path: 'create',
-    //   element: <DefaultLayout />,
-    //   children: [
-    //   ],
-    // },
-    // {
-    //   path: ':username',
-    //   element: <DefaultLayout />,
-    //   children: [
-    //     { element: <UserDetailsPage />, index: true },
-    //   ],
-    // },
-
     {
       path: 'profile',
       element: <DefaultLayout />,

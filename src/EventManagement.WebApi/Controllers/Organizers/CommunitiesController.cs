@@ -10,6 +10,7 @@ using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.
 using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.GetCommunitySubscriptionFormAnswers;
 using EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 using EventManagement.Application.Organizers.Events.Queries.GetEvents;
+using EventManagement.Application.Organizers.Forms.Queries.GetAllForms;
 using EventManagement.Application.Organizers.Subscribers.Queries.GetSubscribers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,9 +65,9 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     }
 
     [HttpGet("{communityId}/events")]
-    public async Task<PagedList<GetEventsEventDto>> GetEventsAsync(int communityId, string? q, string? sortBy, string? sortOrder, int page, int pageSize)
+    public async Task<PagedList<EventDto>> GetEventsAsync(int communityId, string? q, bool isPast, int page, int pageSize)
     {
-        return await Mediator.Send(new GetEventsQuery(communityId, q, sortBy, sortOrder, page, pageSize));
+        return await Mediator.Send(new GetEventsQuery(communityId, q, isPast, page, pageSize));
     }
 
     [HttpGet("{communityId}/subscribers")]
@@ -101,5 +102,11 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     public async Task<GetCommunitySubscriptionFormAnswerDetailsDto> GetSubscriptionFormAnswerDetailsAsync(int communityId, int answerId)
     {
         return await Mediator.Send(new GetCommunitySubscriptionFormAnswerDetailsQuery(communityId, answerId));
+    }
+
+    [HttpGet("{communityId}/all-forms")]
+    public async Task<NonPagedList<FormDto>> GetAllFormsAsync(int communityId)
+    {
+        return await Mediator.Send(new GetAllFormsQuery(communityId));
     }
 }
