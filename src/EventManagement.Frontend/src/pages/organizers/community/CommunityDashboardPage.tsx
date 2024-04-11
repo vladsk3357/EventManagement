@@ -1,5 +1,6 @@
-import { Container, Stack, Typography } from "@mui/material";
+import { Container, Stack, Typography, Box } from "@mui/material";
 import { Helmet } from "react-helmet-async";
+import Dashboard from "../../../sections/organizers/dashboard";
 
 const CommunityDashboardPage = () => {
 
@@ -15,6 +16,7 @@ const CommunityDashboardPage = () => {
             Дашборд
           </Typography>
         </Stack>
+        <Dashboard />
       </Container>
     </>
   );

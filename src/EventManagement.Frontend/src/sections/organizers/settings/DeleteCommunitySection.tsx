@@ -50,9 +50,10 @@ const DeleteCommunitySection = ({ communityId }: Props) => {
             </Button>
             <LoadingButton
               loading={isPending}
-              onClick={mutate}
+              onClick={() => mutate()}
               variant="contained"
               color="error"
+              size="large"
             >
               Видалити
             </LoadingButton>

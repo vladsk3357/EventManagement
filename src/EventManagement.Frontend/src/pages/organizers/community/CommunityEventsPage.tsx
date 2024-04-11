@@ -1,6 +1,6 @@
 import { Container, Stack, Typography } from "@mui/material";
 import { Helmet } from "react-helmet-async";
-import { CreateEventButton, EventsList } from "../../../sections/organizers/eventsList";
+import { EventsList } from "../../../sections/organizers/eventsList";
 
 const CommunityEventsPage = () => {
 
@@ -16,7 +16,6 @@ const CommunityEventsPage = () => {
             Події
           </Typography>
         </Stack>
-        <CreateEventButton />
         <EventsList />
       </Container>
     </>

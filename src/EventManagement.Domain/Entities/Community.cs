@@ -1,4 +1,5 @@
-﻿using EventManagement.Domain.Entities.Form;
+﻿using EventManagement.Domain.Entities.CommunityEvent;
+using EventManagement.Domain.Entities.Form;
 
 namespace EventManagement.Domain.Entities;
 
@@ -23,4 +24,6 @@ public class Community : AuditableEntity
     public CommunitySubscriptionForm SubscriptionForm { get; set; } = default!;
 
     public ICollection<CommunityForm> Forms { get; set; } = default!;
+
+    public ICollection<Event> Events { get; set; } = default!;
 }
