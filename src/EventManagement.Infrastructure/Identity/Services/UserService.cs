@@ -4,6 +4,7 @@ using EventManagement.Infrastructure.Identity.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto;
 
 namespace EventManagement.Infrastructure.Identity.Services;
 
@@ -70,5 +71,14 @@ internal class UserService : IUserService
         var users = await _userManager.Users.Where(u => ids.Contains(u.Id)).ToListAsync(cancellationToken);
 
         return users.Select(u => u.ToEntity()).ToList();
+    }
+
+    public Task<List<User>> GetUsersByEmailListAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(emails);
+
+        return _userManager.Users.Where(u => emails.Contains(u.Email))
+            .Select(u => u.ToEntity())
+            .ToListAsync(cancellationToken);
     }
 }

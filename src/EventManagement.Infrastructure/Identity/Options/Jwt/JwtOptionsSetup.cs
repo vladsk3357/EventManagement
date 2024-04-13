@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace EventManagement.Infrastructure.Identity.Options.Jwt;
 
-internal class JwtOptionsSetup : IConfigureOptions<JwtOptions>
+internal sealed class JwtOptionsSetup : IConfigureOptions<JwtOptions>
 {
     private const string SectionName = "Jwt";
     private readonly IConfiguration _configuration;
