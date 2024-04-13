@@ -9,31 +9,6 @@ import { FormInputs } from "../types";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 
-// const schema: yup.ObjectSchema<FormInputs> = yup.object({
-//   fields: yup.array().of(
-//     yup.object({
-//       name: yup.string().required('Це поле є обов\'язковим'),
-//       description: yup.string(),
-//       type: yup.string().oneOf(['ShortText', 'LongText', 'SingleOption', 'MultipleOptions']).required('Це поле є обов\'язковим'),
-//       isRequired: yup.boolean().required('Це поле є обов\'язковим'),
-//       order: yup.number().required('Це поле є обов\'язковим'),
-//       options: yup.array(yup.string()).when('type', {
-//         is: 'SingleOption',
-//         then: schema => schema.of(yup.string().required('Це поле є обов\'язковим')).min(2, 'Потрібно мінімум два варіанти відповіді').required('Це поле є обов\'язковим'),
-//       }).when('type', {
-//         is: 'MultipleOptions',
-//         then: schema => schema.of(yup.string().required('Це поле є обов\'язковим')).min(2, 'Потрібно мінімум два варіанти відповіді').required('Це поле є обов\'язковим'),
-//       }).when('type', {
-//         is: 'ShortText',
-//         then: schema => schema.notRequired(),
-//       }).when('type', {
-//         is: 'LongText',
-//         then: schema => schema.notRequired(),
-//       }),
-//     })..required('Це поле є обов\'язковим'),
-//   ).required('Це поле є обов\'язковим'),
-// });
-
 const OptionFieldSchema: yup.ObjectSchema<OptionField> = yup.object({
   name: yup.string().required(),
   description: yup.string(),
