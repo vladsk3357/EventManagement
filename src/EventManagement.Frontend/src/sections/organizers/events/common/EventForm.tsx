@@ -9,6 +9,7 @@ import { LoadingButton } from "@mui/lab";
 import { FormInputs, VenueType } from "./types";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { RichTextEditorElement } from "../../../common/primitives";
 
 type Props = {
   defaultValues?: Partial<FormInputs>;
@@ -93,16 +94,7 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
         </Grid>
         <Grid item xs={12} mb={2}>
           <Stack spacing={3}>
-            <>
-              <InputLabel>Опис</InputLabel>
-              <CKEditor
-                editor={ClassicEditor}
-                data={watch('description')}
-                onChange={(event, editor) => {
-                  setValue('description', editor.getData());
-                }}
-              />
-            </>
+            <RichTextEditorElement name="description" label="Опис події" required />
             <VenueFormGroup />
             <AttendanceFormGroup />
           </Stack>

@@ -1,4 +1,6 @@
 ﻿using EventManagement.Application.Common.Pagination;
+using EventManagement.Application.Organizers.Communication.Commands.SendCommunityEmail;
+using EventManagement.Application.Organizers.Communication.Commands.SendEventEmail;
 using EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
 using EventManagement.Application.Organizers.Communities.Commands.DeleteCommunity;
 using EventManagement.Application.Organizers.Communities.Commands.EditCommunity;
@@ -85,7 +87,7 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     [HttpPut("{communityId}/subscription-form")]
     public async Task<IActionResult> UpdateSubscriptionFormAsync(int communityId, EditCommunitySubscriptionFormCommand command)
     {
-        if (communityId != command.CommunityId)
+        if (communityId != command?.CommunityId)
             return BadRequest();
 
         await Mediator.Send(command);
@@ -108,5 +110,25 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     public async Task<NonPagedList<FormDto>> GetAllFormsAsync(int communityId)
     {
         return await Mediator.Send(new GetAllFormsQuery(communityId));
+    }
+
+    [HttpPost("{communityId}/send-email")]
+    public async Task<IActionResult> SendCommunityEmailAsync(int communityId, SendCommunityEmailCommand command)
+    {
+        if (communityId != command?.CommunityId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("{eventId}/send-event-email")]
+    public async Task<IActionResult> SendEventEmailAsync(int eventId, SendEventEmailCommand command)
+    {
+        if (eventId != command?.EventId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
     }
 }

@@ -21,7 +21,7 @@ internal class MailServiceCore
         await SendEmailAsync(to, subject, message, cancellationToken);
     }
 
-    private async Task SendEmailAsync(IEnumerable<string> to, string subject, string message, CancellationToken cancellationToken = default)
+    public async Task SendEmailAsync(IEnumerable<string> to, string subject, string message, CancellationToken cancellationToken = default)
     {
         var mail = CreateMailMessage(to, subject, message);
 

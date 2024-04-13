@@ -1,24 +1,23 @@
 import { Helmet } from 'react-helmet-async';
 import { Container, Stack, Typography } from '@mui/material';
-import CommunitiesList from '../../../sections/organizers/communitiesList';
+import Communication from '../../../sections/organizers/communication';
 
-const CommunitiesListPage = () => {
+const CommunityCommunicationPage = () => {
   return (
     <>
       <Helmet>
         <title>Events</title>
       </Helmet>
-
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Оберіть спільноту
+            Комунікація
           </Typography>
         </Stack>
-        <CommunitiesList />
+        <Communication />
       </Container>
     </>
   );
 };
 
-export default CommunitiesListPage;
+export default CommunityCommunicationPage;

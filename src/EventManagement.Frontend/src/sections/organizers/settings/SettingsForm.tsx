@@ -6,6 +6,7 @@ import { axios } from '../../../api';
 import { useMemo } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { RichTextEditorElement } from "../../common/primitives";
 
 type FormInputs = {
   name: string;
@@ -25,7 +26,6 @@ const SettingsForm = ({ defaultValues }: Props) => {
   const { mutate } = saveCommunitySettings();
 
   const form = useForm<FormInputs>({ defaultValues, mode: 'onBlur' });
-  const { setValue, getValues } = form;
 
   const onSubmit = (data: FormInputs) => {
     const variables = createMutationVariables(data, Number(communityId));
@@ -54,14 +54,7 @@ const SettingsForm = ({ defaultValues }: Props) => {
           <TextFieldElement name="shortDescription" label="Коротко опишіть спільноту" fullWidth multiline />
         </Grid>
         <Grid item xs={12} mb={2}>
-          <InputLabel>Опис спільноти</InputLabel>
-          <CKEditor
-            editor={ClassicEditor}
-            data={getValues().description}
-            onChange={(event, editor) => {
-              setValue('description', editor.getData());
-            }}
-          />
+          <RichTextEditorElement name="description" label="Опис спільноти" />
         </Grid>
         <Grid item xs={12} mb={2}>
           <Button variant="contained" type="submit">Зберегти зміни</Button>
