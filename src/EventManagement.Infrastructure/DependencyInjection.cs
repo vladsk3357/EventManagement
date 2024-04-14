@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using EventManagement.Infrastructure.Mail;
 using EventManagement.Infrastructure.Options.Frontend;
+using EventManagement.Infrastructure.Search;
+using EventManagement.Infrastructure.Jobs;
 
 namespace EventManagement.Infrastructure;
 
@@ -18,6 +20,8 @@ public static class DependencyInjection
         services.AddIdentity(configuration);
         services.AddPersistence(configuration);
         services.AddMails(configuration);
+        services.AddSearch(configuration);
+        services.AddJobs(configuration);
 
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IDomainEventService, DomainEventService>();

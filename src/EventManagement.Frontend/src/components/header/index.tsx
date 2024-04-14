@@ -1,17 +1,12 @@
-// @mui
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
-// utils
 import { bgBlur } from '../../utils/cssStyles';
-// components
 import Iconify from '../iconify';
-//
 import AccountPopover from './AccountPopover';
 import { MouseEventHandler } from 'react';
 import CreatePopover from './CreatePopover';
 import { Link } from 'react-router-dom';
-
-// ----------------------------------------------------------------------
+import SearchBox from './SearchBox';
 
 const NAV_WIDTH = 280;
 
@@ -37,7 +32,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
 
 type Props = {
   onOpenNav?: MouseEventHandler<HTMLButtonElement>;
@@ -58,6 +52,7 @@ export default function Header({ onOpenNav }: Props) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
         <Link to="/"><Typography variant='h3'>Events</Typography></Link>
+        <SearchBox />
         <Box sx={{ flexGrow: 1 }} />
         <Stack
           direction="row"
