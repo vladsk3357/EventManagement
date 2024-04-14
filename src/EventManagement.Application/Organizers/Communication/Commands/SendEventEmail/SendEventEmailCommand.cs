@@ -36,7 +36,8 @@ internal sealed record SendEventEmailCommandHandler : IRequestHandler<SendEventE
 
     public async Task Handle(SendEventEmailCommand request, CancellationToken cancellationToken)
     {
-        var @event = await _context.Events.Include(c => c.Attendees)
+        var @event = await _context.Events.Include(e => e.Attendees)
+            .Include(e => e.Community)
             .FirstOrDefaultAsync(c => c.Id == request.EventId
                 && c.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new InvalidRequestException(nameof(request.EventId), "Event with this Id doesn't exist");
@@ -49,16 +50,7 @@ internal sealed record SendEventEmailCommandHandler : IRequestHandler<SendEventE
         var users = await _userService.GetUsersByIdListAsync(usersIds, cancellationToken);
         var emails = users.Select(u => u.Email).ToList();
 
-        await _mailService.SendEmailAsync(
-            emails,
-            FormatEmailSubject(request.Subject, @event.Name),
-            request.Body,
-            cancellationToken);
-    }
-
-    private static string FormatEmailSubject(string subject, string eventName)
-    {
-        return $"{eventName}: \"{subject}\"";
+        await Task.WhenAll(emails.Select(email => _mailService.SendCommunicationEmailAsync(email, request.Subject, request.Body, @event.Community, cancellationToken)));;
     }
 }
 

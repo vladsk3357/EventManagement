@@ -30,6 +30,7 @@ import EventSpeakersListPage from './pages/organizers/events/EventSpeakersListPa
 import EventSchedulePage from './pages/organizers/events/EventSchedulePage';
 import MyEventsPage from './pages/myEvents/MyEventsPage';
 import CommunityCommunicationPage from './pages/organizers/community/CommunityCommunicationPage';
+import CommunityInvitationPage from './pages/organizers/community/CommunityInvitationPage';
 
 
 // ----------------------------------------------------------------------
@@ -88,6 +89,7 @@ export default function Router() {
         { path: 'registrations', element: <CommunitySubscriptionFormPage /> },
         { path: 'registrations/:answerId', element: <CommunitySubscriptionFormAnswerDetailsPage /> },
         { path: 'communication', element: <CommunityCommunicationPage /> },
+        { path: 'invite', element: <CommunityInvitationPage /> },
       ],
     },
     {

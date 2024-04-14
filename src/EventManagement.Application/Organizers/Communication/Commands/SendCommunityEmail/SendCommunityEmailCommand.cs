@@ -38,15 +38,6 @@ internal sealed class SendCommunityEmailCommandHandler : IRequestHandler<SendCom
         var users = await _userService.GetUsersByIdListAsync(community.Subscriptions.Select(s => s.UserId), cancellationToken);
         var emails = users.Select(u => u.Email).ToList();
 
-        await _mailService.SendEmailAsync(
-            emails,
-            FormatEmailSubject(request.Subject, community.Name), 
-            request.Body, 
-            cancellationToken);
-    }
-
-    private static string FormatEmailSubject(string subject, string communityName)
-    {
-        return $"{communityName}: \"{subject}\"";
+        await Task.WhenAll(emails.Select(email => _mailService.SendCommunicationEmailAsync(email, request.Subject, request.Body, community, cancellationToken)));
     }
 }

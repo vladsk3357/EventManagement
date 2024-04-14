@@ -13,6 +13,7 @@ using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.
 using EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 using EventManagement.Application.Organizers.Events.Queries.GetEvents;
 using EventManagement.Application.Organizers.Forms.Queries.GetAllForms;
+using EventManagement.Application.Organizers.Invitations.Commands;
 using EventManagement.Application.Organizers.Subscribers.Queries.GetSubscribers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -126,6 +127,16 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     public async Task<IActionResult> SendEventEmailAsync(int eventId, SendEventEmailCommand command)
     {
         if (eventId != command?.EventId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("{communityId}/invite")]
+    public async Task<IActionResult> InviteToCommunity(int communityId, InviteToCommunityCommand command)
+    {
+        if (communityId != command?.CommunityId)
             return BadRequest();
 
         await Mediator.Send(command);

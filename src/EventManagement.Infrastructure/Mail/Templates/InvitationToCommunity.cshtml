@@ -1,0 +1,70 @@
+@using EventManagement.Application.Common.MailTemplateModels;
+@inherits RazorEngineCore.RazorEngineTemplateBase<InvitationToCommunityMailTemplateModel>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        <tbody>
+            <tr>
+                <td align="center" style="background-color:#dbe5ea;padding-left:8px;padding-right:8px">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width:632px;margin:0 auto">
+                        <tbody>
+                            <tr>
+                                <td align="left" style="font-family:Helvetica,Arial,sans-serif;margin-top:0px;margin-bottom:0px;font-size:16px;line-height:24px;background-color:#ffffff;color:#424651;padding-left:24px;padding-right:24px;padding-top:16px;padding-bottom:16px">
+                                    <p style="margin-top:0px;margin-bottom:0px">
+                                        Привіт!
+                                    </p>
+                                    <br>
+                                    <p style="margin-top:0px;margin-bottom:0px">
+                                        Вас запросили вступити в спільноту @Model.CommunityName.
+                                    </p>
+                                    <br>
+                                    <p style="margin-top:0px;margin-bottom:0px">
+                                        Приєднавшись, ви зможете брати участь у подіях спільнот. Сподіваюся побачити вас там!
+                                    </p>
+                                    <br>
+                                    <p style="margin-top:0px;margin-bottom:0px">
+                                        - @Model.CommunityName
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        <tbody>
+            <tr>
+                <td align="center" style="background-color:#dbe5ea;padding-left:8px;padding-right:8px">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width:632px;margin:0 auto">
+                        <tbody>
+                            <tr>
+                                <td align="center" style="background-color:#ffffff;padding-left:24px;padding-right:24px;padding-top:8px;padding-bottom:8px">
+                                    <table align="center" cellspacing="0" cellpadding="0" border="0" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <td width="300" align="center" style="font-family:Helvetica,Arial,sans-serif;font-weight:bold;margin-top:0px;margin-bottom:0px;font-size:16px;line-height:24px;background-color:#0ec06e;border-radius:4px">
+                                                    <a href="@Model.CommunityUrl"
+                                                       style="text-decoration:none;outline:none;color:#ffffff;display:block;padding:12px 24px"
+                                                       target="_blank">
+                                                        Приєднатися до спільноти
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
