@@ -8,22 +8,22 @@ namespace EventManagement.Infrastructure.Jobs;
 
 internal class IndexCommunitiesJob(
     IApplicationDbContext context, 
-    ISearchService searchService, 
+    ICommunitiesSearchService searchService, 
     IDateTime dateTime,
     ILogger<IndexCommunitiesJob> logger) : IJob
 {
     private readonly IApplicationDbContext _context = context;
-    private readonly ISearchService _searchService = searchService;
+    private readonly ICommunitiesSearchService _searchService = searchService;
     private readonly IDateTime _dateTime = dateTime;
     private readonly ILogger<IndexCommunitiesJob> _logger = logger;
 
     public async Task Execute(IJobExecutionContext context)
     {
-        _logger.LogWarning("Indexing communities at {Time}", _dateTime.Now);
+        _logger.LogWarning("Indexing communities");
 
         var communities = await _context.Communities.ToListAsync();
-        communities.ForEach(async c => await _searchService.IndexCommunityAsync(c));
+        communities.ForEach(async c => await _searchService.IndexAsync(c));
 
-        _logger.LogWarning("Indexing completed at {Time}", _dateTime.Now);
+        _logger.LogWarning("Indexing communities completed");
     }
 }

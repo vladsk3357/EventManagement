@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 //
 import Header from '../../components/header';
 import BaseLayout from '../base/BaseLayout';
+import Nav from '../home/nav';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -32,10 +34,14 @@ const Main = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DefaultLayout() {
+  const [open, setOpen] = useState(false);
+
   return (
     <BaseLayout>
       <StyledRoot>
-        <Header />
+        <Header onOpenNav={() => setOpen(true)} />
+        <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+
         <Main>
           <Outlet />
         </Main>

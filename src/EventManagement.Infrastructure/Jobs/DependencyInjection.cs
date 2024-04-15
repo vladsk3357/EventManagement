@@ -10,12 +10,21 @@ internal static class DependencyInjection
     {
         services.AddQuartz(q =>
         {
-            var jobKey = new JobKey("IndexCommunitiesJob");
-            q.AddJob<IndexCommunitiesJob>(opts => opts.WithIdentity(jobKey));
+            var indexCommunitiesJobKey = new JobKey("IndexCommunitiesJob");
+            q.AddJob<IndexCommunitiesJob>(opts => opts.WithIdentity(indexCommunitiesJobKey));
 
             q.AddTrigger(opts => opts
                 .ForJob("IndexCommunitiesJob")
                 .WithIdentity("IndexCommunitiesJob-trigger")
+                .WithSimpleSchedule(s => s.WithIntervalInMinutes(1).RepeatForever())
+            );
+
+            var indexEventsJobKey = new JobKey("IndexEventsJob");
+            q.AddJob<IndexEventsJob>(opts => opts.WithIdentity(indexEventsJobKey));
+
+            q.AddTrigger(opts => opts
+                .ForJob("IndexEventsJob")
+                .WithIdentity("IndexEventsJob-trigger")
                 .WithSimpleSchedule(s => s.WithIntervalInMinutes(1).RepeatForever())
             );
 

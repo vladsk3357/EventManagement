@@ -67,14 +67,21 @@ export default function Header({ onOpenNav }: Props) {
           direction="row"
           alignItems="center"
           spacing={{
-            xs: 0.5,
+            xs: 1,
             sm: 3,
           }}
         >
-          <ShowOnEventsButton />
+          <Box sx={{
+            display: {
+              lg: 'block',
+              xs: 'none'
+            }
+          }}>
+            <ShowOnEventsButton />
+          </Box>
           <AccountPopover />
         </Stack>
       </StyledToolbar>
-    </StyledRoot>
+    </StyledRoot >
   );
 }

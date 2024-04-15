@@ -14,11 +14,11 @@ public sealed record SearchQuery(string Term, int Page, int PageSize) : IRequest
 internal sealed class SearchResultQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ISearchService _searchService;
+    private readonly ICommunitiesSearchService _searchService;
 
     public SearchResultQueryHandler(
         IApplicationDbContext context,
-        ISearchService searchService)
+        ICommunitiesSearchService searchService)
     {
         _context = context;
         _searchService = searchService;

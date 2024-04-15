@@ -2,6 +2,7 @@
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,13 +24,16 @@ internal sealed class CreateEventCommandHandler
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IEventsSearchService _searchService;
 
     public CreateEventCommandHandler(
-        IApplicationDbContext dbContext, 
-        ICurrentUserAccessor currentUserAccessor)
+        IApplicationDbContext dbContext,
+        ICurrentUserAccessor currentUserAccessor,
+        IEventsSearchService searchService)
     {
         _context = dbContext;
         _currentUserAccessor = currentUserAccessor;
+        _searchService = searchService;
     }
 
     public async Task<CreateEventResultDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
@@ -52,6 +56,8 @@ internal sealed class CreateEventCommandHandler
             Status = AttendeeStatus.Confirmed,
         }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _searchService.IndexAsync(entity, cancellationToken);
 
         return new CreateEventResultDto(entity.Id);
     }

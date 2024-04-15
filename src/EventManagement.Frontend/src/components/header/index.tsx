@@ -51,18 +51,20 @@ export default function Header({ onOpenNav }: Props) {
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
-        <Link to="/"><Typography variant='h3'>Events</Typography></Link>
+        <Box sx={{ mr: 2 }}>
+          <Link to="/"><Typography variant='h3'>Events</Typography></Link>
+        </Box>
+
         <SearchBox />
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1, mx: 2 }} />
         <Stack
           direction="row"
           alignItems="center"
           spacing={{
-            xs: 0.5,
+            xs: 1,
             sm: 3,
           }}
         >
-          <CreatePopover />
           <AccountPopover />
         </Stack>
       </StyledToolbar>

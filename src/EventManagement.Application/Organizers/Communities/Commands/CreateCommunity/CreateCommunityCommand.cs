@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.Form;
 using MediatR;
@@ -13,11 +14,16 @@ internal sealed class CreateCommunityCommandHandler : IRequestHandler<CreateComm
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly ICommunitiesSearchService _searchService;
 
-    public CreateCommunityCommandHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
+    public CreateCommunityCommandHandler(
+        IApplicationDbContext context, 
+        ICurrentUserAccessor currentUserAccessor, 
+        ICommunitiesSearchService searchService)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
+        _searchService = searchService;
     }
 
     public async Task<CreateCommunityResultDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
@@ -46,6 +52,8 @@ internal sealed class CreateCommunityCommandHandler : IRequestHandler<CreateComm
         };
         await _context.CommunitySubscriptionForms.AddAsync(communitySubscriptionForm, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _searchService.IndexAsync(entity, cancellationToken);
 
         return new CreateCommunityResultDto(entity.Id);
     }

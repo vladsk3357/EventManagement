@@ -1,4 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using EventManagement.Application.Common.Services.Search;
 using EventManagement.Application.Services.Search;
 using EventManagement.Infrastructure.Search.Options;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,8 @@ internal static class DependencyInjection
             return new ElasticsearchClient(new Uri(elasticOptions.Uri));
         });
 
-        services.AddScoped<ISearchService, SearchService>();
+        services.AddScoped<ICommunitiesSearchService, CommunitiesSearchService>();
+        services.AddScoped<IEventsSearchService, EventsSearchService>();
 
         return services;
     }

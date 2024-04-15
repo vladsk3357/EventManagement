@@ -2,6 +2,7 @@ import { Autocomplete, darken, lighten, styled, TextField } from "@mui/material"
 import { useMutation } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const GroupHeader = styled('div')(({ theme }) => ({
   position: 'sticky',
@@ -20,20 +21,33 @@ const GroupItems = styled('ul')({
 
 const SearchBox = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [value, setValue] = useState('');
   const { data, mutate, isPending } = useSearchMutation(10);
 
   useEffect(() => {
     searchQuery && mutate(searchQuery);
   }, [searchQuery]);
 
+  const getOptionLabel = (option: CommunitySearchSuggestion | EventSearchSuggestion | string) => {
+    if (typeof option === 'string') {
+      return '';
+    }
+    return option.name;
+  };
+
+  const options = [
+    ...data?.communities.map(c => ({ ...c, type: 'Спільноти' } as CommunitySearchSuggestion)) || [],
+    ...data?.events.map(c => ({ ...c, type: 'Події' } as EventSearchSuggestion)) || [],
+  ];
+
   return (
     <Autocomplete
       id="grouped-demo"
       freeSolo
       filterOptions={x => x}
-      options={data?.communities || []}
+      options={options}
       groupBy={(option) => option.type}
-      getOptionLabel={(option) => typeof (option) === "string" ? option : option.name}
+      getOptionLabel={getOptionLabel}
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="Пошук" />}
       renderGroup={(params) => (
@@ -42,6 +56,15 @@ const SearchBox = () => {
           <GroupItems>{params.children}</GroupItems>
         </li>
       )}
+      renderOption={(props, option, { inputValue }) => {
+        return (
+          <Link to={option.type === 'Спільноти' ? `/community/${option.id}` : `/community/${option.communityId}/${option.id}`}>
+            <li {...props}>
+              {option.name}
+            </li>
+          </Link>
+        );
+      }}
       onInputChange={(event, value) => setSearchQuery(value)}
       inputValue={searchQuery}
     />
@@ -56,8 +79,27 @@ type CommunitySearchSuggestion = {
   name: string;
 };
 
+type CommunitySearchSuggestionResult = {
+  id: number;
+  name: string;
+};
+
+type EventSearchSuggestion = {
+  type: 'Події';
+  id: number;
+  name: string;
+  communityId: number;
+};
+
+type EventSearchSuggestionResult = {
+  id: number;
+  name: string;
+  communityId: number;
+}
+
 type SearchSuggestionsMutationResult = {
-  communities: CommunitySearchSuggestion[];
+  communities: CommunitySearchSuggestionResult[];
+  events: EventSearchSuggestionResult[];
 };
 
 function useSearchMutation(pageSize: number) {
