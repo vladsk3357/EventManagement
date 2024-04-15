@@ -8,15 +8,27 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
+using Serilog.Exceptions;
+using Serilog.Sinks.Elasticsearch;
+using Quartz.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog((context, configuration) 
+    => configuration.Enrich.FromLogContext()
+    .Enrich.WithExceptionDetails()
+    .Enrich.WithMachineName()
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(context.Configuration["Elastic:Uri"]!))
+    {
+        IndexFormat = $"{context.Configuration["ApplicationName"]}-logs-{context.HostingEnvironment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+        AutoRegisterTemplate = true,
+        NumberOfShards = 2,
+        NumberOfReplicas = 1,
+
+    })
+    .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName!)
+    .ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>())
     .AddJsonOptions(options =>

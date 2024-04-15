@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagement.WebApi", "s
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "eventmanagement.frontend", "src\EventManagement.Frontend\eventmanagement.frontend.esproj", "{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{680033A2-0C3F-4EA9-AF36-FC747F398543}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB8CE0B8-C84D-4B54-8BD9-B195C8737181}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{680033A2-0C3F-4EA9-AF36-FC747F398543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{680033A2-0C3F-4EA9-AF36-FC747F398543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{680033A2-0C3F-4EA9-AF36-FC747F398543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{680033A2-0C3F-4EA9-AF36-FC747F398543}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

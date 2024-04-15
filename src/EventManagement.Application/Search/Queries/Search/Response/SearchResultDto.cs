@@ -1,7 +1,5 @@
-﻿using EventManagement.Application.Common.Pagination;
+﻿namespace EventManagement.Application.Search.Queries.Search.Response;
 
-namespace EventManagement.Application.Search.Queries.Search.Response;
+public sealed record SearchResultDto(ICollection<CommunityDto> Communities);
 
-public sealed record SearchResultDto(
-    string IndexName,
-    PagedList<object> List);
+public sealed record CommunityDto(int Id, string Name, string Location);

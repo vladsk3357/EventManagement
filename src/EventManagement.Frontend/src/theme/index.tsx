@@ -3,6 +3,7 @@ import { ReactNode, useMemo } from 'react';
 // @mui
 import { CssBaseline, ThemeOptions } from '@mui/material';
 import { ThemeProvider as MUIThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import { ukUA } from '@mui/x-data-grid/locales';
 //
 import palette from './palette';
 import shadows from './shadows';
@@ -25,6 +26,7 @@ const ThemeProvider = ({ children }: Props) => {
       typography,
       shadows: shadows(),
       customShadows: customShadows(),
+      ukUA,
     }),
     []
   );

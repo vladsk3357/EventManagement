@@ -1,13 +1,12 @@
-﻿using System;
-using EventManagement.Application.Common.Exceptions;
+﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EventManagement.Application.Organizers.Events.Commands.EditEvent;
 
@@ -26,13 +25,16 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IEventsSearchService _searchService;
 
     public EditEventCommandHandler(
-        IApplicationDbContext context, 
-        ICurrentUserAccessor currentUserAccessor)
+        IApplicationDbContext context,
+        ICurrentUserAccessor currentUserAccessor,
+        IEventsSearchService searchService)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
+        _searchService = searchService;
     }
 
     public async Task Handle(EditEventCommand request, CancellationToken cancellationToken)
@@ -43,6 +45,7 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
 
         UpdateEventWithCommand(@event, request);
         await _context.SaveChangesAsync(cancellationToken);
+        await _searchService.IndexAsync(@event, cancellationToken);
     }
 
     private static void UpdateEventWithCommand(Event @event, EditEventCommand request)

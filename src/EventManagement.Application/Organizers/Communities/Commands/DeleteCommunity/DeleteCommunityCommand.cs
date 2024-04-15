@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +18,16 @@ internal sealed class DeleteCommunityCommandHandler : IRequestHandler<DeleteComm
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IApplicationDbContext _context;
+    private readonly ICommunitiesSearchService _searchService;
 
     public DeleteCommunityCommandHandler(
         ICurrentUserService currentUserService,
-        IApplicationDbContext context)
+        IApplicationDbContext context,
+        ICommunitiesSearchService searchService)
     {
         _currentUserService = currentUserService;
         _context = context;
+        _searchService = searchService;
     }
 
     public async Task Handle(DeleteCommunityCommand request, CancellationToken cancellationToken)
@@ -33,6 +37,7 @@ internal sealed class DeleteCommunityCommandHandler : IRequestHandler<DeleteComm
 
         _context.Communities.Remove(community);
         await _context.SaveChangesAsync(cancellationToken);
+        await _searchService.DeleteAsync(community.Id);
     }
 }
 

@@ -17,14 +17,14 @@ export default function App() {
       <HelmetProvider>
         <ApiProvider>
           <UserContextProvider>
-            <BrowserRouter>
-              <ThemeProvider>
+            <ThemeProvider>
+              <BrowserRouter>
                 <GraphQlProvider>
                   <ScrollToTop />
                   <Router />
                 </GraphQlProvider>
-              </ThemeProvider>
-            </BrowserRouter>
+              </BrowserRouter>
+            </ThemeProvider>
           </UserContextProvider>
         </ApiProvider>
       </HelmetProvider >

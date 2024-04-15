@@ -1,6 +1,7 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +22,16 @@ internal sealed class EditCommunityCommandHandler : IRequestHandler<EditCommunit
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly ICommunitiesSearchService _searchService;
 
-    public EditCommunityCommandHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
+    public EditCommunityCommandHandler(
+        IApplicationDbContext context, 
+        ICurrentUserAccessor currentUserAccessor, 
+        ICommunitiesSearchService searchService)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
+        _searchService = searchService;
     }
 
     public async Task Handle(EditCommunityCommand request, CancellationToken cancellationToken)
@@ -36,6 +42,7 @@ internal sealed class EditCommunityCommandHandler : IRequestHandler<EditCommunit
 
         UpdateCommunityWithCommand(community, request);
         await _context.SaveChangesAsync(cancellationToken);
+        await _searchService.IndexAsync(community, cancellationToken);
     }
 
     private static void UpdateCommunityWithCommand(Community community, EditCommunityCommand request)
