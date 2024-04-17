@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { axios } from '../../../api';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Community } from "../types";
 import { LoadingButton } from "@mui/lab";
 import { Card, CardContent, Grid, Typography, Button, Dialog, DialogTitle, DialogContent, Stack, DialogActions } from "@mui/material";
@@ -68,8 +68,13 @@ export default DeleteCommunitySection;
 
 function useDeleteCommunityMutation(communityId: number) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: () => axios.delete(`/api/organizers/communities/${communityId}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['community', communityId] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['community', communityId] });
+      navigate('/organizers/communities');
+    },
   });
 }

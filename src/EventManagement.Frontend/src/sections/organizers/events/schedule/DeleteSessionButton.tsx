@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from "../../../../api";
@@ -14,7 +14,12 @@ type Props = {
 
 const DeleteSessionButton = ({ session }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useDeleteSession(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useDeleteSession(() => {
+    setShowModal(false);
+    setSnackbarOpen(true);
+  });
+
   return (
     <>
       <Button
@@ -55,6 +60,15 @@ const DeleteSessionButton = ({ session }: Props) => {
           </LoadingButton>
         </DialogActions>
       </Dialog >
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Доповідь успішно видалено
+        </Alert>
+      </Snackbar>
     </>
   );
 };

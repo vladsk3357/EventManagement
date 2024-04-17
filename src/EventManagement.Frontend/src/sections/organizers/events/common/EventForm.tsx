@@ -76,7 +76,7 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
     reValidateMode: 'onBlur',
     defaultValues: defaultValues || emptyDefaultValues,
   });
-  const { setValue, watch } = form;
+  const { watch } = form;
 
   return (
     <FormContainer<FormInputs> formContext={form} onSuccess={onSubmit} >
@@ -88,8 +88,19 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
         </Grid>
         <Grid item xs={12} md={6} mb={2}>
           <Stack spacing={3} direction="row">
-            <DateTimePickerElement name="startDate" label="Дата початку" required ampm={false} />
-            <DateTimePickerElement name="endDate" label="Дата закінчення" required ampm={false} />
+            <DateTimePickerElement
+              name="startDate"
+              label="Дата початку"
+              required
+              ampm={false}
+            />
+            <DateTimePickerElement
+              name="endDate"
+              label="Дата закінчення"
+              required
+              ampm={false}
+              minDateTime={watch('startDate')}
+            />
           </Stack>
         </Grid>
         <Grid item xs={12} mb={2}>

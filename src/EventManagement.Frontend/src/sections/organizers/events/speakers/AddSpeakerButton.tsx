@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 import { useState } from "react";
 import FormPopup from "./FormPopup";
 import { FormInputs } from "./types";
@@ -17,7 +17,11 @@ const AddSpeakerButton = () => {
   const { eventId: eventIdParam } = useParams();
   const eventId = Number(eventIdParam);
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useAddSpeaker(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useAddSpeaker(() => {
+    setShowModal(false);
+    setSnackbarOpen(true);
+  });
   return (
     <>
       <Button
@@ -35,6 +39,15 @@ const AddSpeakerButton = () => {
         onSubmit={data => mutate({ ...data, eventId })}
         defaultValues={defaultValues}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Спікера успішно додано
+        </Alert>
+      </Snackbar>
     </>
   );
 };

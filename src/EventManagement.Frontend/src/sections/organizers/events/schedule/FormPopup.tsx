@@ -20,7 +20,7 @@ type Props = {
 }
 
 const schema: yup.ObjectSchema<FormInputs> = yup.object().shape({
-  title: yup.string().required("Посада є обов'язковою"),
+  title: yup.string().required("Назва є обов'язковою"),
   startTime: yup.mixed((input): input is moment.Moment => moment.isMoment(input)).test({
     message: 'Дата початку повинна бути в майбутньому',
     test: function (value) {

@@ -8,7 +8,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { ActionCellItemWithConfirmation, useEventsList } from "../common";
 import { Link as RouterLink } from 'react-router-dom';
 import { Chip } from "@mui/material";
-import CreateEventButton from "./CreateEventButton";
 import { Box } from "@mui/material";
 import { TabPanel } from "@mui/lab";
 
