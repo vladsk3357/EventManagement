@@ -3,14 +3,16 @@ import { axios } from '../../../../api';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { EventForm, FormInputs, GetEventQueryResult, OfflineVenue, OnlineVenue, useGetEventQuery, VenueType } from "../common";
-import { Box, CircularProgress } from "@mui/material";
+import { Alert, Box, CircularProgress, Snackbar } from "@mui/material";
+import { useState } from "react";
 
 const EditEventForm = () => {
   const { eventId: eventIdParam, communityId: communityIdParam } = useParams();
   const eventId = Number(eventIdParam);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const { data, isFetched, isLoading } = useGetEventQuery(eventId);
-  const { mutate, isPending } = useEditEventMutation(eventId);
+  const { mutate, isPending } = useEditEventMutation(eventId, () => setSnackbarOpen(true));
 
   const handleSubmit = (data: FormInputs) => {
     const variables = formInputToVariables(data, eventId, Number(communityIdParam));
@@ -18,10 +20,21 @@ const EditEventForm = () => {
   };
 
   return (
-    <Box>
-      {isLoading && <CircularProgress />}
-      {isFetched && data && <EventForm defaultValues={queryResultToFormInputs(data)} onSubmit={handleSubmit} isSubmitting={isPending} />}
-    </Box>
+    <>
+      <Box>
+        {isLoading && <CircularProgress />}
+        {isFetched && data && <EventForm defaultValues={queryResultToFormInputs(data)} onSubmit={handleSubmit} isSubmitting={isPending} />}
+      </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Подію успішно оновлено
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
@@ -42,9 +55,10 @@ function queryResultToFormInputs(data: GetEventQueryResult): FormInputs {
   };
 }
 
-function useEditEventMutation(eventId: number) {
+function useEditEventMutation(eventId: number, onSuccess?: () => void) {
   return useMutation<EditEventMutationResult, EditEventMutationError, EditEventMutationVariables>({
     mutationFn: variables => axios.put<EditEventMutationResult>(`/api/organizers/events/${eventId}`, variables).then(res => res.data),
+    onSuccess: () => onSuccess?.(),
   });
 }
 

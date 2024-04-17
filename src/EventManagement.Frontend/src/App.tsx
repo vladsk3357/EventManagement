@@ -9,8 +9,6 @@ import { UserContextProvider } from './components/user';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
-// ----------------------------------------------------------------------
-
 export default function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>

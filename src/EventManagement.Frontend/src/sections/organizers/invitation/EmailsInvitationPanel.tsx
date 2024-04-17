@@ -1,11 +1,12 @@
 import { LoadingButton, TabPanel } from "@mui/lab";
-import { Stack } from "@mui/material";
+import { Alert, Snackbar, Stack } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import { useParams } from "react-router-dom";
 import { axios } from '../../../api';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from "react";
 
 type Props = {
   value: string;
@@ -19,7 +20,8 @@ const schema = yup.object({
 
 const EmailsInvitationPanel = ({ value }: Props) => {
   const { communityId } = useParams();
-  const { mutate, isPending } = useInviteToCommunityMutation();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useInviteToCommunityMutation(() => setSnackbarOpen(true));
   const form = useForm<FormInputs>({ mode: 'onBlur', resolver: yupResolver(schema) });
 
   const handleSubmit = (data: FormInputs) => {
@@ -31,19 +33,30 @@ const EmailsInvitationPanel = ({ value }: Props) => {
   }
 
   return (
-    <TabPanel value={value}>
-      <FormContainer formContext={form} onSuccess={handleSubmit}>
-        <Stack spacing={2}>
-          <TextFieldElement
-            name="emails"
-            label="Електронні пошти"
-            required
-            placeholder="Електронні пошти (розділені комами)"
-          />
-          <LoadingButton loading={isPending} variant="contained" type="submit">Надіслати</LoadingButton>
-        </Stack>
-      </FormContainer>
-    </TabPanel>
+    <>
+      <TabPanel value={value}>
+        <FormContainer formContext={form} onSuccess={handleSubmit}>
+          <Stack spacing={2}>
+            <TextFieldElement
+              name="emails"
+              label="Електронні пошти"
+              required
+              placeholder="Електронні пошти (розділені комами)"
+            />
+            <LoadingButton loading={isPending} variant="contained" type="submit">Надіслати</LoadingButton>
+          </Stack>
+        </FormContainer>
+      </TabPanel>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Запрошення успішно надіслано
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
@@ -58,8 +71,11 @@ type InviteToCommunityMutationVariables = {
   emails: string[];
 };
 
-function useInviteToCommunityMutation() {
+function useInviteToCommunityMutation(onSuccess?: () => void) {
   return useMutation({
     mutationFn: (variables: InviteToCommunityMutationVariables) => axios.post(`/api/organizers/communities/${variables.communityId}/invite`, variables),
+    onSuccess: () => {
+      onSuccess?.();
+    }
   });
 }

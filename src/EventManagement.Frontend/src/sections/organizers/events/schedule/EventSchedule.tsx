@@ -1,15 +1,16 @@
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Box, CircularProgress, Typography, Paper, Tooltip, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "../../../../api";
 import { useGetEventQuery, useSpeakersList } from "../common";
 import AddSessionButton from "./AddSessionButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CurrentDateSelect from "./CurrentDateSelect";
 import moment from "moment";
 import { Session } from "./types";
 import EditSessionButton from "./EditSessionButton";
 import DeleteSessionButton from "./DeleteSessionButton";
+import WarningIcon from '@mui/icons-material/Warning';
 
 const EventSchedule = () => {
   const { eventId: eventIdParam } = useParams();
@@ -67,7 +68,14 @@ const EventSchedule = () => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {session.title}
+                    <Stack direction="row">
+                      {data && session.endTime.isAfter(moment(data.endDate)) && (
+                        <Tooltip title="Доповідь закінчується після кінця події. ЇЇ не показано в розкладі." placement="top">
+                          <Typography mr={1} color="orange"><WarningIcon /></Typography>
+                        </Tooltip>
+                      )}
+                      {session.title}
+                    </Stack>
                   </TableCell>
                   <TableCell align="right">{session.startTime.format("kk:mm")} - {session.endTime.format("kk:mm")}</TableCell>
                   <TableCell align="right">{session.duration}</TableCell>
@@ -141,5 +149,5 @@ type GetSessionsQueryResponse = {
 };
 
 function isSelectedDate(session: Session, selectedDate: moment.Moment) {
-  return session.startTime.isSame(selectedDate, 'day');
+  return selectedDate.isBetween(session.startTime, session.endTime, 'day', '[]');
 }

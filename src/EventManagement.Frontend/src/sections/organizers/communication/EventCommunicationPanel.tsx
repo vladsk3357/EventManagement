@@ -1,14 +1,14 @@
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { LoadingButton, TabPanel } from "@mui/lab";
-import { Box, CircularProgress, InputLabel, Stack, Typography } from "@mui/material";
+import { CircularProgress, Stack, Snackbar, Alert } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import { CheckboxElement, FormContainer, SelectElement, TextFieldElement, useForm, Controller } from "react-hook-form-mui";
+import { CheckboxElement, FormContainer, SelectElement, TextFieldElement, useForm } from "react-hook-form-mui";
 import { useParams } from "react-router-dom";
 import { axios } from '../../../api';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEventsList } from "../common";
 import { RichTextEditorElement } from "../../common/primitives";
+import { useState } from "react";
 
 type Props = {
   value: string;
@@ -46,35 +46,47 @@ const EventCommunicationPanel = ({ value }: Props) => {
   const { communityId: communityIdProp } = useParams();
   const communityId = Number(communityIdProp);
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { data, isLoading, isFetched } = useEventsList(communityId, 1, 100);
-  const { mutate, isPending } = useSendEventEmailMutation();
+  const { mutate, isPending } = useSendEventEmailMutation(() => setSnackbarOpen(true));
   const form = useForm<FormInputs>({ defaultValues, mode: 'onBlur', resolver: yupResolver(schema) });
   const handleSubmit = (data: FormInputs) => {
     mutate(data);
   };
 
   return (
-    <TabPanel value={value}>
-      <FormContainer<FormInputs> formContext={form} onSuccess={handleSubmit}>
-        <Stack spacing={2}>
-          {isLoading && <CircularProgress />}
-          {isFetched && data && (
-            <SelectElement
-              name="eventId"
-              label="Подія"
-              valueKey="value"
-              required
-              options={data.items.map(event => ({ value: event.id, label: event.name }))}
-            />
-          )}
-          <CheckboxElement name="toPending" label="Надіслати учасникам, які ще не підтвердили участь" />
-          <CheckboxElement name="toConfirmed" label="Надіслати учасникам, які підтвердили участь" />
-          <TextFieldElement name="subject" label="Тема" required />
-          <RichTextEditorElement name="body" label="Сповіщення" required />
-          <LoadingButton loading={isPending} variant="contained" type="submit">Надіслати</LoadingButton>
-        </Stack>
-      </FormContainer>
-    </TabPanel >
+    <>
+      <TabPanel value={value}>
+        <FormContainer<FormInputs> formContext={form} onSuccess={handleSubmit}>
+          <Stack spacing={2}>
+            {isLoading && <CircularProgress />}
+            {isFetched && data && (
+              <SelectElement
+                name="eventId"
+                label="Подія"
+                valueKey="value"
+                required
+                options={data.items.map(event => ({ value: event.id, label: event.name }))}
+              />
+            )}
+            <CheckboxElement name="toPending" label="Надіслати учасникам, які ще не підтвердили участь" />
+            <CheckboxElement name="toConfirmed" label="Надіслати учасникам, які підтвердили участь" />
+            <TextFieldElement name="subject" label="Тема" required />
+            <RichTextEditorElement name="body" label="Сповіщення" required />
+            <LoadingButton loading={isPending} variant="contained" type="submit">Надіслати</LoadingButton>
+          </Stack>
+        </FormContainer>
+      </TabPanel>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Лист успішно відіслано
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
@@ -88,8 +100,11 @@ type FormInputs = {
   toConfirmed: boolean;
 };
 
-function useSendEventEmailMutation() {
+function useSendEventEmailMutation(onSuccess?: () => void) {
   return useMutation({
     mutationFn: (variables: FormInputs) => axios.post(`/api/organizers/communities/${variables.eventId}/send-event-email`, variables),
+    onSuccess: () => {
+      onSuccess && onSuccess();
+    },
   });
 }

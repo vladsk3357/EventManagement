@@ -36,6 +36,6 @@ internal sealed class DeleteEventCommandHandler : IRequestHandler<DeleteEventCom
         _context.Events.Remove(eventEntity);
 
         await _context.SaveChangesAsync(cancellationToken);
-        await _searchService.DeleteAsync(eventEntity.Id);
+        await _searchService.DeleteAsync(eventEntity.Id, cancellationToken);
     }
 }

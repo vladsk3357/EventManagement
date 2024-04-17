@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 import { useState } from "react";
 import FormPopup from "./FormPopup";
 import { Session } from "./types";
@@ -18,7 +18,11 @@ type Props = {
 
 const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useEditSpeaker(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useEditSpeaker(() => {
+    setShowModal(false)
+    setSnackbarOpen(true);
+  });
   return (
     <>
       <Button
@@ -50,6 +54,15 @@ const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => 
         endDate={endDate}
         startDate={startDate}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Доповідь успішно оновлено
+        </Alert>
+      </Snackbar>
     </>
   );
 };

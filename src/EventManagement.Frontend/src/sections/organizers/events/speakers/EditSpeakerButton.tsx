@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 import { useState } from "react";
 import FormPopup from "./FormPopup";
 import { FormInputs } from "./types";
@@ -14,7 +14,12 @@ type Props = {
 
 const EditSpeakerButton = ({ speaker }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useEditSpeaker(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useEditSpeaker(() => {
+    setShowModal(false);
+    setSnackbarOpen(true);
+  });
+
   return (
     <>
       <Button
@@ -33,6 +38,15 @@ const EditSpeakerButton = ({ speaker }: Props) => {
         onSubmit={data => mutate({ ...data, id: speaker.id })}
         defaultValues={speaker}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Спікера успішно додано
+        </Alert>
+      </Snackbar>
     </>
   );
 };

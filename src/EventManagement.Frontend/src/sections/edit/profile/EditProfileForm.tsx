@@ -34,7 +34,7 @@ const EditProfileForm = () => {
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
-        message="Note archived"
+        onClose={() => setSnackbarOpen(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
           Профіль успішно оновлено

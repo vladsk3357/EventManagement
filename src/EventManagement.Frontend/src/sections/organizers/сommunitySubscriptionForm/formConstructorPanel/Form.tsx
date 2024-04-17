@@ -10,7 +10,7 @@ import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const OptionFieldSchema: yup.ObjectSchema<OptionField> = yup.object({
-  name: yup.string().required(),
+  name: yup.string().required("Ім'я поля є обов'язковим"),
   description: yup.string(),
   isRequired: yup.boolean().required(),
   order: yup.number().required(),
@@ -19,7 +19,7 @@ const OptionFieldSchema: yup.ObjectSchema<OptionField> = yup.object({
 });
 
 const TextFieldSchema: yup.ObjectSchema<TextField> = yup.object({
-  name: yup.string().required(),
+  name: yup.string().required("Ім'я поля є обов'язковим"),
   description: yup.string(),
   isRequired: yup.boolean().required(),
   order: yup.number().required(),

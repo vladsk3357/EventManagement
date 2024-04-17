@@ -28,10 +28,9 @@ const schema = yup
 const CreateCommunityForm = () => {
   const navigate = useNavigate();
 
-  const { register, handleSubmit, setError } = useForm<FormInputs>(
-    {
-      resolver: yupResolver(schema),
-    });
+  const { register, handleSubmit, setError } = useForm<FormInputs>({
+    resolver: yupResolver(schema),
+  });
 
   const { mutate, isPending } = useMutation<CreateCommunityMutationResult, Error, CreateCommunityMutationVariables>({
     mutationFn: variables => axios.post<CreateCommunityMutationResult>('/api/organizers/communities', variables).then(res => res.data),
