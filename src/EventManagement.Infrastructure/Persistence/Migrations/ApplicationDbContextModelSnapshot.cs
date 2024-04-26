@@ -17,7 +17,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -101,6 +101,10 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CommunityImage")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -556,6 +560,10 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfileImage")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -741,7 +749,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("EventManagement.Domain.Entities.CommunityEvent.Event", b =>
                 {
                     b.HasOne("EventManagement.Domain.Entities.Community", "Community")
-                        .WithMany()
+                        .WithMany("Events")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -940,6 +948,8 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Community", b =>
                 {
+                    b.Navigation("Events");
+
                     b.Navigation("Forms");
 
                     b.Navigation("SubscriptionForm")

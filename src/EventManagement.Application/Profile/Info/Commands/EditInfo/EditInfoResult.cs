@@ -6,4 +6,5 @@ public sealed record EditInfoResult(
     string Name, 
     string UserName,
     string? Location,
-    string? Information);
+    string? Information,
+    string? ProfileImageUrl);

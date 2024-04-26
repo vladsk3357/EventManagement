@@ -15,6 +15,8 @@ using EventManagement.Application.Organizers.Events.Queries.GetEvents;
 using EventManagement.Application.Organizers.Forms.Queries.GetAllForms;
 using EventManagement.Application.Organizers.Invitations.Commands;
 using EventManagement.Application.Organizers.Subscribers.Queries.GetSubscribers;
+using EventManagement.WebApi.Models;
+using EventManagement.WebApi.Models.Organizers.Communities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.WebApi.Controllers.Organizers;
@@ -47,12 +49,20 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCommunityAsync(int id, EditCommunityCommand command)
+    public async Task<IActionResult> UpdateCommunityAsync(int id, [FromForm] EditCommunityModel model)
     {
-        if (id != command?.Id)
+        if (id != model?.Id)
             return BadRequest();
 
-        await Mediator.Send(command);
+        await Mediator.Send(new EditCommunityCommand(
+            model.Id,
+            model.Name,
+            model.Location,
+            model.Domain,
+            model.ShortDescription,
+            model.Description,
+            model.CommunityImage is null ? null : new FormFileProxy(model.CommunityImage)));
+
         return NoContent();
     }
 

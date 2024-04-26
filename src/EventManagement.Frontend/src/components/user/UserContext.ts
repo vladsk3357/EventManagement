@@ -3,12 +3,11 @@ import { createContext } from "react";
 export type User = {
   id: string;
   email: string;
-  phoneNumber: string | null;
   name: string;
   userName: string;
-  birthday: string | null;
   location: string | null;
   information: string | null;
+  profileImageUrl: string | null;
 };
 
 export type Tokens = {

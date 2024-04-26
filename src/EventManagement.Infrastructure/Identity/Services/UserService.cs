@@ -53,6 +53,7 @@ internal class UserService : IUserService
         storedUser.Location = updatedUser.Location;
         storedUser.Information = updatedUser.Information;
         storedUser.UserName = updatedUser.UserName;
+        storedUser.ProfileImage = updatedUser.ProfileImage;
     }
 
     public async Task<User?> GetUserByIdAsync(string id, CancellationToken cancellationToken = default)

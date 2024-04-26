@@ -15,7 +15,11 @@ const UserDetails = () => {
           <Grid container spacing={3} mb={3}>
             <Grid item xs={12} md={8}>
               <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Avatar alt="photoURL" sx={{ width: 120, height: 120, mr: 2 }} />
+                <Avatar
+                  alt="profile image"
+                  sx={{ width: 120, height: 120, mr: 2 }}
+                  src={data.profileImageUrl || undefined}
+                />
                 <Stack direction="column" spacing={2}>
                   <Typography variant="h2">
                     {data.name}
@@ -69,6 +73,7 @@ type UserDetailsQueryResultType = {
   userName: string;
   location: string | null;
   information: string | null;
+  profileImageUrl: string | null;
 };
 
 function useGetProfileQuery() {

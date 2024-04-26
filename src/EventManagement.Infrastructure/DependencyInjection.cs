@@ -8,6 +8,7 @@ using EventManagement.Infrastructure.Mail;
 using EventManagement.Infrastructure.Options.Frontend;
 using EventManagement.Infrastructure.Search;
 using EventManagement.Infrastructure.Jobs;
+using EventManagement.Infrastructure.FilesStorage;
 
 namespace EventManagement.Infrastructure;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddMails(configuration);
         services.AddSearch(configuration);
         services.AddJobs(configuration);
+        services.AddFilesStorage(configuration);
 
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IDomainEventService, DomainEventService>();

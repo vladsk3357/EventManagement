@@ -19,6 +19,8 @@ public class Community : AuditableEntity
 
     public string? Description { get; set; }
 
+    public string? CommunityImage { get; set; }
+
     public ICollection<Subscription> Subscriptions { get; set; } = default!;
 
     public CommunitySubscriptionForm SubscriptionForm { get; set; } = default!;

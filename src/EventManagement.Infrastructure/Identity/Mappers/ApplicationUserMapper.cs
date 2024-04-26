@@ -13,6 +13,7 @@ internal static class ApplicationUserMapper
         Location = applicationUser.Location,
         Name = applicationUser.Name,
         UserName = applicationUser.UserName!,
+        ProfileImage = applicationUser.ProfileImage,
     };
 
     public static ApplicationUser ToApplicationUser(this User user) => new()
@@ -24,5 +25,6 @@ internal static class ApplicationUserMapper
         Location = user.Location,
         Name = user.Name,
         UserName = user.UserName,
+        ProfileImage = user.ProfileImage,
     };
 }

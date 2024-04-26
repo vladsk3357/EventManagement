@@ -1,8 +1,16 @@
-import { Stack, TextField, Grid } from '@mui/material';
+import { TextField, Grid, Button, Avatar, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, SubmitHandler, TextareaAutosizeElement, TextFieldElement, useForm } from 'react-hook-form-mui';
+import {
+  FormContainer,
+  SubmitHandler,
+  TextFieldElement,
+  useForm,
+} from 'react-hook-form-mui';
+import { styled } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
+import FileUploadFieldElement from '../../../components/organizers/fileUploadFieldElement';
 
 type Props = {
   onSubmit: SubmitHandler<FormInputs>;
@@ -13,6 +21,7 @@ type Props = {
     userName: string;
     location: string | null;
     information: string | null;
+    profileImageUrl: string | null;
   };
 };
 
@@ -24,6 +33,7 @@ type FormInputs = {
   birthday?: string;
   location?: string;
   information?: string;
+  profileImage?: FileList | null;
 };
 
 const schema = yup
@@ -41,20 +51,40 @@ const schema = yup
   .required()
 
 const Form = ({ initialValues, onSubmit, isPending }: Props) => {
-  const form = useForm<FormInputs>(
-    {
-      resolver: yupResolver(schema),
-      defaultValues: {
-        name: initialValues?.name,
-        userName: initialValues?.userName,
-        location: initialValues?.location || undefined,
-        information: initialValues?.information || undefined,
-      }
-    });
+  const form = useForm<FormInputs>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: initialValues.name,
+      userName: initialValues.userName,
+      location: initialValues?.location || undefined,
+      information: initialValues?.information || undefined,
+      profileImage: undefined,
+    },
+  });
+  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(initialValues?.profileImageUrl || null);
+  const { watch } = form;
+  const file = watch('profileImage');
+
+  useEffect(() => {
+    console.log(file);
+  }, [file]);
 
   return (
     <FormContainer onSuccess={onSubmit} formContext={form}>
       <Grid container spacing={2}>
+        <Grid item xs={12} mb={2}>
+          <Avatar
+            alt="profile image"
+            src={profileImagePreview || undefined}
+            sx={{ width: 120, height: 120, mb: 2 }} />
+
+          <FileUploadFieldElement
+            label="Завантажити картинку"
+            name='profileImage'
+            accept='image/*'
+            onFileLoadEnd={result => setProfileImagePreview(result as string | null)}
+          />
+        </Grid>
         <Grid item xs={12} mb={2}>
           <TextField
             value={initialValues?.email}
@@ -73,10 +103,11 @@ const Form = ({ initialValues, onSubmit, isPending }: Props) => {
           <TextFieldElement name="location" label="Ваша локація" fullWidth />
         </Grid>
         <Grid item xs={12} mb={2}>
-          <TextareaAutosizeElement
+          <TextFieldElement
             fullWidth
+            multiline
+            rows={5}
             name="information"
-            rows={4}
             label="Інформація"
           />
         </Grid>

@@ -6,5 +6,5 @@ public sealed record GetCommunityDto(
     string Location,
     string Domain,
     string? ShortDescription,
-    string? Description);
-
+    string? Description,
+    string? CommunityImageUrl);

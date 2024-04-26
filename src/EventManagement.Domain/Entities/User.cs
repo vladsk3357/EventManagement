@@ -14,5 +14,7 @@ public class User : AuditableEntity, IHasDomainEvent
 
     public string? Information { get; set; }
 
+    public string? ProfileImage { get; set; }
+
     public List<DomainEvent> DomainEvents { get; set; } = new();
 }
