@@ -21,9 +21,9 @@ const UserContextProvider = ({ children }: Props) => {
   });
 
   const { data, isSuccess, refetch, isFetching } = useQuery({
-    queryKey: ['user', 'shortInfo'],
+    queryKey: ['user'],
     queryFn: async () => {
-      const res = await axios.get<GetProfileShortInfoQueryResult>('/api/profileinfo/short');
+      const res = await axios.get<GetProfileShortInfoQueryResult>('/api/profileinfo');
       return res.data;
     },
     enabled: false
@@ -81,8 +81,10 @@ export default UserContextProvider;
 
 type GetProfileShortInfoQueryResult = {
   id: string;
-  name: string;
   email: string;
+  name: string;
   userName: string;
   location: string | null;
+  information: string | null;
+  profileImageUrl: string | null;
 };

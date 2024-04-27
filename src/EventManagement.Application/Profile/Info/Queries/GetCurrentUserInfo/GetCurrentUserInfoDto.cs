@@ -6,4 +6,5 @@ public sealed record GetCurrentUserInfoDto(
     string Name, 
     string UserName,
     string? Location,
-    string? Information);
+    string? Information,
+    string? ProfileImageUrl);

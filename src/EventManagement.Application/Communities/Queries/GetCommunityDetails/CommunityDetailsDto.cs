@@ -10,4 +10,5 @@ public sealed record CommunityDetailsDto(
     bool IsSubscribed,
     bool IsOrganizer,
     bool RequiresFormAnswer,
-    int FormId);
+    int FormId,
+    string? CommunityImageUrl);

@@ -53,7 +53,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar alt="photoURL" />
+        <Avatar alt="profile image" src={user?.profileImageUrl || undefined} />
       </IconButton>
 
       <Popover

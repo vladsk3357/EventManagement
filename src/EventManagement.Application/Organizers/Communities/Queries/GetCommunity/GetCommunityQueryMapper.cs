@@ -4,7 +4,7 @@ namespace EventManagement.Application.Organizers.Communities.Queries.GetCommunit
 
 internal static class GetCommunityQueryMapper
 {
-    public static GetCommunityDto ToDto(this Community community)
+    public static GetCommunityDto ToDto(this Community community, string? communityImage)
     {
         return new GetCommunityDto(
             community.Id,
@@ -12,6 +12,7 @@ internal static class GetCommunityQueryMapper
             community.Location,
             community.Domain,
             community.ShortDescription,
-            community.Description);
+            community.Description,
+            communityImage);
     }
 }

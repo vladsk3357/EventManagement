@@ -31,7 +31,7 @@ internal class EventsSearchService(ElasticsearchClient client, IOptions<ElasticO
             @event.CommunityId);
 
         await CreateIndexIfNotExistsAsync(cancellationToken);
-        var result = await _client.IndexAsync(document, _options.Indices.Event, cancellationToken);
+        var result = await _client.IndexAsync(document, (IndexName)_options.Indices.Event, cancellationToken);
         return result.IsSuccess();
     }
 

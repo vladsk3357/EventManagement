@@ -27,13 +27,14 @@ internal sealed class GetEventDetailsQueryHandler : IRequestHandler<GetEventDeta
         var @event = await _context.Events.Include(e => e.Community)
             .Include(e => e.Attendees)
             .Include(e => e.Speakers)
-            .Include(e => e.Sessions.Where(s => s.StartTime >= e.StartDate && s.EndTime <= e.EndDate))
+            //.Include(e => e.Sessions.Where(s => s.StartTime >= e.StartDate && s.EndTime <= e.EndDate))
+            .Include(e => e.Sessions)
             .ThenInclude(s => s.Speakers)
-            .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken) 
+            .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Event), request.Id);
 
         var attendeesCount = @event.Attendees.Count(e => e.Status == AttendeeStatus.Confirmed);
-        var isAttendable = @event.StartDate > _dateTime.Now 
+        var isAttendable = @event.StartDate > _dateTime.Now
             && (!@event.Attendance.Limited || attendeesCount >= @event.Attendance.Limit);
 
         var currentAttendee = @event.Attendees

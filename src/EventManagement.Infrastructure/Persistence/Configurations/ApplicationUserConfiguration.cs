@@ -18,5 +18,8 @@ internal sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Ap
 
         builder.Property(e => e.Information)
             .HasMaxLength(1000);
+
+        builder.Property(e => e.ProfileImage)
+            .HasMaxLength(200);
     }
 }

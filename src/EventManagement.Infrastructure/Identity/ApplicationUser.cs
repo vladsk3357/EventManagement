@@ -13,5 +13,7 @@ internal class ApplicationUser : IdentityUser, IHasDomainEvent
 
     public string? Information { get; set; }
 
+    public string? ProfileImage { get; set; }
+
     public List<DomainEvent> DomainEvents { get; set; } = [];
 }

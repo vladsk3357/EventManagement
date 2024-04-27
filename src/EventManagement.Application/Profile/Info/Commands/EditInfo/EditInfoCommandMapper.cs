@@ -10,11 +10,12 @@ internal static class EditInfoCommandMapper
         Information = command.Information
     };
 
-    public static EditInfoResult ToDto(this Domain.Entities.User user) => new(
+    public static EditInfoResult ToDto(this Domain.Entities.User user, string? profileImageUrl) => new(
         user.Id, 
         user.Email, 
         user.Name, 
         user.UserName, 
         user.Location, 
-        user.Information);
+        user.Information,
+        profileImageUrl);
 }

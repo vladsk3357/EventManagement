@@ -8,18 +8,14 @@ namespace EventManagement.Application.Communities.Queries.GetCommunityDetails;
 
 public sealed record GetCommunityDetailsQuery(int Id) : IRequest<CommunityDetailsDto>;
 
-internal sealed class GetCommunityDetailsQueryHandler : IRequestHandler<GetCommunityDetailsQuery, CommunityDetailsDto>
+internal sealed class GetCommunityDetailsQueryHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor,
+    IFileStorageService fileStorageService) : IRequestHandler<GetCommunityDetailsQuery, CommunityDetailsDto>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public GetCommunityDetailsQueryHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+    private readonly IFileStorageService _fileStorageService = fileStorageService;
 
     public async Task<CommunityDetailsDto> Handle(GetCommunityDetailsQuery request, CancellationToken cancellationToken)
     {
@@ -40,7 +36,17 @@ internal sealed class GetCommunityDetailsQueryHandler : IRequestHandler<GetCommu
         var requiresFormAnswer = community.SubscriptionForm.Form.Fields.Count != 0;
 
         var formId = community.SubscriptionForm.FormId;
+        var communityImage = community.CommunityImage is not null
+            ? await _fileStorageService.GetFileUrlAsync(community.CommunityImage, cancellationToken)
+            : null;
 
-        return GetCommunityDetailsQueryMapper.ToDto(community, subscribersCount, isSubscribed, community.OrganizerId == userId, requiresFormAnswer, formId);
+        return GetCommunityDetailsQueryMapper.ToDto(
+            community, 
+            subscribersCount, 
+            isSubscribed, 
+            community.OrganizerId == userId, 
+            requiresFormAnswer, 
+            formId,
+            communityImage?.ToString());
     }
 }

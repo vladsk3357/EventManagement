@@ -25,7 +25,7 @@ internal class CommunitiesSearchService(ElasticsearchClient client, IOptions<Ela
             community.Location);
 
         await CreateCommunityIndexIfNotExistsAsync(cancellationToken);
-        var result = await _client.IndexAsync(document, _options.Indices.Community, cancellationToken);
+        var result = await _client.IndexAsync(document, (IndexName)_options.Indices.Community, cancellationToken);
         return result.IsSuccess();
     }
 

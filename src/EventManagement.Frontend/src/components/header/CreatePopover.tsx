@@ -1,11 +1,6 @@
-import { MouseEventHandler, useContext, useState } from 'react';
-// @mui
-import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover, Link, Button, Menu } from '@mui/material';
-import { UserContext } from '../user';
+import { useState } from 'react';
+import { MenuItem, Link, Button, Menu } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-
-// ----------------------------------------------------------------------
 
 export default function CreatePopover() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
