@@ -8,6 +8,7 @@ import Tooltip from './Tooltip';
 import Backdrop from './Backdrop';
 import Typography from './Typography';
 import Autocomplete from './Autocomplete';
+import Accordion from './Accordion';
 import { Components, Theme } from '@mui/material';
 
 // ----------------------------------------------------------------------
@@ -22,7 +23,8 @@ const ComponentsOverrides = (theme: Theme): Components<Theme> => {
     Tooltip(theme),
     Backdrop(theme),
     Typography(theme),
-    Autocomplete(theme)
+    Autocomplete(theme),
+    Accordion(theme),
   );
 };
 

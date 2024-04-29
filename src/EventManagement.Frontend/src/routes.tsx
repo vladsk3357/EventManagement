@@ -31,9 +31,7 @@ import EventSchedulePage from './pages/organizers/events/EventSchedulePage';
 import MyEventsPage from './pages/myEvents/MyEventsPage';
 import CommunityCommunicationPage from './pages/organizers/community/CommunityCommunicationPage';
 import CommunityInvitationPage from './pages/organizers/community/CommunityInvitationPage';
-
-
-// ----------------------------------------------------------------------
+import DiscoverCommunitiesPage from './pages/discover/DiscoverCommunitiesPage';
 
 export default function Router() {
   const routes = useRoutes([
@@ -41,9 +39,10 @@ export default function Router() {
       path: '',
       element: <HomeLayout />,
       children: [
-        { element: <HomePage />, index: true },
+        { element: <Navigate to='my-communities' />, index: true },
         { path: 'my-communities', element: <MyCommunitiesPage /> },
         { path: 'my-events', element: <MyEventsPage /> },
+        { path: 'discover-communities', element: <DiscoverCommunitiesPage /> },
       ],
     },
     {

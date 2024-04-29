@@ -3,5 +3,8 @@
 public sealed record CommunityDocument(
     int Id,
     string Name,
+    string NameSuggestion,
     string? Description,
-    string Location);
+    string Location,
+    string Domain,
+    int SubscribersCount);

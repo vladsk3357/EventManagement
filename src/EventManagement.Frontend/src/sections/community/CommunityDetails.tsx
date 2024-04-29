@@ -28,7 +28,7 @@ const CommunityDetails = () => {
         <Grid container>
           <Grid item xs={12} md={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }}>
-              <Avatar alt="community image" src={data?.communityImageUrl} sx={{ width: 120, height: 120, mr: 2 }} />
+              <Avatar alt="community image" src={data?.communityImageUrl || undefined} sx={{ width: 120, height: 120, mr: 2 }} />
               <Stack direction="column">
                 <Typography variant="h2">
                   {data?.name}

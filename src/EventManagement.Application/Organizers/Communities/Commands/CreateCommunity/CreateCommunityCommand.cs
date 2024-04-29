@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.Form;
@@ -10,21 +11,14 @@ namespace EventManagement.Application.Organizers.Communities.Commands.CreateComm
 [Authorize]
 public sealed record CreateCommunityCommand(string Name, string Location, string Domain) : IRequest<CreateCommunityResultDto>;
 
-internal sealed class CreateCommunityCommandHandler : IRequestHandler<CreateCommunityCommand, CreateCommunityResultDto>
+internal sealed class CreateCommunityCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor,
+    ICommunitiesSearchService searchService) : IRequestHandler<CreateCommunityCommand, CreateCommunityResultDto>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-    private readonly ICommunitiesSearchService _searchService;
-
-    public CreateCommunityCommandHandler(
-        IApplicationDbContext context, 
-        ICurrentUserAccessor currentUserAccessor, 
-        ICommunitiesSearchService searchService)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-        _searchService = searchService;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+    private readonly ICommunitiesSearchService _searchService = searchService;
 
     public async Task<CreateCommunityResultDto> Handle(CreateCommunityCommand request, CancellationToken cancellationToken)
     {
@@ -53,7 +47,15 @@ internal sealed class CreateCommunityCommandHandler : IRequestHandler<CreateComm
         await _context.CommunitySubscriptionForms.AddAsync(communitySubscriptionForm, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _searchService.IndexAsync(entity, cancellationToken);
+        var document = new CommunityIndexDocument(
+            entity.Id,
+            entity.Name,
+            entity.Description,
+            entity.Location,
+            entity.Domain,
+            0);
+
+        await _searchService.IndexAsync(document, cancellationToken);
 
         return new CreateCommunityResultDto(entity.Id);
     }

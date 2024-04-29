@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.Form.Answer;
 using MediatR;
@@ -9,16 +10,14 @@ namespace EventManagement.Application.Communities.Commands.SubscribeCommunity;
 
 public sealed record SubscribeCommunityCommand(int CommunityId, FormAnswerDto? FormAnswer = null) : IRequest;
 
-internal class SubscribeCommunityCommandHandler : IRequestHandler<SubscribeCommunityCommand>
+internal class SubscribeCommunityCommandHandler(
+    IApplicationDbContext context, 
+    ICurrentUserAccessor currentUserAccessor,
+    ICommunitiesSearchService searchService) : IRequestHandler<SubscribeCommunityCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public SubscribeCommunityCommandHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+    private readonly ICommunitiesSearchService _searchService = searchService;
 
     public async Task Handle(SubscribeCommunityCommand request, CancellationToken cancellationToken)
     {
@@ -74,5 +73,8 @@ internal class SubscribeCommunityCommandHandler : IRequestHandler<SubscribeCommu
         }, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        var subscribersCount = _context.Subscriptions.Count(cs => cs.CommunityId == community.Id);
+        await _searchService.UpdateSubscribersCountAsync(community.Id, subscribersCount, cancellationToken);
     }
 }

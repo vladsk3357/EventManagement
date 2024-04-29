@@ -1,4 +1,8 @@
-﻿using EventManagement.Application.Search.Queries.Search;
+﻿using EventManagement.Application.Common.Pagination;
+using EventManagement.Application.Common.Services.Search;
+using EventManagement.Application.Communities.Queries.GetCommunities;
+using EventManagement.Application.Communities.Queries.GetFacetedFilter;
+using EventManagement.Application.Search.Queries.Search;
 using EventManagement.Application.Search.Queries.Search.Response;
 using EventManagement.Application.Search.Queries.SearchSuggestions;
 using Microsoft.AspNetCore.Mvc;
@@ -17,5 +21,29 @@ public class SearchController : ApiControllerBase
     public async Task<SearchSuggestionsResult> SuggestAsync([FromQuery] SearchSuggestionsQuery request)
     {
         return await Mediator.Send(request);
+    }
+
+    [HttpGet("discover-communities")]
+    public async Task<PagedList<Application.Communities.Queries.GetCommunities.CommunityDto>> DiscoverCommunitiesAsync(
+        string? sortBy, 
+        string? sortOrder = "asc", 
+        int page = 1, 
+        int pageSize = 10, 
+        string? location = null,
+        string? domain = null)
+    {
+        return await Mediator.Send(new GetCommunitiesQuery(
+            sortBy, 
+            sortOrder, 
+            page, 
+            pageSize, 
+            location?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+            domain?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)));
+    }
+
+    [HttpGet("communities-faceted-filter")]
+    public async Task<FacetedFilter> GetCommunitiesFacetedFilterAsync()
+    {
+        return await Mediator.Send(new GetFacetedFilterQuery());
     }
 }

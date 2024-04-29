@@ -2,23 +2,15 @@
 
 namespace EventManagement.Application.Common.Pagination;
 
-public class PagedList<T>
+public class PagedList<T>(List<T> items, int page, int pageSize, long totalCount)
 {
-    public PagedList(List<T> items, int page, int pageSize, int totalCount)
-    {
-        Items = items;
-        Page = page;
-        PageSize = pageSize;
-        TotalCount = totalCount;
-    }
+    public List<T> Items { get; } = items;
 
-    public List<T> Items { get; }
+    public int Page { get; } = page;
 
-    public int Page { get; }
+    public int PageSize { get; } = pageSize;
 
-    public int PageSize { get; }
-
-    public int TotalCount { get; }
+    public long TotalCount { get; } = totalCount;
 
     public bool HasNextPage => Page * PageSize < TotalCount;
 

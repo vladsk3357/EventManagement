@@ -73,6 +73,6 @@ internal class EventsSearchService(ElasticsearchClient client, IOptions<ElasticO
                     .Type(TextQueryType.BoolPrefix)
                     .Query(term))));
 
-        return new SearchResult<EventDocument>(response.Documents, response.Total);
+        return new SearchResult<EventDocument>(response.Documents, 0, pageSize, response.Total);
     }
 }
