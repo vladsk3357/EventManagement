@@ -53,7 +53,7 @@ internal sealed class CreateCommunityCommandHandler(
             entity.Description,
             entity.Location,
             entity.Domain,
-            0);
+            1);
 
         await _searchService.IndexAsync(document, cancellationToken);
 

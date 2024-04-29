@@ -11,7 +11,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 export default function App() {
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
+    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="uk">
       <HelmetProvider>
         <ApiProvider>
           <UserContextProvider>

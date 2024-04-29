@@ -2,6 +2,7 @@
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Application.Communities.Queries.GetCommunities;
 using EventManagement.Application.Communities.Queries.GetFacetedFilter;
+using EventManagement.Application.Events.Queries.GetEvents;
 using EventManagement.Application.Search.Queries.Search;
 using EventManagement.Application.Search.Queries.Search.Response;
 using EventManagement.Application.Search.Queries.SearchSuggestions;
@@ -45,5 +46,23 @@ public class SearchController : ApiControllerBase
     public async Task<FacetedFilter> GetCommunitiesFacetedFilterAsync()
     {
         return await Mediator.Send(new GetFacetedFilterQuery());
+    }
+
+    [HttpGet("discover-events")]
+    public async Task<PagedList<Application.Events.Queries.GetEvents.EventDto>> DiscoverEventsAsync(
+        string? sortBy = "startDate",
+        string? sortOrder = "asc",
+        int page = 1,
+        int pageSize = 10,
+        DateTime? startDate = null,
+        DateTime? endDate = null)
+    {
+        return await Mediator.Send(new GetEventsQuery(
+            sortBy,
+            sortOrder,
+            page,
+            pageSize,
+            startDate,
+            endDate));
     }
 }

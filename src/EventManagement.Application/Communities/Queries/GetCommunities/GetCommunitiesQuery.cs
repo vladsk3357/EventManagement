@@ -39,16 +39,15 @@ internal sealed class GetCommunitiesQueryHandler(
 
         if (request.Location is not null)
         {
-            searchRequest.Filters.Add(new Filter<CommunityIndexDocument>(c => c.Location, request.Location));
+            searchRequest.Filters.Add(new TextFilter<CommunityIndexDocument>(c => c.Location, request.Location));
         }
 
         if (request.Domain is not null)
         {
-            searchRequest.Filters.Add(new Filter<CommunityIndexDocument>(c => c.Domain, request.Domain));
+            searchRequest.Filters.Add(new TextFilter<CommunityIndexDocument>(c => c.Domain, request.Domain));
         }
 
         var searchResult = await _communitiesSearchService.SearchAsync(searchRequest, cancellationToken);
-        var facets = await _communitiesSearchService.GetFacetedFilterAsync(cancellationToken);
         var communities = await _context.Communities
             .Where(c => searchResult.Results.Select(r => r.Id).Contains(c.Id))
             .ToDictionaryAsync(c => c.Id, cancellationToken);

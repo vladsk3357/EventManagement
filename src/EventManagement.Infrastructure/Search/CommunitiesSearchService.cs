@@ -110,11 +110,23 @@ internal class CommunitiesSearchService(ElasticsearchClient client, IOptions<Ela
         if (request.Filters.Count > 0)
         {
             queryDescriptor = queryDescriptor.Bool(x => x
-                .Filter(request.Filters.Select(f => Query.Terms(new TermsQuery
+                .Filter(request.Filters.Select(f =>
                 {
-                    Field = f.FieldSelector,
-                    Terms = new TermsQueryField(f.Values.Select(v => FieldValue.String((string)v)).ToArray()),
-                })).ToList()));
+                    return f switch
+                    {
+                        TextFilter<CommunityIndexDocument> textFilter => Query.Terms(new TermsQuery
+                        {
+                            Field = textFilter.FieldSelector,
+                            Terms = new TermsQueryField(textFilter.Values.Select(v => FieldValue.String((string)v)).ToArray()),
+                        }),
+                        RangeFilter<CommunityIndexDocument> rangeFilter => Query.Range(new RangeQuery(new DateRangeQuery(rangeFilter.FieldSelector)
+                        {
+                            Gte = (DateTime?)rangeFilter.From,
+                            Lte = (DateTime?)rangeFilter.To
+                        })),
+                        _ => throw new ArgumentException("Unknown filter type")
+                    };
+                }).ToList()));
         }
 
         searchRequest = searchRequest.Query(queryDescriptor);

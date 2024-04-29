@@ -11,7 +11,7 @@ type Props = {
 
 const CommunityCard = ({ community }: Props) => {
   return (
-    <Card>
+    <Card sx={{ height: '100%' }}>
       <RouterLink to={`/community/${community.id}`}>
         <CardActionArea sx={{ minHeight: 200 }}>
           <CardMedia

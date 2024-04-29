@@ -1,6 +1,4 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-//
-import SimpleLayout from './layouts/simple';
 import HomeLayout from './layouts/home';
 import DefaultLayout from './layouts/default';
 import SimpleOrganizersLayout from './layouts/organizers/SimpleOrganizersLayout';
@@ -8,7 +6,6 @@ import OrganizersLayout from './layouts/organizers/OrganizersLayout';
 import RegistrationPage from './pages/profile/RegistrationPage';
 import LoginPage from './pages/profile/LoginPage';
 import Page404 from './pages/error/Page404';
-import HomePage from './pages/HomePage';
 import UserDetailsPage from './pages/UserDetailsPage';
 import Edit from './layouts/edit';
 import EditProfilePage from './pages/edit/EditProfilePage';
@@ -32,6 +29,7 @@ import MyEventsPage from './pages/myEvents/MyEventsPage';
 import CommunityCommunicationPage from './pages/organizers/community/CommunityCommunicationPage';
 import CommunityInvitationPage from './pages/organizers/community/CommunityInvitationPage';
 import DiscoverCommunitiesPage from './pages/discover/DiscoverCommunitiesPage';
+import DiscoverEventsPage from './pages/discover/DiscoverEventsPage';
 
 export default function Router() {
   const routes = useRoutes([
@@ -43,6 +41,7 @@ export default function Router() {
         { path: 'my-communities', element: <MyCommunitiesPage /> },
         { path: 'my-events', element: <MyEventsPage /> },
         { path: 'discover-communities', element: <DiscoverCommunitiesPage /> },
+        { path: 'discover-events', element: <DiscoverEventsPage /> },
       ],
     },
     {

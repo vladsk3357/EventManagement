@@ -28,6 +28,11 @@ const navConfig: NavItem[] = [
     path: '/discover-communities',
     icon: <GroupAddIcon />,
   },
+  {
+    title: 'Дослідити події',
+    path: '/discover-events',
+    icon: <GroupAddIcon />,
+  },
 ];
 
 export default navConfig;

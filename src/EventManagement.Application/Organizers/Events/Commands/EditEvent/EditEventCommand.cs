@@ -2,6 +2,7 @@
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.CommunityEvent;
@@ -40,12 +41,23 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
     public async Task Handle(EditEventCommand request, CancellationToken cancellationToken)
     {
         var @event = await _context.Events
+            .Include(e => e.Attendees)
             .FirstOrDefaultAsync(e => e.Id == request.Id && e.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new InvalidRequestException(nameof(request.Id), "Події не існує.");
 
         UpdateEventWithCommand(@event, request);
         await _context.SaveChangesAsync(cancellationToken);
-        await _searchService.IndexAsync(@event, cancellationToken);
+
+        var document = new EventIndexDocument(
+            @event.Id,
+            @event.Name,
+            @event.Description,
+            @event.CommunityId,
+            @event.StartDate,
+            @event.EndDate,
+            @event.Attendees.Count);
+
+        await _searchService.IndexAsync(document, cancellationToken);
     }
 
     private static void UpdateEventWithCommand(Event @event, EditEventCommand request)

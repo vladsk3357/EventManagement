@@ -1,28 +1,25 @@
+import { Grid, CircularProgress, Box, Pagination } from "@mui/material";
+import Filters from "./Filters";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "../../../api";
-import {
-  Box,
-  CircularProgress,
-  Grid,
-  Pagination,
-} from "@mui/material";
-import { Community } from "./types";
-import CommunityCard from "./CommunityCard";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 import { PagedList } from "../../common/types";
-import Filters from './Filters';
+import moment from "moment";
+import { Venue } from "../../event/types";
+import EventCard from "./EventCard";
+import { CommunityEvent } from "./types";
 
-const DiscoverCommunities = () => {
+const DiscoverEvents = () => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const page = Number(urlSearchParams.get('page')) || 1;
   const pageSize = Number(urlSearchParams.get('pageSize')) || 10;
-  const { data, isFetched, isLoading } = useDiscoverCommunitiesList(
+  const { data, isFetched, isLoading } = useDiscoverEventsList(
     page,
     pageSize,
     urlSearchParams.get('sortBy') || undefined,
     urlSearchParams.get('sortOrder') || undefined,
-    urlSearchParams.get('location') || undefined,
-    urlSearchParams.get('domain') || undefined,
+    urlSearchParams.get('startDate') || undefined,
+    urlSearchParams.get('endDate') || undefined,
   );
 
   return (
@@ -33,9 +30,9 @@ const DiscoverCommunities = () => {
       {isLoading && <CircularProgress />}
       {isFetched && (
         <>
-          {data?.items.map(community => (
-            <Grid item xs={12} sm={4} key={community.id} >
-              <CommunityCard community={community} />
+          {data?.items.map(event => (
+            <Grid item xs={12} sm={4} key={event.id}>
+              <EventCard event={event} />
             </Grid>
           ))}
           <Box display="flex" justifyContent="center" flexDirection="row" width="100%">
@@ -55,28 +52,41 @@ const DiscoverCommunities = () => {
   );
 };
 
-export default DiscoverCommunities;
+export default DiscoverEvents;
 
-function useDiscoverCommunitiesList(
+function useDiscoverEventsList(
   page: number,
   pageSize: number,
   sortBy?: string,
   sortOrder?: string,
-  location?: string,
-  domain?: string) {
+  startDate?: string,
+  endDate?: string) {
   return useQuery({
-    queryKey: ['discover-communities', page, pageSize, sortBy, sortOrder, location, domain],
-    queryFn: () => axios.get<DiscoverCommunitiesQueryResultType>('/api/search/discover-communities', {
+    queryKey: ['discover-events', page, pageSize, sortBy, sortOrder, startDate, endDate],
+    queryFn: () => axios.get<DiscoverEventsQueryResultType>('/api/search/discover-events', {
       params: {
         page,
         pageSize,
         sortBy,
         sortOrder,
-        location,
-        domain,
+        startDate,
+        endDate,
       }
-    }).then(res => res.data)
-  });
+    }).then(res => res.data),
+    select: data => ({
+      ...data, items: data.items.map(item => ({ ...item, startDate: moment(item.startDate) }) as CommunityEvent),
+    }),
+  })
 }
 
-type DiscoverCommunitiesQueryResultType = PagedList<Community>;
+type DiscoverEventsQueryResultType = PagedList<{
+  id: number;
+  name: string;
+  community: {
+    id: number;
+    name: string;
+  };
+  startDate: string;
+  attendeesCount: number;
+  venue: Venue;
+}>;
