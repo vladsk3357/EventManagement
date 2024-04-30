@@ -10,4 +10,5 @@ public interface IEventsSearchService
     Task<bool> IndexAsync(EventIndexDocument @event, CancellationToken cancellationToken = default);
     Task<SearchResult<EventIndexDocument>> SuggestAsync(string term, int pageSize, CancellationToken cancellationToken = default);
     Task<SearchResult<EventIndexDocument>> SearchAsync(SearchRequest<EventIndexDocument> request, CancellationToken cancellation = default);
+    Task<FacetedFilter> GetFacetedFilterAsync(CancellationToken cancellationToken = default);
 }

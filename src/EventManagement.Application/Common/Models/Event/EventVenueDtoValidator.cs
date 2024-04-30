@@ -23,6 +23,6 @@ internal class OfflineVenueDtoValidator : EventVenueDtoValidator<OfflineEventVen
 {
     public OfflineVenueDtoValidator()
     {
-        RuleFor(x => x.Location).NotEmpty();
+        RuleFor(x => x.Address).IsValid();
     }
 }

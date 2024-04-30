@@ -6,6 +6,7 @@ using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Entities.CommunityEvent;
+using EventManagement.Domain.ValueObjects;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,21 +23,14 @@ public sealed record EditEventCommand(
     EventVenueDto Venue,
     int CommunityId) : IRequest;
 
-internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand>
+internal sealed class EditEventCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor,
+    IEventsSearchService searchService) : IRequestHandler<EditEventCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-    private readonly IEventsSearchService _searchService;
-
-    public EditEventCommandHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor,
-        IEventsSearchService searchService)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-        _searchService = searchService;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+    private readonly IEventsSearchService _searchService = searchService;
 
     public async Task Handle(EditEventCommand request, CancellationToken cancellationToken)
     {
@@ -55,7 +49,13 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
             @event.CommunityId,
             @event.StartDate,
             @event.EndDate,
-            @event.Attendees.Count);
+            @event.Attendees.Count,
+            @event.Venue switch
+            {
+                OfflineEventVenue offline => offline.Address.City,
+                OnlineEventVenue => "онлайн",
+                _ => throw new ArgumentException("Event type is not handled."),
+            });
 
         await _searchService.IndexAsync(document, cancellationToken);
     }
@@ -66,7 +66,14 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
         @event.Venue = request.Venue switch
         {
             OnlineEventVenueDto online => new OnlineEventVenue { Url = online.Url },
-            OfflineEventVenueDto offline => new OfflineEventVenue { Location = offline.Location },
+            OfflineEventVenueDto offline => new OfflineEventVenue 
+            {
+                Address = new Address(
+                    offline.Address.City, 
+                    offline.Address.Street, 
+                    offline.Address.LocationName, 
+                    offline.Address.ZipCode)
+            },
             _ => throw new NotImplementedException(),
         };
         @event.Description = request.Description;
@@ -78,5 +85,5 @@ internal sealed class EditEventCommandHandler : IRequestHandler<EditEventCommand
             Limit = request.Attendance.Limit,
             ShouldBeApproved = request.Attendance.ShouldBeApproved,
         };
-    }   
+    }
 }

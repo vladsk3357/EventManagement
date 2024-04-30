@@ -39,7 +39,7 @@ const EventsTabPanel = ({ value }: Props) => {
                             <Typography variant="h6">{event.name}</Typography>
                             <Typography variant="body2">{event.attendeesCount} учасників йде</Typography>
                             <Typography variant="body2"><EventIcon /> {moment(event.startDate).format("LL")}</Typography>
-                            <Typography variant="body2"><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.location}</Typography>
+                            <Typography variant="body2"><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.address.locationName}</Typography>
                           </CardContent>
                         </CardActionArea>
                       </RouterLink>

@@ -5,6 +5,7 @@ using EventManagement.Application.Common.Security;
 using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,7 +66,13 @@ internal sealed class CreateEventCommandHandler
             community.Id,
             entity.StartDate,
             entity.EndDate,
-            1);
+            1,
+            entity.Venue switch
+            {
+                OfflineEventVenue offline => offline.Address.City,
+                OnlineEventVenue => "онлайн",
+                _ => throw new ArgumentException("Event type is not handled."),
+            });
 
         await _searchService.IndexAsync(document, cancellationToken);
 

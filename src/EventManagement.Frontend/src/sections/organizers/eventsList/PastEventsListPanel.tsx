@@ -77,7 +77,7 @@ function useColumns(): GridColDef[] {
       sortable: false,
       filterable: false,
       renderCell: ({ value, row }) => (
-        <Chip label={value.type === 'Online' ? 'Онлайн' : value.location} />
+        <Chip label={value.type === 'Online' ? 'Онлайн' : value.address.locationName} />
       ),
     },
     {

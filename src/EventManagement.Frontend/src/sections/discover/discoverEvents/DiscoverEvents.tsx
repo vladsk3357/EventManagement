@@ -1,4 +1,4 @@
-import { Grid, CircularProgress, Box, Pagination } from "@mui/material";
+import { Grid, CircularProgress, Box, Pagination, Paper, Typography } from "@mui/material";
 import Filters from "./Filters";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "../../../api";
@@ -20,6 +20,7 @@ const DiscoverEvents = () => {
     urlSearchParams.get('sortOrder') || undefined,
     urlSearchParams.get('startDate') || undefined,
     urlSearchParams.get('endDate') || undefined,
+    urlSearchParams.get('location') || undefined,
   );
 
   return (
@@ -30,7 +31,14 @@ const DiscoverEvents = () => {
       {isLoading && <CircularProgress />}
       {isFetched && (
         <>
-          {data?.items.map(event => (
+          {data!.items.length === 0 && (
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2 }}>
+                <Typography variant="body1" align="center">Немає результатів</Typography>
+              </Paper>
+            </Grid>
+          )}
+          {data!.items.map(event => (
             <Grid item xs={12} sm={4} key={event.id}>
               <EventCard event={event} />
             </Grid>
@@ -60,9 +68,10 @@ function useDiscoverEventsList(
   sortBy?: string,
   sortOrder?: string,
   startDate?: string,
-  endDate?: string) {
+  endDate?: string,
+  location?: string) {
   return useQuery({
-    queryKey: ['discover-events', page, pageSize, sortBy, sortOrder, startDate, endDate],
+    queryKey: ['discover-events', page, pageSize, sortBy, sortOrder, startDate, endDate, location],
     queryFn: () => axios.get<DiscoverEventsQueryResultType>('/api/search/discover-events', {
       params: {
         page,
@@ -71,6 +80,7 @@ function useDiscoverEventsList(
         sortOrder,
         startDate,
         endDate,
+        location,
       }
     }).then(res => res.data),
     select: data => ({

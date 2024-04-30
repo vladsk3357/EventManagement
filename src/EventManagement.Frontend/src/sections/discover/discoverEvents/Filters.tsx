@@ -20,12 +20,9 @@ const Filters = () => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const sortBy = urlSearchParams.get('sortBy');
-  const sortOrder = urlSearchParams.get('sortOrder');
-
   const form = useForm({
     defaultValues: {
-      // location: urlSearchParams.get('location')?.split(','),
+      location: urlSearchParams.get('location')?.split(','),
       // domain: urlSearchParams.get('domain')?.split(','),
       sortBy: urlSearchParams.get('sortBy') || 'startDate',
       sortOrder: urlSearchParams.get('sortOrder') || 'asc',
@@ -47,8 +44,8 @@ const Filters = () => {
       if (data.endDate)
         params.set('endDate', data.endDate.format());
 
-      // if (data.domain?.length)
-      //   params.set('domain', data.domain.join(','));
+      if (data.location?.length)
+        params.set('location', data.location.join(','));
 
       setUrlSearchParams(params);
       return { values: data, errors: {} };
@@ -57,12 +54,12 @@ const Filters = () => {
 
   const { watch } = form;
 
-  const { data, isLoading, isFetched } = useGetCommunitiesFacetedFilter();
+  const { data, isLoading, isFetched } = useGetEventsFacetedFilter();
 
   return (
     <FormContainer formContext={form}>
       <Grid container spacing={3}>
-        {/* {isLoading && <CircularProgress />}
+        {isLoading && <CircularProgress />}
         {isFetched && data?.facets.map((facet, index) => (
           <Grid item xs={12} md={3} key={index}>
             <Accordion>
@@ -82,7 +79,7 @@ const Filters = () => {
               </AccordionDetails>
             </Accordion>
           </Grid>
-        ))} */}
+        ))}
         <Grid item xs={12} md={3}>
           <Accordion>
             <AccordionSummary
@@ -96,7 +93,6 @@ const Filters = () => {
                   name="startDate"
                   label="Дата початку"
                   required
-                  mb={2}
                 />
                 <DatePickerElement
                   name="endDate"
@@ -154,17 +150,17 @@ const Filters = () => {
 
 export default Filters;
 
-function useGetCommunitiesFacetedFilter() {
+function useGetEventsFacetedFilter() {
   return useQuery({
-    queryKey: ['communities-faceted-filter'],
+    queryKey: ['events-faceted-filter'],
     queryFn: async () => {
-      const res = await axios.get<GetCommunitiesFacetedFilterQueryResult>('/api/search/communities-faceted-filter');
+      const res = await axios.get<GetEventsFacetedFilterQueryResult>('/api/search/events-faceted-filter');
       return res.data;
     },
   });
 }
 
-type GetCommunitiesFacetedFilterQueryResult = {
+type GetEventsFacetedFilterQueryResult = {
   facets: {
     name: string;
     values: {

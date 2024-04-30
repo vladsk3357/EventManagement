@@ -35,8 +35,7 @@ const AnswersPanel = ({ value }: Props) => {
         pageSizeOptions={[10, 15]}
         loading={isLoading}
         onPaginationModelChange={paginationChangeHandle}
-      >
-      </DataGrid>
+      />
     </TabPanel>
   );
 };

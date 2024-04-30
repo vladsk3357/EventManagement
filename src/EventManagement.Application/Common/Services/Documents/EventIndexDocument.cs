@@ -7,4 +7,5 @@ public sealed record EventIndexDocument(
     int CommunityId,
     DateTime StartDate,
     DateTime EndDate,
-    int AttendeesCount);
+    int AttendeesCount,
+    string Location);

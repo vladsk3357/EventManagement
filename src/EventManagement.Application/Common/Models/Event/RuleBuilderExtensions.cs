@@ -13,4 +13,14 @@ internal static class RuleBuilderExtensions
            x.Add(new OfflineVenueDtoValidator());
        });
     }
+
+    public static IRuleBuilderOptions<T, AddressDto> IsValid<T>(this IRuleBuilder<T, AddressDto> ruleBuilder)
+    {
+        return ruleBuilder.ChildRules(address =>
+        {
+            address.RuleFor(x => x.City).NotEmpty();
+            address.RuleFor(x => x.Street).NotEmpty();
+            address.RuleFor(x => x.LocationName).NotEmpty();
+        });
+    }
 }

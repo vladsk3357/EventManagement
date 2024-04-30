@@ -19,7 +19,7 @@ const EventCard = ({ event }: Props) => {
               <Typography variant="subtitle2">{event.startDate.format("lll")}</Typography>
               <Typography variant="subtitle2">Від {event.community.name}</Typography>
             </Stack>
-            <Typography variant="subtitle2" gutterBottom sx={{ verticalAlign: 'middle' }}><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.location}</Typography>
+            <Typography variant="subtitle2" gutterBottom sx={{ verticalAlign: 'middle' }}><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.address.locationName}</Typography>
             <Typography variant="body1">{event.attendeesCount} учасників йде</Typography>
           </CardContent>
         </CardActionArea>

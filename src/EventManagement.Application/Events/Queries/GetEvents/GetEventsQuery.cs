@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EventManagement.Application.Common.Interfaces;
+﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Pagination;
 using EventManagement.Application.Common.Security;
@@ -17,7 +16,8 @@ public sealed record GetEventsQuery(
     int Page,
     int PageSize,
     DateTime? StartDate,
-    DateTime? EndDate) : PagedRequest(Page, PageSize), IRequest<PagedList<EventDto>>;
+    DateTime? EndDate,
+    string[]? Location) : PagedRequest(Page, PageSize), IRequest<PagedList<EventDto>>;
 
 internal sealed class GetEventsQueryHandler(
     IApplicationDbContext context,
@@ -39,6 +39,11 @@ internal sealed class GetEventsQueryHandler(
         };
 
         searchRequest.Filters.Add(new RangeFilter<EventIndexDocument>(e => e.StartDate, request.StartDate ?? _dateTime.Now, request.EndDate));
+
+        if (request.Location is not null)
+        {
+            searchRequest.Filters.Add(new TextFilter<EventIndexDocument>(c => c.Location, request.Location));
+        }
 
         var result = await _eventsSearchService.SearchAsync(searchRequest, cancellationToken);
         var events = await _context.Events

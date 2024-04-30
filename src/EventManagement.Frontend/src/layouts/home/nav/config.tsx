@@ -2,6 +2,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import EventIcon from '@mui/icons-material/Event';
 import SvgColor from '../../../components/svg-color';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import DateRangeIcon from '@mui/icons-material/DateRange';
 
 const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
@@ -31,7 +32,7 @@ const navConfig: NavItem[] = [
   {
     title: 'Дослідити події',
     path: '/discover-events',
-    icon: <GroupAddIcon />,
+    icon: <DateRangeIcon />,
   },
 ];
 
