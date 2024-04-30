@@ -6,7 +6,7 @@ using Elastic.Clients.Elasticsearch.QueryDsl;
 using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Application.Services.Search;
-using EventManagement.Domain.Entities.CommunityEvent;
+using EventManagement.Infrastructure.Search.Documents;
 using EventManagement.Infrastructure.Search.Documents.Event;
 using EventManagement.Infrastructure.Search.Options;
 using Microsoft.Extensions.Options;
@@ -41,7 +41,7 @@ internal class EventsSearchService(ElasticsearchClient client, IOptions<ElasticO
                 .Properties<EventDocument>(p =>
                     p.SearchAsYouType(d => d.Name)
                      .Text(d => d.Description)
-                     .Text(d => d.Venue)
+                     .Keyword(d => d.Location)
                      .IntegerNumber(d => d.CommunityId)
                      .Date(d => d.StartDate)
                      .Date(d => d.EndDate)));
@@ -116,5 +116,20 @@ internal class EventsSearchService(ElasticsearchClient client, IOptions<ElasticO
         var response = await _client.SearchAsync(searchRequest, cancellationToken);
 
         return new SearchResult<EventIndexDocument>(response.Documents.Select(d => d.ToIndexDocument()), request.Page, request.PageSize, response.Total);
+    }
+
+    public async Task<FacetedFilter> GetFacetedFilterAsync(CancellationToken cancellationToken = default)
+    {
+        var searchRequest = new SearchRequestDescriptor<EventDocument>()
+            .Index(_options.Indices.Event)
+            .Size(0)
+            .Aggregations(a => a
+                .Add("location", x => x.Terms(x => x.Field(x => x.Location))));
+
+        var response = await _client.SearchAsync(searchRequest, cancellationToken);
+        return new FacetedFilter(
+            [
+                new("location", response.Aggregations.GetStringTerms("location").Buckets.Select(b => new FacetValue(b.Key.Value.ToString(), b.DocCount))),
+            ]);
     }
 }

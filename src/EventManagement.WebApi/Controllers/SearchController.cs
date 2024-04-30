@@ -1,7 +1,6 @@
 ﻿using EventManagement.Application.Common.Pagination;
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Application.Communities.Queries.GetCommunities;
-using EventManagement.Application.Communities.Queries.GetFacetedFilter;
 using EventManagement.Application.Events.Queries.GetEvents;
 using EventManagement.Application.Search.Queries.Search;
 using EventManagement.Application.Search.Queries.Search.Response;
@@ -45,17 +44,18 @@ public class SearchController : ApiControllerBase
     [HttpGet("communities-faceted-filter")]
     public async Task<FacetedFilter> GetCommunitiesFacetedFilterAsync()
     {
-        return await Mediator.Send(new GetFacetedFilterQuery());
+        return await Mediator.Send(new Application.Communities.Queries.GetFacetedFilter.GetFacetedFilterQuery());
     }
 
     [HttpGet("discover-events")]
-    public async Task<PagedList<Application.Events.Queries.GetEvents.EventDto>> DiscoverEventsAsync(
+    public async Task<PagedList<EventDto>> DiscoverEventsAsync(
         string? sortBy = "startDate",
         string? sortOrder = "asc",
         int page = 1,
         int pageSize = 10,
         DateTime? startDate = null,
-        DateTime? endDate = null)
+        DateTime? endDate = null,
+        string? location = null)
     {
         return await Mediator.Send(new GetEventsQuery(
             sortBy,
@@ -63,6 +63,13 @@ public class SearchController : ApiControllerBase
             page,
             pageSize,
             startDate,
-            endDate));
+            endDate,
+            location?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)));
+    }
+
+    [HttpGet("events-faceted-filter")]
+    public async Task<FacetedFilter> GetEventsFacetedFilterAsync()
+    {
+        return await Mediator.Send(new Application.Events.Queries.GetFacetedFilter.GetFacetedFilterQuery());
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
+using EventManagement.Domain.Entities.CommunityEvent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Quartz;
@@ -31,7 +32,13 @@ internal class IndexEventsJob(
             e.CommunityId,
             e.StartDate,
             e.EndDate,
-            e.Attendees.Count))
+            e.Attendees.Count,
+            e.Venue switch
+            {
+                OfflineEventVenue offline => offline.Address.City,
+                OnlineEventVenue => "онлайн",
+                _ => throw new ArgumentException("Event type is not handled."),
+            }))
             .ToList()
             .ForEach(async e => await _searchService.IndexAsync(e));
 

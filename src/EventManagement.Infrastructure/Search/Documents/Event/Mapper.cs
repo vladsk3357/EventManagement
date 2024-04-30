@@ -8,11 +8,11 @@ internal static class Mapper
         @event.Id,
         @event.Name,
         @event.Description,
-        "",
         @event.CommunityId,
         @event.StartDate,
         @event.EndDate,
-        @event.AttendeesCount);
+        @event.AttendeesCount,
+        @event.Location);
 
     public static EventIndexDocument ToIndexDocument(this EventDocument document) => new(
         document.Id,
@@ -21,5 +21,6 @@ internal static class Mapper
         document.CommunityId,
         document.StartDate,
         document.EndDate,
-        document.AttendeesCount);
+        document.AttendeesCount,
+        document.Location);
 }
