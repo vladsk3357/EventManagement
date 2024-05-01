@@ -58,6 +58,13 @@ internal class FileStorageService(
         return blobClient.Uri;
     }
 
+    public async Task<Dictionary<string, Uri>> GetFileUrlsAsync(IEnumerable<string> fileNames, CancellationToken cancellationToken = default)
+    {
+        var containerClient = await GetContainerClientAsync(cancellationToken);
+        return fileNames.Distinct()
+            .ToDictionary(n => n, n => containerClient.GetBlobClient(n).Uri);
+    }
+
     public async Task DeleteIfExistsAsync(string fileName, CancellationToken cancellationToken = default)
     {
         var containerClient = await GetContainerClientAsync(cancellationToken);

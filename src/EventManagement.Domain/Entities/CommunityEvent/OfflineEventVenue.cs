@@ -1,8 +1,10 @@
-﻿namespace EventManagement.Domain.Entities.CommunityEvent;
+﻿using EventManagement.Domain.ValueObjects;
+
+namespace EventManagement.Domain.Entities.CommunityEvent;
 
 public class OfflineEventVenue : EventVenueBase
 {
     public override string Type => EventVenueTypes.Offline;
 
-    public string Location { get; set; } = null!;
+    public Address Address { get; set; } = null!;
 }

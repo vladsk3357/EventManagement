@@ -69,7 +69,7 @@ const InformationPanel = ({
             </>
           ) : (
             <>
-              <Typography variant="subtitle2">{venue.location}</Typography>
+              <Typography variant="subtitle2">{venue.address.locationName}, {venue.address.street}, {venue.address.city}</Typography>
             </>
           )}
         </Box>

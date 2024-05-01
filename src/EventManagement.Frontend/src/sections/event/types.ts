@@ -30,5 +30,10 @@ export type Venue = {
   url: string;
 } | {
   type: 'Offline';
-  location: string;
+  address: {
+    city: string;
+    street: string;
+    locationName: string;
+    zipCode?: string;
+  }
 };

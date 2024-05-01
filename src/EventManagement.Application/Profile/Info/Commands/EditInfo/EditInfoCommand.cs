@@ -14,12 +14,10 @@ public sealed record EditInfoCommand(
 internal sealed class EditInfoCommandHandler(
     ICurrentUserAccessor currentUserAccessor,
     IUserService userService,
-    IImagesService imagesService,
     IFileStorageService fileStorageService) : IRequestHandler<EditInfoCommand, EditInfoResult>
 {
     private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
     private readonly IUserService _userService = userService;
-    private readonly IImagesService _imagesService = imagesService;
     private readonly IFileStorageService _fileStorageService = fileStorageService;
 
     public async Task<EditInfoResult> Handle(EditInfoCommand request, CancellationToken cancellationToken)

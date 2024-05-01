@@ -16,7 +16,14 @@ const VenueFormGroup = () => {
         ]}
       />
       {venueType === VenueType.Online && <TextFieldElement type="url" name="url" label="Посилання на подію" required placeholder="https://example.com" />}
-      {venueType === VenueType.Offline && <TextFieldElement name="location" label="Назва локації" required />}
+      {venueType === VenueType.Offline && (
+        <>
+          <TextFieldElement name="address.city" label="Місто" required />
+          <TextFieldElement name="address.street" label="Вулиця" required />
+          <TextFieldElement name="address.locationName" label="Назва локації" required />
+          <TextFieldElement name="address.zipCode" label="Поштовий індекс" />
+        </>
+      )}
     </>
   );
 };

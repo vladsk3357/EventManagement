@@ -1,6 +1,7 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Abstractions;
 using EventManagement.Domain.Entities;
@@ -33,6 +34,7 @@ internal sealed class EditCommunityCommandHandler(
     public async Task Handle(EditCommunityCommand request, CancellationToken cancellationToken)
     {
         var community = await _context.Communities
+            .Include(c => c.Subscriptions)
             .FirstOrDefaultAsync(c => c.Id == request.Id && c.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new NotFoundException(nameof(Communities), request.Id);
 
@@ -50,7 +52,16 @@ internal sealed class EditCommunityCommandHandler(
         }
 
         await _context.SaveChangesAsync(cancellationToken);
-        await _searchService.IndexAsync(community, cancellationToken);
+
+        var document = new CommunityIndexDocument(
+            community.Id,
+            community.Name,
+            community.Description,
+            community.Location,
+            community.Domain,
+            community.Subscriptions.Count);
+
+        await _searchService.IndexAsync(document, cancellationToken);
     }
 
     private static void UpdateCommunityWithCommand(Community community, EditCommunityCommand request)

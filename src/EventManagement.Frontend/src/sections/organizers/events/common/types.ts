@@ -6,7 +6,7 @@ export type FormInputs = {
   endDate: moment.Moment;
   description: string;
   venueType: VenueType;
-  location?: string | undefined;
+  address?: OfflineVenue['address'];
   url?: string | undefined;
   limit: string;
   limitNumber?: number;
@@ -25,7 +25,12 @@ export type OnlineVenue = {
 
 export type OfflineVenue = {
   type: VenueType.Offline;
-  location: string;
+  address: {
+    city: string;
+    street: string;
+    locationName: string;
+    zipCode?: string;
+  }
 };
 
 export const enum AttendeeStatus {

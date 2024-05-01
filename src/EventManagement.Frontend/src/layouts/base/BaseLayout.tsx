@@ -23,7 +23,7 @@ const BaseLayout = ({ children, authenticationRequired = true }: Props) => {
       </AuthenticationRedirectProvider>
     );
   } else {
-    return children;
+    return <>{children}</>;
   }
 };
 

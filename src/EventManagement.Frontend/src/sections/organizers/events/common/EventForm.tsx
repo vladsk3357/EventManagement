@@ -1,4 +1,4 @@
-import { Grid, Stack, InputLabel } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { DateTimePickerElement, FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import VenueFormGroup from "./VenueFormGroup";
 import AttendanceFormGroup from "./AttendanceFormGroup";
@@ -7,8 +7,6 @@ import * as yup from 'yup';
 import moment from "moment";
 import { LoadingButton } from "@mui/lab";
 import { FormInputs, VenueType } from "./types";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { RichTextEditorElement } from "../../../common/primitives";
 
 type Props = {
@@ -44,7 +42,12 @@ const schema: yup.ObjectSchema<FormInputs> = yup.object({
     is: 'online',
     then: schema => schema.required('Це поле є обов\'язковим'),
   }),
-  location: yup.string().when('venueType', {
+  address: yup.object({
+    city: yup.string().required('Це поле є обов\'язковим'),
+    street: yup.string().required('Це поле є обов\'язковим'),
+    locationName: yup.string().required('Це поле є обов\'язковим'),
+    zipCode: yup.string(),
+  }).when('venueType', {
     is: 'offline',
     then: schema => schema.required('Це поле є обов\'язковим'),
   }),
@@ -63,7 +66,7 @@ const emptyDefaultValues: Partial<FormInputs> = {
   description: undefined,
   venueType: VenueType.Online,
   url: undefined,
-  location: undefined,
+  address: undefined,
   limit: 'unlimited',
   limitNumber: undefined,
   shouldBeApproved: false,

@@ -32,8 +32,7 @@ const RichTextEditorElement = ({ name, label, required }: Props) => {
           {fieldState.error && (<Typography variant="caption" ml={2} color="#FF4842">{fieldState.error.message}</Typography>)}
         </Box>
       )}
-    >
-    </Controller>
+    />
   );
 };
 

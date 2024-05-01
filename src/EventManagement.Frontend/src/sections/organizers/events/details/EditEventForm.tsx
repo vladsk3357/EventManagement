@@ -47,7 +47,7 @@ function queryResultToFormInputs(data: GetEventQueryResult): FormInputs {
     endDate: moment(data.endDate),
     description: data.description,
     venueType: data.venue.type,
-    location: data.venue.type === VenueType.Offline && data.venue.location || undefined,
+    address: data.venue.type === VenueType.Offline && data.venue.address || undefined,
     url: data.venue.type === VenueType.Online && data.venue.url || undefined,
     limit: data.attendance.limit ? 'limited' : 'unlimited',
     limitNumber: data.attendance.limit || undefined,
@@ -91,7 +91,7 @@ function formInputToVariables(input: FormInputs, eventId: number, communityId: n
     },
     venue: input.venueType === VenueType.Online
       ? { type: VenueType.Online, url: input.url! }
-      : { type: VenueType.Offline, location: input.location! },
+      : { type: VenueType.Offline, address: input.address! },
     communityId,
   };
 }

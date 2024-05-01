@@ -1,4 +1,8 @@
-﻿using EventManagement.Application.Search.Queries.Search;
+﻿using EventManagement.Application.Common.Pagination;
+using EventManagement.Application.Common.Services.Search;
+using EventManagement.Application.Communities.Queries.GetCommunities;
+using EventManagement.Application.Events.Queries.GetEvents;
+using EventManagement.Application.Search.Queries.Search;
 using EventManagement.Application.Search.Queries.Search.Response;
 using EventManagement.Application.Search.Queries.SearchSuggestions;
 using Microsoft.AspNetCore.Mvc;
@@ -17,5 +21,55 @@ public class SearchController : ApiControllerBase
     public async Task<SearchSuggestionsResult> SuggestAsync([FromQuery] SearchSuggestionsQuery request)
     {
         return await Mediator.Send(request);
+    }
+
+    [HttpGet("discover-communities")]
+    public async Task<PagedList<Application.Communities.Queries.GetCommunities.CommunityDto>> DiscoverCommunitiesAsync(
+        string? sortBy, 
+        string? sortOrder = "asc", 
+        int page = 1, 
+        int pageSize = 10, 
+        string? location = null,
+        string? domain = null)
+    {
+        return await Mediator.Send(new GetCommunitiesQuery(
+            sortBy, 
+            sortOrder, 
+            page, 
+            pageSize, 
+            location?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+            domain?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)));
+    }
+
+    [HttpGet("communities-faceted-filter")]
+    public async Task<FacetedFilter> GetCommunitiesFacetedFilterAsync()
+    {
+        return await Mediator.Send(new Application.Communities.Queries.GetFacetedFilter.GetFacetedFilterQuery());
+    }
+
+    [HttpGet("discover-events")]
+    public async Task<PagedList<EventDto>> DiscoverEventsAsync(
+        string? sortBy = "startDate",
+        string? sortOrder = "asc",
+        int page = 1,
+        int pageSize = 10,
+        DateTime? startDate = null,
+        DateTime? endDate = null,
+        string? location = null)
+    {
+        return await Mediator.Send(new GetEventsQuery(
+            sortBy,
+            sortOrder,
+            page,
+            pageSize,
+            startDate,
+            endDate,
+            location?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)));
+    }
+
+    [HttpGet("events-faceted-filter")]
+    public async Task<FacetedFilter> GetEventsFacetedFilterAsync()
+    {
+        return await Mediator.Send(new Application.Events.Queries.GetFacetedFilter.GetFacetedFilterQuery());
     }
 }

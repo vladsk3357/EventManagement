@@ -2,8 +2,10 @@
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,7 +59,22 @@ internal sealed class CreateEventCommandHandler
         }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        await _searchService.IndexAsync(entity, cancellationToken);
+        var document = new EventIndexDocument(
+            entity.Id,
+            entity.Name,
+            entity.Description,
+            community.Id,
+            entity.StartDate,
+            entity.EndDate,
+            1,
+            entity.Venue switch
+            {
+                OfflineEventVenue offline => offline.Address.City,
+                OnlineEventVenue => "онлайн",
+                _ => throw new ArgumentException("Event type is not handled."),
+            });
+
+        await _searchService.IndexAsync(document, cancellationToken);
 
         return new CreateEventResultDto(entity.Id);
     }

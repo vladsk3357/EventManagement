@@ -22,7 +22,7 @@ internal sealed class SearchSuggestionsQueryHandler(ICommunitiesSearchService se
     public async Task<SearchSuggestionsResult> Handle(SearchSuggestionsQuery request, CancellationToken cancellationToken)
     {
         var communitiesSearchResult = await _searchService.Suggest(request.Q, request.PageSize);
-        var eventsSearchResult = await _eventsSearchService.Suggest(request.Q, request.PageSize);
+        var eventsSearchResult = await _eventsSearchService.SuggestAsync(request.Q, request.PageSize);
 
         return new SearchSuggestionsResult(
             communitiesSearchResult.Results.Select(r => new CommunitySuggestions(r.Id, r.Name)).ToList(),

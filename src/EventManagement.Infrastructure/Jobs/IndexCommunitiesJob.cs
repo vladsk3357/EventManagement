@@ -1,4 +1,5 @@
 ﻿using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Services.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,15 @@ internal class IndexCommunitiesJob(
     {
         _logger.LogWarning("Indexing communities");
 
-        var communities = await _context.Communities.ToListAsync();
+        var communities = await _context.Communities
+            .Include(c => c.Subscriptions)
+            .Select(c => new CommunityIndexDocument(
+                c.Id, 
+                c.Name, 
+                c.Description, 
+                c.Location, 
+                c.Domain, 
+                c.Subscriptions.Count)).ToListAsync();
         communities.ForEach(async c => await _searchService.IndexAsync(c));
 
         _logger.LogWarning("Indexing communities completed");
