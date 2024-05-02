@@ -18,7 +18,7 @@ public class Event : AuditableEntity
 
     public int CommunityId { get; set; } = default!;
 
-    public Community Community { get; set; } = default!;
+    public Community.Community Community { get; set; } = default!;
 
     public string OrganizerId { get; set; } = default!;
 

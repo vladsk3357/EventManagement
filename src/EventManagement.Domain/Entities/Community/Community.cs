@@ -1,7 +1,7 @@
 ﻿using EventManagement.Domain.Entities.CommunityEvent;
 using EventManagement.Domain.Entities.Form;
 
-namespace EventManagement.Domain.Entities;
+namespace EventManagement.Domain.Entities.Community;
 
 public class Community : AuditableEntity
 {
@@ -28,4 +28,8 @@ public class Community : AuditableEntity
     public ICollection<CommunityForm> Forms { get; set; } = default!;
 
     public ICollection<Event> Events { get; set; } = default!;
+
+    public int SocialMediaId { get; set; }
+
+    public SocialMedia SocialMedia { get; set; } = default!;
 }

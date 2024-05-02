@@ -1,7 +1,7 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Services.Search;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ internal sealed class UnsubscribeCommunityCommandHandler(
     IApplicationDbContext context, 
     ICurrentUserAccessor currentUserAccessor,
     ICommunitiesSearchService searchService) : IRequestHandler<UnsubscribeCommunityCommand>
-{
+    {
     private readonly IApplicationDbContext _context = context;
     private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
     private readonly ICommunitiesSearchService _searchService = searchService;
@@ -36,8 +36,5 @@ internal sealed class UnsubscribeCommunityCommandHandler(
         _context.Subscriptions.Remove(userCommunity);
 
         await _context.SaveChangesAsync(cancellationToken);
-
-        var subscribersCount = _context.Subscriptions.Count(cs => cs.CommunityId == community.Id);
-        await _searchService.UpdateSubscribersCountAsync(community.Id, subscribersCount, cancellationToken);
     }
 }

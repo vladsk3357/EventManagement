@@ -3,6 +3,7 @@ using EventManagement.Application.Common.Security;
 using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using EventManagement.Domain.Entities.Form;
 using MediatR;
 
@@ -45,6 +46,7 @@ internal sealed class CreateCommunityCommandHandler(
             Form = form
         };
         await _context.CommunitySubscriptionForms.AddAsync(communitySubscriptionForm, cancellationToken);
+        await _context.CommunitySocialMedia.AddAsync(new SocialMedia { CommunityId = entity.Id }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         var document = new CommunityIndexDocument(

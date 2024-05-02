@@ -1,6 +1,6 @@
-﻿namespace EventManagement.Application.Organizers.Communities.Queries.GetCommunities;
+﻿using EventManagement.Domain.Entities.Community;
 
-using Community = Domain.Entities.Community;
+namespace EventManagement.Application.Organizers.Communities.Queries.GetCommunities;
 
 internal static class GetCommunitiesQueryMapper
 {

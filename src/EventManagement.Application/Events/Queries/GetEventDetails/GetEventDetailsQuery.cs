@@ -34,13 +34,13 @@ internal sealed class GetEventDetailsQueryHandler : IRequestHandler<GetEventDeta
             ?? throw new NotFoundException(nameof(Event), request.Id);
 
         var attendeesCount = @event.Attendees.Count(e => e.Status == AttendeeStatus.Confirmed);
-        var isAttendable = @event.StartDate > _dateTime.Now
-            && (!@event.Attendance.Limited || attendeesCount >= @event.Attendance.Limit);
+        var isOrganizer = @event.OrganizerId == _currentUserAccessor.UserId;
+        var isAttendable = @event.StartDate > _dateTime.Now && !isOrganizer
+            && (!@event.Attendance.Limited || attendeesCount < @event.Attendance.Limit);
 
         var currentAttendee = @event.Attendees
             .FirstOrDefault(e => e.UserId == _currentUserAccessor.UserId);
 
-        var isOrganizer = @event.OrganizerId == _currentUserAccessor.UserId;
 
         return @event.ToDto(attendeesCount, isAttendable, currentAttendee?.Status, isOrganizer);
     }

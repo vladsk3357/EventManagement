@@ -1,4 +1,5 @@
-﻿using EventManagement.Domain.Entities;
+﻿using EventManagement.Application.Common.Models.Community;
+using EventManagement.Domain.Entities.Community;
 
 namespace EventManagement.Application.Communities.Queries.GetCommunityDetails;
 
@@ -22,6 +23,7 @@ internal static class GetCommunityDetailsQueryMapper
             isOrganizer,
             requiresFormAnswer,
             formId,
-            communityImageUrl
+            communityImageUrl,
+            community.SocialMedia?.ToDto()
         );
 }

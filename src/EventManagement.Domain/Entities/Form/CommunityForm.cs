@@ -6,7 +6,7 @@ public class CommunityForm
 
     public int CommunityId { get; set; }
 
-    public Community Community { get; set; } = null!;
+    public Community.Community Community { get; set; } = null!;
 
     public int FormId { get; set; }
 

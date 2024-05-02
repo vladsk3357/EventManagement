@@ -1,7 +1,7 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Pagination;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using EventManagement.Domain.Entities.Form;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

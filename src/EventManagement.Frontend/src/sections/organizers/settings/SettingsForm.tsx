@@ -35,8 +35,7 @@ const SettingsForm = ({ defaultValues, communityImageUrl }: Props) => {
     const variables = createMutationVariables(data, Number(communityId));
     mutate(variables);
   };
-  console.log(watch('communityImage'));
-
+  
   return (
     <>
       <FormContainer<FormInputs>

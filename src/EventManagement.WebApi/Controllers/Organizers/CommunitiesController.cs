@@ -4,6 +4,7 @@ using EventManagement.Application.Organizers.Communication.Commands.SendEventEma
 using EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
 using EventManagement.Application.Organizers.Communities.Commands.DeleteCommunity;
 using EventManagement.Application.Organizers.Communities.Commands.EditCommunity;
+using EventManagement.Application.Organizers.Communities.Commands.EditSocialMedia;
 using EventManagement.Application.Organizers.Communities.Queries.GetCommunities;
 using EventManagement.Application.Organizers.Communities.Queries.GetCommunity;
 using EventManagement.Application.Organizers.CommunitySubscriptionForms.Commands.EditCommunitySubscriptionForm;
@@ -145,6 +146,16 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
 
     [HttpPost("{communityId}/invite")]
     public async Task<IActionResult> InviteToCommunity(int communityId, InviteToCommunityCommand command)
+    {
+        if (communityId != command?.CommunityId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPut("{communityId}/social-media")]
+    public async Task<IActionResult> UpdateSocialMedia(int communityId, [FromBody] EditSocialMediaCommand command)
     {
         if (communityId != command?.CommunityId)
             return BadRequest();
