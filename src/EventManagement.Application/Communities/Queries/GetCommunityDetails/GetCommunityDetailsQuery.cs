@@ -1,6 +1,6 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +24,7 @@ internal sealed class GetCommunityDetailsQueryHandler(
         var community = await _context.Communities
             .Include(c => c.SubscriptionForm)
             .ThenInclude(f => f.Form)
+            .Include(f => f.SocialMedia)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Community), request.Id);
 

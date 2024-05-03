@@ -1,7 +1,7 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +22,7 @@ internal sealed class GetCommunityQueryHandler(
     public async Task<GetCommunityDto> Handle(GetCommunityQuery request, CancellationToken cancellationToken)
     {
         var community = await _context.Communities
+            .Include(c => c.SocialMedia)
             .Where(c => c.OrganizerId == _currentUserAccessor.UserId && c.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken)
             ?? throw new NotFoundException(nameof(Community), request.Id);

@@ -10,6 +10,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SubscribeCommunityButton from "./SubscribeCommunityButton";
 import UnsubscribeCommunityButton from "./UnsubscribeCommunityButton";
 import CommunityOrganizerButtons from "./CommunityOrganizerButtons";
+import { SocialMedia } from "./types";
+import CommunitySocialMedia from "./communitySocialMedia";
 
 const CommunityDetails = () => {
   const { communityId: communityIdParam } = useParams();
@@ -24,7 +26,6 @@ const CommunityDetails = () => {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-
         <Grid container>
           <Grid item xs={12} md={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }}>
@@ -33,7 +34,7 @@ const CommunityDetails = () => {
                 <Typography variant="h2">
                   {data?.name}
                 </Typography>
-                <Stack direction="row">
+                <Stack direction="row" mb={2}>
                   <LocationOnIcon />
                   <Typography variant="body2" sx={{ mr: 2 }}>
                     {data?.location}
@@ -45,7 +46,7 @@ const CommunityDetails = () => {
                     {data?.subscriberCount} учасників
                   </Typography>
                 </Stack>
-
+                {data && <CommunitySocialMedia socialMedia={data?.socialMedia} />}
               </Stack>
             </Stack>
           </Grid>
@@ -106,4 +107,5 @@ export type GetCommunityDetailsQueryResult = {
   requiresFormAnswer: boolean;
   formId: number;
   communityImageUrl: string | null;
+  socialMedia: SocialMedia;
 }

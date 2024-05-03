@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Application.Communities.Queries.GetCommunityDetails;
+﻿using EventManagement.Application.Common.Models.Community;
+
+namespace EventManagement.Application.Communities.Queries.GetCommunityDetails;
 
 public sealed record CommunityDetailsDto(
     int Id, 
@@ -11,4 +13,5 @@ public sealed record CommunityDetailsDto(
     bool IsOrganizer,
     bool RequiresFormAnswer,
     int FormId,
-    string? CommunityImageUrl);
+    string? CommunityImageUrl,
+    SocialMediaDto SocialMedia);

@@ -11,5 +11,6 @@ public interface IFileStorageService
     Task<Uri> GetFileUrlAsync(string fileName, CancellationToken cancellationToken = default);
 
     Task DeleteIfExistsAsync(string fileName, CancellationToken cancellationToken = default);
+    
     Task<Dictionary<string, Uri>> GetFileUrlsAsync(IEnumerable<string> fileNames, CancellationToken cancellationToken = default);
 }

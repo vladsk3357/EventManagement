@@ -4,7 +4,7 @@ using EventManagement.Application.Common.Security;
 using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Abstractions;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

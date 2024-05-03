@@ -1,6 +1,6 @@
 ﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.MailTemplateModels;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using EventManagement.Infrastructure.Mail.Options;
 using EventManagement.Infrastructure.Options.Frontend;
 using Microsoft.Extensions.Options;

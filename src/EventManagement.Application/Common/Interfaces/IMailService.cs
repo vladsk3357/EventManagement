@@ -1,5 +1,5 @@
 ﻿using EventManagement.Application.Common.MailTemplateModels;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 
 namespace EventManagement.Application.Common.Interfaces;
 
