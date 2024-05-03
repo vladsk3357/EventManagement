@@ -4,18 +4,12 @@ using EventManagement.Infrastructure.Identity.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto;
 
 namespace EventManagement.Infrastructure.Identity.Services;
 
-internal class UserService : IUserService
+internal class UserService(UserManager<ApplicationUser> userManager) : IUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public UserService(UserManager<ApplicationUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
@@ -81,5 +75,5 @@ internal class UserService : IUserService
         return _userManager.Users.Where(u => emails.Contains(u.Email))
             .Select(u => u.ToEntity())
             .ToListAsync(cancellationToken);
-    }
+    }    
 }

@@ -42,6 +42,10 @@ export default defineConfig({
                 target: 'https://localhost:7165',
                 secure: false,
             },
+            '/admin': {
+                target: 'https://localhost:7165',
+                secure: false,
+            },
         },
         port: 5173,
         https: {

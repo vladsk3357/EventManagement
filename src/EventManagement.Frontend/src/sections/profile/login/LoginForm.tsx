@@ -38,30 +38,26 @@ export default function LoginForm() {
 
   const { register, handleSubmit, setError, formState: { errors }, watch } = useForm<FormInputs>({ resolver: yupResolver(schema) });
 
-  const { mutate, isPending } = useMutation<LoginUserMutationResult, Error, LoginUserMutationVariables>({
-    mutationFn: variables => axios.post<LoginUserMutationResult>('/api/profileuser/login', variables).then(res => res.data),
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (variables: LoginUserMutationVariables) => {
+      return await axios.post<LoginUserMutationResult>('/api/profileuser/login', variables);
+    },
     onError: error => {
       if (axios.isAxiosError<LoginUserMutationError>(error)) {
-        if (error.response?.status === 400) {
-          Object.entries(error.response?.data.errors).forEach(([key, value]) => {
-            setError(key as keyof FormInputs, {
-              type: 'validate',
-              message: value[0],
-            });
+        Object.entries(error.response!.data.errors).forEach(([key, value]) => {
+          setError(key as keyof FormInputs, {
+            type: 'validate',
+            message: value[0],
           });
-        }
-
-        if (error.response?.status === 401) {
-          setError('root', { type: 'validate', message: 'Електронна пошта або пароль неправильні' });
-        }
+        });
       }
     },
-    onSuccess: data => {
-      setTokens(data);
+    onSuccess: res => {
+      setTokens(res.data);
       navigate('/');
     },
   });
-  watch()
+
   const handleClick: SubmitHandler<FormInputs> = async data => {
     mutate(data);
   };

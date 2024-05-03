@@ -14,6 +14,7 @@ internal static class ApplicationUserMapper
         Name = applicationUser.Name,
         UserName = applicationUser.UserName!,
         ProfileImage = applicationUser.ProfileImage,
+        IsLocked = applicationUser.LockoutEnd == DateTimeOffset.MaxValue,
     };
 
     public static ApplicationUser ToApplicationUser(this User user) => new()
@@ -26,5 +27,6 @@ internal static class ApplicationUserMapper
         Name = user.Name,
         UserName = user.UserName,
         ProfileImage = user.ProfileImage,
+        LockoutEnd = user.IsLocked ? DateTimeOffset.MaxValue : null,
     };
 }
