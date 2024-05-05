@@ -6,7 +6,13 @@ namespace EventManagement.Application.Events.Queries.GetEventDetails;
 
 internal static class GetEventDetailsMapper
 {
-    public static GetEventDetailsDto ToDto(this Event entity, int attendeesCount, bool isAttendable, AttendeeStatus? attendeeStatus, bool isOrganizer)
+    public static GetEventDetailsDto ToDto(
+        this Event entity, 
+        int attendeesCount, 
+        bool isAttendable, 
+        AttendeeStatus? attendeeStatus, 
+        bool isOrganizer,
+        List<string> imagesUrls)
     {
         return new GetEventDetailsDto(
             entity.Id,
@@ -22,7 +28,8 @@ internal static class GetEventDetailsMapper
             entity.Attendance.Limit is not null ? entity.Attendance.Limit - attendeesCount : null,
             new GetEventDetailsCommunityDto(entity.Community.Id, entity.Community.Name),
             entity.Sessions.ToScheduleDtos().ToList(),
-            entity.Speakers.Select(s => s.ToDto()).ToList());
+            entity.Speakers.Select(s => s.ToDto()).ToList(),
+            imagesUrls);
     }
 
     public static IEnumerable<ScheduleDto> ToScheduleDtos(this IEnumerable<Session> entities)

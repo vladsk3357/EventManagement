@@ -17,7 +17,8 @@ public sealed record GetEventDetailsDto(
     int? AttendanceCountLeft,
     GetEventDetailsCommunityDto Community,
     ICollection<ScheduleDto> Schedules,
-    ICollection<SpeakerDto> Speakers);
+    ICollection<SpeakerDto> Speakers,
+    List<string> ImagesUrls);
 
 public sealed record ScheduleDto(
     DateTime Date,

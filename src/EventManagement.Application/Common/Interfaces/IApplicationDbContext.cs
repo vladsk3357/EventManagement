@@ -28,7 +28,7 @@ public interface IApplicationDbContext
     DbSet<Form> Forms { get; }
 
     DbSet<CommunitySubscriptionForm> CommunitySubscriptionForms { get; }
-    
+
     DbSet<EventAttendanceForm> EventRegistrationForms { get; }
 
     DbSet<CommunityForm> CommunityForms { get; }
@@ -38,5 +38,8 @@ public interface IApplicationDbContext
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     DatabaseFacade Database { get; }
+
     DbSet<SocialMedia> CommunitySocialMedia { get; }
+
+    DbSet<EventImage> EventImages { get; }
 }

@@ -38,6 +38,7 @@ internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
     {
         var @event = await _context.Events
             .Include(e => e.Community)
+            .Include(e => e.Images)
             .SingleOrDefaultAsync(e => e.Id == request.Id && e.Community.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new NotFoundException(nameof(Event), request.Id);
 

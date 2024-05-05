@@ -30,6 +30,7 @@ import CommunityCommunicationPage from './pages/organizers/community/CommunityCo
 import CommunityInvitationPage from './pages/organizers/community/CommunityInvitationPage';
 import DiscoverCommunitiesPage from './pages/discover/DiscoverCommunitiesPage';
 import DiscoverEventsPage from './pages/discover/DiscoverEventsPage';
+import EventUploadsPage from './pages/organizers/events/EventUploadsPage';
 
 export default function Router() {
   const routes = useRoutes([
@@ -79,6 +80,7 @@ export default function Router() {
             { path: ':eventId/attendees/*', element: <EventAttendeesListPage /> },
             { path: ':eventId/speakers', element: <EventSpeakersListPage /> },
             { path: ':eventId/schedule', element: <EventSchedulePage /> },
+            { path: ':eventId/uploads', element: <EventUploadsPage /> },
           ]
         },
         { path: 'events/create', element: <CreateEventPage /> },

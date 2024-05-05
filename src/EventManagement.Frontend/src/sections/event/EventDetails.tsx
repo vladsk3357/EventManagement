@@ -10,7 +10,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import moment from "moment";
 import { AttendeeStatus, Schedule, Speaker, Venue } from "./types";
 import InformationPanel from "./InformationPanel";
-import { DescriptionSection, SchedulesSection, SpeakersSection } from "./sections";
+import { DescriptionSection, ImagesSection, SchedulesSection, SpeakersSection } from "./sections";
 
 const EventDetails = () => {
   const { eventId: eventIdParam } = useParams();
@@ -24,7 +24,7 @@ const EventDetails = () => {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         {/* <Avatar alt="photoURL" sx={{ width: 120, height: 120, mr: 2 }} /> */}
-        <Grid container spacing={3}>
+        <Grid container columnSpacing={3}>
           <Grid item xs={12} xl={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }} spacing={2}>
               <Box bgcolor="Background" textAlign="center" p={1} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -41,6 +41,7 @@ const EventDetails = () => {
               </Box>
               <DescriptionSection description={data.description} />
               {data.schedules.length > 0 && <SchedulesSection schedules={data.schedules} />}
+              {data.imagesUrls.length > 0 && <ImagesSection imagesUrls={data.imagesUrls} />}
               {data.speakers.length > 0 && <SpeakersSection speakers={data.speakers} />}
             </Box>
           </Grid>
@@ -110,6 +111,7 @@ type EventDetails = {
   }
   schedules: Schedule[];
   speakers: Speaker[];
+  imagesUrls: string[];
 }
 
 export type EventDetailsQueryResultType = {
@@ -130,6 +132,7 @@ export type EventDetailsQueryResultType = {
   }
   schedules: ScheduleQueryResult[];
   speakers: SpeakerQueryResult[];
+  imagesUrls: string[];
 }
 
 type ScheduleQueryResult = {

@@ -31,4 +31,6 @@ public class Event : AuditableEntity
     public ICollection<Session> Sessions { get; set; } = [];
 
     public ICollection<Speaker> Speakers { get; set; } = [];
+
+    public ICollection<EventImage> Images { get; set; } = [];
 }

@@ -52,6 +52,8 @@ internal class ApplicationDbContext(
 
     public DbSet<FormAnswer> FormAnswers => Set<FormAnswer>();
 
+    public DbSet<EventImage> EventImages => Set<EventImage>();
+
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
