@@ -42,7 +42,7 @@ const navConfig = (communityId: string, eventId: string) => {
     },
     {
       title: 'Завантаження',
-      path: `${baseUrl}/photos`,
+      path: `${baseUrl}/uploads`,
       icon: <FileUploadIcon />,
     },
   ] as NavItem[]

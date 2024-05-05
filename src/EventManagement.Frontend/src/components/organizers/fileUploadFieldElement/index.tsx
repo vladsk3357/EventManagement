@@ -20,14 +20,16 @@ type Props = {
   label: string;
   required?: boolean;
   accept?: string;
+  multiple?: boolean;
   onFileLoadEnd?: (result: string | ArrayBuffer | null) => void;
 };
 
 const FileUploadFieldElement = ({
   name,
   label,
-  required = false,
+  required,
   accept,
+  multiple,
   onFileLoadEnd
 }: Props) => {
   const { register } = useFormContext();
@@ -56,7 +58,8 @@ const FileUploadFieldElement = ({
         {...register(name, { onChange: handleFileUpload })}
         type="file"
         accept={accept}
-        required={required}
+        required={!!required}
+        multiple={!!multiple}
       />
     </Button>
   );

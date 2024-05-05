@@ -9,18 +9,16 @@ namespace EventManagement.Application.Events.Queries.GetEventDetails;
 
 public sealed record GetEventDetailsQuery(int Id) : IRequest<GetEventDetailsDto>;
 
-internal sealed class GetEventDetailsQueryHandler : IRequestHandler<GetEventDetailsQuery, GetEventDetailsDto>
+internal sealed class GetEventDetailsQueryHandler(
+    IApplicationDbContext context,
+    IDateTime dateTime,
+    ICurrentUserAccessor currentUserAccessor,
+    IFileStorageService fileStorageService) : IRequestHandler<GetEventDetailsQuery, GetEventDetailsDto>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-    private readonly IDateTime _dateTime;
-
-    public GetEventDetailsQueryHandler(IApplicationDbContext context, IDateTime dateTime, ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _dateTime = dateTime;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+    private readonly IDateTime _dateTime = dateTime;
+    private readonly IFileStorageService _fileStorageService = fileStorageService;
 
     public async Task<GetEventDetailsDto> Handle(GetEventDetailsQuery request, CancellationToken cancellationToken)
     {
@@ -30,6 +28,7 @@ internal sealed class GetEventDetailsQueryHandler : IRequestHandler<GetEventDeta
             //.Include(e => e.Sessions.Where(s => s.StartTime >= e.StartDate && s.EndTime <= e.EndDate))
             .Include(e => e.Sessions)
             .ThenInclude(s => s.Speakers)
+            .Include(e => e.Images)
             .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Event), request.Id);
 
@@ -41,7 +40,14 @@ internal sealed class GetEventDetailsQueryHandler : IRequestHandler<GetEventDeta
         var currentAttendee = @event.Attendees
             .FirstOrDefault(e => e.UserId == _currentUserAccessor.UserId);
 
+        var tasks = @event.Images.Select(i => _fileStorageService.GetFileUrlAsync(i.FileName, cancellationToken)).ToList();
+        var imagesUrls = await Task.WhenAll(tasks);
 
-        return @event.ToDto(attendeesCount, isAttendable, currentAttendee?.Status, isOrganizer);
+        return @event.ToDto(
+            attendeesCount, 
+            isAttendable, 
+            currentAttendee?.Status, 
+            isOrganizer, 
+            imagesUrls.Select(i => i.ToString()).ToList());
     }
 }

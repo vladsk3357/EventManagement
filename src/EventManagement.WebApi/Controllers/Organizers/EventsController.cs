@@ -1,11 +1,16 @@
 ﻿using EventManagement.Application.Common.Pagination;
+using EventManagement.Application.Organizers.Events.Commands.AddImages;
 using EventManagement.Application.Organizers.Events.Commands.DeleteEvent;
+using EventManagement.Application.Organizers.Events.Commands.DeleteImage;
 using EventManagement.Application.Organizers.Events.Commands.EditEvent;
 using EventManagement.Application.Organizers.Events.Queries.GetAttendees;
 using EventManagement.Application.Organizers.Events.Queries.GetEvent;
+using EventManagement.Application.Organizers.Events.Queries.GetImages;
 using EventManagement.Application.Organizers.Sessions.Queries.GetSessions;
 using EventManagement.Application.Organizers.Speakers.Queries.GetSpeakers;
 using EventManagement.Domain.Entities;
+using EventManagement.WebApi.Models;
+using EventManagement.WebApi.Models.Organizers.Events;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.WebApi.Controllers.Organizers;
@@ -51,5 +56,32 @@ public sealed class EventsController : OrganizersApiControllerBase
     public async Task<GetSessionsResult> GetSessions(int eventId)
     {
         return await Mediator.Send(new GetSessionsQuery(eventId));
+    }
+
+    [HttpGet("{eventId}/images")]
+    public async Task<NonPagedList<ImageDto>> GetImages(int eventId)
+    {
+        return await Mediator.Send(new GetImagesQuery(eventId));
+    }
+
+    [HttpPost("{eventId}/images")]
+    public async Task<IActionResult> AddImages(int eventId, [FromForm] AddImagesModel model)
+    {
+        if (eventId != model.EventId)
+            return BadRequest();
+
+        var command = new AddImagesCommand(
+            eventId, 
+            model.Images.Select(i => new FormFileProxy(i)).ToArray());
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("{eventId}/images/{imageId}")]
+    public async Task<IActionResult> DeleteImage(int eventId, int imageId)
+    {
+        await Mediator.Send(new DeleteImageCommand(eventId, imageId));
+        return NoContent();
     }
 }
