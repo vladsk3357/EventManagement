@@ -16,5 +16,7 @@ public class User : AuditableEntity, IHasDomainEvent
 
     public string? ProfileImage { get; set; }
 
-    public List<DomainEvent> DomainEvents { get; set; } = new();
+    public bool IsLocked { get; set; }
+
+    public List<DomainEvent> DomainEvents { get; set; } = [];
 }

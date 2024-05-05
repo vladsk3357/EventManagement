@@ -1,11 +1,13 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Application.Communities.Queries.GetCommunityDetails;
 
+[Authorize]
 public sealed record GetCommunityDetailsQuery(int Id) : IRequest<CommunityDetailsDto>;
 
 internal sealed class GetCommunityDetailsQueryHandler(

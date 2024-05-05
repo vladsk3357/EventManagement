@@ -65,7 +65,10 @@ app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
@@ -74,9 +77,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllerRoute(
+    name: "Admin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
     name: "EmailConfirmation",
     pattern: "users/confirmation",
     defaults: new {controller = "Users", action = "Confirmation"});
+
 app.MapControllerRoute(
     name: "ResetPassword",
     pattern: "users/reset-password",

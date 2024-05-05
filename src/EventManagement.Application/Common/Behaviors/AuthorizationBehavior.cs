@@ -31,6 +31,11 @@ internal class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TR
                 throw new UnauthorizedAccessException();
             }
 
+            if (await _identityService.IsUserLockedAsync(_currentUserService.UserId))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
             // Role-based authorization
             var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
 

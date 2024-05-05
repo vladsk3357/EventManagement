@@ -28,9 +28,6 @@ const CommunityCard = ({ community }: Props) => {
                   {community.subscribersCount} учасників
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
-                {!community.isOwner && <Button variant="contained">Ви приєдналися</Button>}
-              </Grid>
             </Grid>
           </CardContent>
         </CardActionArea>

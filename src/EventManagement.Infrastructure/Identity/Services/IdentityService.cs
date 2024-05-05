@@ -13,18 +13,20 @@ internal class IdentityService : IIdentityService
     private readonly IJwtService _jwtService;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
-
+    private readonly IDateTime _dateTime;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
         IJwtService jwtService,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IDateTime dateTime)
     {
         _userManager = userManager;
         _jwtService = jwtService;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
+        _dateTime = dateTime;
     }
 
     public async Task<RegisterUserResult> RegisterUserAsync(RegisterUserInput input, CancellationToken cancellationToken = default)
@@ -82,7 +84,7 @@ internal class IdentityService : IIdentityService
         ArgumentException.ThrowIfNullOrEmpty(email);
         ArgumentException.ThrowIfNullOrEmpty(password);
         ArgumentException.ThrowIfNullOrEmpty(token);
-
+        
         var user = await _userManager.FindByEmailAsync(email) 
             ?? throw new InvalidOperationException("Користувача з таким email не знайдено");
 
@@ -99,7 +101,7 @@ internal class IdentityService : IIdentityService
             return null;
 
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        if (user == null || user.LockoutEnd > _dateTime.Now)
             return null;
 
         var isValidPassword = await _userManager.CheckPasswordAsync(user, password);
@@ -136,5 +138,11 @@ internal class IdentityService : IIdentityService
     public async Task<AuthToken> RefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
     {
         return await _jwtService.RefreshTokenAsync(token, refreshToken, cancellationToken);
+    }
+
+    public async Task<bool> IsUserLockedAsync(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        return user?.LockoutEnd > _dateTime.Now;
     }
 }
