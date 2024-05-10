@@ -6,4 +6,5 @@ internal static class MailTemplateNames
     public const string ResetPassword = "ResetPassword";
     public const string InvitationToCommunity = "InvitationToCommunity";
     public const string Communication = "Communication";
+    public const string EventCancelled = "EventCancelled";
 }

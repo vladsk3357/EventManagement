@@ -11,4 +11,5 @@ export type Event = {
     name: string;
   };
   isPast: boolean;
+  isCancelled: boolean;
 }

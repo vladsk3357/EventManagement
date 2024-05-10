@@ -11,4 +11,5 @@ export type CommunityEvent = {
   startDate: Moment;
   attendeesCount: number;
   venue: Venue;
+  isCancelled: boolean;
 };

@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { Box, Drawer } from '@mui/material';
+import { Box, Drawer, Typography } from '@mui/material';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 import navConfig from './config';
+import { useGetCommunityDetailsQuery } from '../../../sections/organizers/common';
 
 const NAV_WIDTH = 280;
 
@@ -16,6 +17,7 @@ type Props = {
 const CommunityNav = ({ openNav, onCloseNav }: Props) => {
   const { pathname } = useLocation();
   const { communityId } = useParams();
+  const { data, isFetched } = useGetCommunityDetailsQuery();
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -33,6 +35,22 @@ const CommunityNav = ({ openNav, onCloseNav }: Props) => {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
+      {isFetched && data && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            px: 2,
+            pt: 2,
+          }}
+        >
+          <Box sx={{ mr: 1 }}>
+            <Typography variant="subtitle1">
+              {data.name}
+            </Typography>
+          </Box>
+        </Box>
+      )}
       <NavSection data={navConfig(communityId!)} />
 
       <Box sx={{ flexGrow: 1 }} />
@@ -54,8 +72,8 @@ const CommunityNav = ({ openNav, onCloseNav }: Props) => {
           PaperProps={{
             sx: {
               width: NAV_WIDTH,
-              bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
+              bgcolor: 'background.neutral',
+              borderRightStyle: 'solid',
             },
           }}
         >

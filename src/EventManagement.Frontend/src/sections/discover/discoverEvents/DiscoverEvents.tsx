@@ -99,4 +99,5 @@ type DiscoverEventsQueryResultType = PagedList<{
   startDate: string;
   attendeesCount: number;
   venue: Venue;
+  isCancelled: boolean;
 }>;

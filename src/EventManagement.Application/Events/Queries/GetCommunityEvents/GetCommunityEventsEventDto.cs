@@ -7,4 +7,5 @@ public sealed record GetCommunityEventsEventDto(
     string Name,
     int AttendeesCount,
     DateTime StartDate,
-    EventVenueDto Venue);
+    EventVenueDto Venue,
+    bool IsCancelled);

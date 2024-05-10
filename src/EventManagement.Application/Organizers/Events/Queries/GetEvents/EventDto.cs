@@ -7,4 +7,5 @@ public sealed record EventDto(
     string Name,
     EventVenueDto Venue,
     DateTime StartDate,
-    int AttendeesCount);
+    int AttendeesCount,
+    bool IsCancelled);

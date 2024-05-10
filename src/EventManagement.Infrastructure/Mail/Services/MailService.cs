@@ -49,4 +49,11 @@ internal class MailService(IOptions<MailOptions> options, IOptions<FrontendOptio
         var model = new InvitationToCommunityMailTemplateModel(community.Name, _frontendOptions.Url + "community/" + community.Id);
         await SendEmailAsync([to], $"Тебе запросили приєднатися до {model.CommunityName}", MailTemplateNames.InvitationToCommunity, model, cancellation);
     }
+
+    public async Task SendEventCancelledMailAsync(string to, EventCancelledMailTemplateModel model, CancellationToken cancellation = default!)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(to);
+
+        await SendEmailAsync([to], $"Подію {model.EventName} скасовано", MailTemplateNames.EventCancelled, model, cancellation);
+    }
 }

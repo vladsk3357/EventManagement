@@ -38,4 +38,5 @@ export type GetEventQueryResult = {
   },
   venue: OnlineVenue | OfflineVenue;
   communityId: number;
+  isCancelled: boolean;
 };

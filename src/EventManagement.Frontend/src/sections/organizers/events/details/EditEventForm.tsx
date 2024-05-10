@@ -1,6 +1,6 @@
 import moment from "moment";
 import { axios } from '../../../../api';
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { EventForm, FormInputs, GetEventQueryResult, OfflineVenue, OnlineVenue, useGetEventQuery, VenueType } from "../common";
 import { Alert, Box, CircularProgress, Snackbar } from "@mui/material";
@@ -23,6 +23,11 @@ const EditEventForm = () => {
     <>
       <Box>
         {isLoading && <CircularProgress />}
+        {isFetched && data && data.isCancelled && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            Ця подія була скасована
+          </Alert>
+        )}
         {isFetched && data && <EventForm defaultValues={queryResultToFormInputs(data)} onSubmit={handleSubmit} isSubmitting={isPending} />}
       </Box>
       <Snackbar
