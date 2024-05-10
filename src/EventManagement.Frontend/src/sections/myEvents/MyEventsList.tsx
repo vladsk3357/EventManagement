@@ -8,7 +8,6 @@ import EventCard from "./EventCard";
 import { useState } from "react";
 
 const MyEventsList = () => {
-
   const [isPast, setIsPast] = useState(false);
   const { data, isFetched, isLoading } = useMyEventsList(isPast);
 
@@ -90,6 +89,7 @@ type CommunitiesListQueryResultType = {
         name: string;
       };
       isPast: boolean;
+      isCancelled: boolean;
     }[]
   }[];
   totalCount: number;

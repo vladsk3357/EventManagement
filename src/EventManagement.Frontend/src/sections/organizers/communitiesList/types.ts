@@ -1,5 +1,5 @@
 export type Community = {
-  id: string;
+  id: number;
   name: string;
   location: string;
   domain: string;

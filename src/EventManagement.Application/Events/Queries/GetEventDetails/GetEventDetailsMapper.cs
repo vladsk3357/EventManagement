@@ -29,7 +29,8 @@ internal static class GetEventDetailsMapper
             new GetEventDetailsCommunityDto(entity.Community.Id, entity.Community.Name),
             entity.Sessions.ToScheduleDtos().ToList(),
             entity.Speakers.Select(s => s.ToDto()).ToList(),
-            imagesUrls);
+            imagesUrls,
+            entity.IsCancelled);
     }
 
     public static IEnumerable<ScheduleDto> ToScheduleDtos(this IEnumerable<Session> entities)

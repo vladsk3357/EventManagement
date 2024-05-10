@@ -1,5 +1,4 @@
 import { Box, CircularProgress, Tab } from "@mui/material";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { axios } from '../../../api';
 import { SyntheticEvent, useMemo, useState } from "react";
@@ -7,11 +6,12 @@ import SettingsForm from "./SettingsForm";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import DeleteCommunitySection from "./DeleteCommunitySection";
 import SocialMediaForm from "./SocialMediaForm";
+import { useGetCommunityDetailsQuery } from "../common";
 
 const Settings = () => {
   const { communityId: communityIdParam } = useParams();
   const communityId = Number(communityIdParam);
-  const { data, isFetching, isFetched } = useGetCommunitySettingsQuery();
+  const { data, isFetching, isFetched } = useGetCommunityDetailsQuery();
   const [tabIndex, setTabIndex] = useState('0');
   const defaultValues = useMemo(() => {
     if (!data)
@@ -72,37 +72,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-function useGetCommunitySettingsQuery() {
-  const { communityId } = useParams();
-
-  return useQuery({
-    queryKey: ['community', communityId],
-    queryFn: () => axios.get<GetCommunityQueryResponse>(`/api/organizers/communities/${communityId}`).then(res => res.data)
-  });
-}
-
-type GetCommunityQueryResponse = {
-  id: number;
-  name: string;
-  location: string;
-  domain: string;
-  shortDescription?: string;
-  description?: string;
-  communityImageUrl: string | null;
-  socialMedia: {
-    communityId: number;
-    websiteUrl: string;
-    facebookUrl: string;
-    twitterUrl: string;
-    linkedinUrl: string;
-    instagramUrl: string;
-    youtubeUrl: string;
-    discordUrl: string;
-    slackUrl: string;
-    twitchUrl: string;
-    mediumUrl: string;
-    tikTokUrl: string;
-    telegramUrl: string;
-  };
-}

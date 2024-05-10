@@ -8,6 +8,7 @@ public sealed record EventDto(
     CommunityDto Community,
     DateTime StartDate,
     int AttendeesCount,
-    EventVenueDto Venue);
+    EventVenueDto Venue,
+    bool IsCancelled);
 
 public sealed record CommunityDto(int Id, string Name);

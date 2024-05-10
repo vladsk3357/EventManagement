@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Pagination;
 using EventManagement.Application.Organizers.Events.Commands.AddImages;
+using EventManagement.Application.Organizers.Events.Commands.CancelEvent;
 using EventManagement.Application.Organizers.Events.Commands.DeleteEvent;
 using EventManagement.Application.Organizers.Events.Commands.DeleteImage;
 using EventManagement.Application.Organizers.Events.Commands.EditEvent;
@@ -82,6 +83,13 @@ public sealed class EventsController : OrganizersApiControllerBase
     public async Task<IActionResult> DeleteImage(int eventId, int imageId)
     {
         await Mediator.Send(new DeleteImageCommand(eventId, imageId));
+        return NoContent();
+    }
+
+    [HttpPut("{eventId}/cancel")]
+    public async Task<IActionResult> CancelEvent(int eventId)
+    {
+        await Mediator.Send(new CancelEventCommand(eventId));
         return NoContent();
     }
 }

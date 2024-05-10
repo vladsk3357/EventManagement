@@ -18,7 +18,8 @@ public sealed record GetEventDetailsDto(
     GetEventDetailsCommunityDto Community,
     ICollection<ScheduleDto> Schedules,
     ICollection<SpeakerDto> Speakers,
-    List<string> ImagesUrls);
+    List<string> ImagesUrls,
+    bool IsCancelled);
 
 public sealed record ScheduleDto(
     DateTime Date,

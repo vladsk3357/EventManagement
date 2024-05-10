@@ -21,5 +21,6 @@ public interface IIdentityService
     Task<bool> AuthorizeAsync(string userId, string policyName);
 
     Task<AuthToken> RefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default);
+    
     Task<bool> IsUserLockedAsync(string id);
 }

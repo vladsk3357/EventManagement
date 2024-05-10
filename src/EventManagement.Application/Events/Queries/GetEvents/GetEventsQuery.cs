@@ -59,7 +59,8 @@ internal sealed class GetEventsQueryHandler(
                 new CommunityDto(e.CommunityId, events[e.Id].Community.Name),
                 e.StartDate,
                 events[e.Id].Attendees.Count,
-                events[e.Id].Venue.ToDto())).ToList(),
+                events[e.Id].Venue.ToDto(),
+                events[e.Id].IsCancelled)).ToList(),
             result.Page,
             result.PageSize,
             result.Total);

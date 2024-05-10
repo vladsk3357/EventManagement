@@ -2,7 +2,7 @@
 
 namespace EventManagement.Domain.Entities.CommunityEvent;
 
-public class Event : AuditableEntity
+public class Event : AuditableEntity, IHasDomainEvent
 {
     public int Id { get; set; }
 
@@ -33,4 +33,8 @@ public class Event : AuditableEntity
     public ICollection<Speaker> Speakers { get; set; } = [];
 
     public ICollection<EventImage> Images { get; set; } = [];
+
+    public bool IsCancelled { get; set; }
+
+    public List<DomainEvent> DomainEvents { get; set; } = [];
 }

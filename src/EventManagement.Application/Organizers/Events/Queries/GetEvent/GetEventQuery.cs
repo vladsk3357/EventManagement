@@ -19,7 +19,8 @@ public sealed record EventDto(
     DateTime EndDate,
     AttendanceDto Attendance,
     EventVenueDto Venue,
-    int CommunityId);
+    int CommunityId,
+    bool IsCancelled);
 
 internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
 {
@@ -50,6 +51,7 @@ internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
             @event.EndDate,
             new AttendanceDto(@event.Attendance.Limit, @event.Attendance.ShouldBeApproved),
             @event.Venue.ToDto(),
-            @event.CommunityId);
+            @event.CommunityId,
+            @event.IsCancelled);
     }
 }

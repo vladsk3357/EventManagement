@@ -1,12 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { useParams } from "react-router-dom";
-import { Container, Stack, Grid, Typography, Box, Link, Skeleton, Card, CardContent, Paper } from "@mui/material";
-import AttendEventButton from "./AttendEventButton";
-import UnattendEventButton from "./UnattendEventButton";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { Container, Stack, Grid, Typography, Box, Card, CardContent, Alert } from "@mui/material";
 import moment from "moment";
 import { AttendeeStatus, Schedule, Speaker, Venue } from "./types";
 import InformationPanel from "./InformationPanel";
@@ -23,7 +18,6 @@ const EventDetails = () => {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        {/* <Avatar alt="photoURL" sx={{ width: 120, height: 120, mr: 2 }} /> */}
         <Grid container columnSpacing={3}>
           <Grid item xs={12} xl={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }} spacing={2}>
@@ -39,6 +33,11 @@ const EventDetails = () => {
             <Box>
               <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
               </Box>
+              {data.isCancelled && (
+                <Alert severity="error" sx={{ mb: 3 }}>
+                  Ця подія була скасована
+                </Alert>
+              )}
               <DescriptionSection description={data.description} />
               {data.schedules.length > 0 && <SchedulesSection schedules={data.schedules} />}
               {data.imagesUrls.length > 0 && <ImagesSection imagesUrls={data.imagesUrls} />}
@@ -112,6 +111,7 @@ type EventDetails = {
   schedules: Schedule[];
   speakers: Speaker[];
   imagesUrls: string[];
+  isCancelled: boolean;
 }
 
 export type EventDetailsQueryResultType = {
@@ -133,6 +133,7 @@ export type EventDetailsQueryResultType = {
   schedules: ScheduleQueryResult[];
   speakers: SpeakerQueryResult[];
   imagesUrls: string[];
+  isCancelled: boolean;
 }
 
 type ScheduleQueryResult = {

@@ -7,8 +7,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ActionCellItemWithConfirmation, useEventsList } from "../common";
 import { Link as RouterLink } from 'react-router-dom';
-import { Chip } from "@mui/material";
-import { Box } from "@mui/material";
+import { Chip, Box, Stack } from "@mui/material";
 import { TabPanel } from "@mui/lab";
 
 type Props = {
@@ -60,13 +59,16 @@ function useColumns(): GridColDef[] {
       field: 'name',
       type: 'string',
       headerName: 'Подія',
-      width: 400,
+      width: 500,
       sortable: false,
       filterable: false,
       renderCell: ({ value, row }) => (
-        <RouterLink to={`/organizers/${communityId}/events/${row.id}/details`}>
-          {value}
-        </RouterLink>
+        <Stack spacing={2} direction="row" alignItems="baseline">
+          {row.isCancelled && <Chip color="error" label="Відмінено" />}
+          <RouterLink to={`/organizers/${communityId}/events/${row.id}/details`}>
+            {value}
+          </RouterLink>
+        </Stack>
       ),
     },
     {
@@ -112,16 +114,6 @@ function useColumns(): GridColDef[] {
           showInMenu
           icon={<EditIcon />}
           onClick={() => navigate(`/organizers/${communityId}/events/${row.id}`)}
-        />,
-        <ActionCellItemWithConfirmation
-          action={() => { }}
-          icon={<BlockIcon />}
-          showInMenu
-          dialogTitle="Відмінити подію"
-          dialogContent="Ви впевнені, що хочете відмінити подію?"
-          actionButtonLabel="Відмінити подію"
-          label="Відмінити подію"
-          closeMenuOnClick={false}
         />,
         <ActionCellItemWithConfirmation
           action={() => deleteEvent(row.id)}
