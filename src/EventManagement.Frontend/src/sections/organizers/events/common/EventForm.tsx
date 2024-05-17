@@ -1,4 +1,4 @@
-import { Grid, Stack } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { DateTimePickerElement, FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import VenueFormGroup from "./VenueFormGroup";
 import AttendanceFormGroup from "./AttendanceFormGroup";
@@ -8,11 +8,15 @@ import moment from "moment";
 import { LoadingButton } from "@mui/lab";
 import { FormInputs, VenueType } from "./types";
 import { RichTextEditorElement } from "../../../common/primitives";
+import { start } from "repl";
+import { useMemo } from "react";
 
 type Props = {
   defaultValues?: Partial<FormInputs>;
   onSubmit: (data: FormInputs) => void;
   isSubmitting: boolean;
+  sessionsStartDate?: moment.Moment | null;
+  sessionsEndDate?: moment.Moment | null;
 };
 
 const schema: yup.ObjectSchema<FormInputs> = yup.object({
@@ -42,7 +46,7 @@ const schema: yup.ObjectSchema<FormInputs> = yup.object({
     is: 'online',
     then: schema => schema.required('Це поле є обов\'язковим'),
   }),
-  address: yup.object({
+  address: yup.object().notRequired().default(undefined).shape({
     city: yup.string().required('Це поле є обов\'язковим'),
     street: yup.string().required('Це поле є обов\'язковим'),
     locationName: yup.string().required('Це поле є обов\'язковим'),
@@ -72,14 +76,39 @@ const emptyDefaultValues: Partial<FormInputs> = {
   shouldBeApproved: false,
 };
 
-const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
+const EventForm = ({ isSubmitting, onSubmit, defaultValues, sessionsEndDate, sessionsStartDate }: Props) => {
   const form = useForm<FormInputs>({
-    resolver: yupResolver(schema),
+    resolver: async function (...args) {
+      console.log(args);
+      const a = await yupResolver(schema)(...args);
+      console.log(a);
+      return a;
+    },
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: defaultValues || emptyDefaultValues,
   });
   const { watch } = form;
+
+  const maxStartDate = useMemo(() => {
+    const endDate = watch('endDate');
+    if (endDate && sessionsStartDate)
+      return endDate < sessionsStartDate ? endDate : sessionsStartDate;
+    if (endDate && !sessionsStartDate)
+      return endDate;
+    else
+      return undefined;
+  }, [watch, sessionsStartDate]);
+
+  const minEndDate = useMemo(() => {
+    const startDate = watch('startDate');
+    if (startDate && sessionsEndDate)
+      return startDate < sessionsEndDate ? sessionsEndDate : startDate;
+    if (startDate && !sessionsEndDate)
+      return startDate;
+    else
+      return undefined;
+  }, [watch, sessionsEndDate]);
 
   return (
     <FormContainer<FormInputs> formContext={form} onSuccess={onSubmit} >
@@ -90,20 +119,29 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
           </Stack>
         </Grid>
         <Grid item xs={12} md={6} mb={2}>
-          <Stack spacing={3} direction="row">
+          <Stack spacing={1} direction="column">
             <DateTimePickerElement
               name="startDate"
               label="Дата початку"
               required
               ampm={false}
+              maxDateTime={maxStartDate}
+              disablePast
             />
+            {sessionsStartDate && <Typography variant="caption" color="textSecondary">Максимальна дата початку: {sessionsStartDate?.format('DD.MM.YYYY HH:mm')}. Змініть програму, щоб обрати іншу дату початку.</Typography>}
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6} mb={2}>
+          <Stack spacing={1} direction="column">
             <DateTimePickerElement
               name="endDate"
               label="Дата закінчення"
               required
               ampm={false}
-              minDateTime={watch('startDate')}
+              minDateTime={minEndDate}
+              disablePast
             />
+            {sessionsEndDate && <Typography variant="caption" color="textSecondary">Мінімальна дата кінця: {sessionsEndDate?.format('DD.MM.YYYY HH:mm')}. Змініть програму, щоб обрати іншу дату кінця.</Typography>}
           </Stack>
         </Grid>
         <Grid item xs={12} mb={2}>

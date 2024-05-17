@@ -7,4 +7,5 @@ public sealed record SessionDto(
     DateTime EndTime,
     double Duration,
     string Description,
-    ICollection<GetSessionsSpeakerDto> Speakers);
+    ICollection<GetSessionsSpeakerDto> Speakers,
+    string Level);

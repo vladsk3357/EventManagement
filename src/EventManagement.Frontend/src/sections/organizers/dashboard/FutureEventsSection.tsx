@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
+import { Button, Card, CardActionArea, CardActions, CardContent, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useEventsList } from "../common";
@@ -21,6 +21,11 @@ const FutureEventsSection = ({ communityId }: Props) => {
         </Stack>
         {isLoading && <CircularProgress />}
         <Stack direction="column" spacing={2} mb={2}>
+          {isFetched && !isLoading && data && data.items.length === 0 && (
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="body1" align="center">Майбутні події відсутні</Typography>
+            </Paper>
+          )}
           {isFetched && data && data.items.map(event => (
             <Card key={event.id}>
               <Link to={`/organizers/${communityId}/events/${event.id}/details`}>

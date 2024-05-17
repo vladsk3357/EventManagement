@@ -1,17 +1,15 @@
 import { Card, CardContent, Stack, Button, Grid, Box } from "@mui/material";
 import { TextFieldElement, ToggleButtonGroupElement, SwitchElement, useFormContext } from "react-hook-form-mui";
-import { FormField, OptionField } from "../../types";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { MouseEventHandler, useCallback } from "react";
 import OptionsArrayField from "./OptionsArrayField";
 
 type Props = {
-  field: FormField;
   index: number;
   onDelete: () => void;
 };
 
-const FormFieldCard = ({ field, index, onDelete }: Props) => {
+const FormFieldCard = ({ index, onDelete }: Props) => {
   const { watch } = useFormContext();
   const type = watch(`fields[${index}].type`);
   const handleDelete = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
@@ -67,7 +65,3 @@ const FormFieldCard = ({ field, index, onDelete }: Props) => {
 };
 
 export default FormFieldCard;
-
-function isOptionField(field: FormField): field is OptionField {
-  return field.type === "MultipleOptions" || field.type === "SingleOption";
-}

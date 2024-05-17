@@ -39,4 +39,6 @@ export type GetEventQueryResult = {
   venue: OnlineVenue | OfflineVenue;
   communityId: number;
   isCancelled: boolean;
+  sessionsStartDate: string | null;
+  sessionsEndDate: string | null;
 };

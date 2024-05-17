@@ -3,7 +3,6 @@ import EventIcon from '@mui/icons-material/Event';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
 import ShieldIcon from '@mui/icons-material/Shield';
-import EditIcon from '@mui/icons-material/Edit';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { NavItem } from '../types';
@@ -35,11 +34,6 @@ const navConfig = (communityId: string) => {
       title: 'Реєстраційна форма',
       path: `${baseUrl}/registrations`,
       icon: <ShieldIcon />,
-    },
-    {
-      title: 'Конструктор форм',
-      path: `${baseUrl}/forms`,
-      icon: <EditIcon />,
     },
     {
       title: 'Комунікація',

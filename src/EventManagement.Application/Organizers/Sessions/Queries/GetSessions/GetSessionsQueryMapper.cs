@@ -11,7 +11,8 @@ internal static class GetSessionsQueryMapper
         session.EndTime,
         session.Duration.TotalMinutes,
         session.Description,
-        session.Speakers.Select(s => s.ToDto()).ToList());
+        session.Speakers.Select(s => s.ToDto()).ToList(),
+        session.Level);
 
     public static GetSessionsSpeakerDto ToDto(this Speaker speaker) => new(speaker.Id, speaker.Name);
 }

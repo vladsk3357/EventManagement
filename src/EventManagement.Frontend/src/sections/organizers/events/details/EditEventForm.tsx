@@ -28,7 +28,13 @@ const EditEventForm = () => {
             Ця подія була скасована
           </Alert>
         )}
-        {isFetched && data && <EventForm defaultValues={queryResultToFormInputs(data)} onSubmit={handleSubmit} isSubmitting={isPending} />}
+        {isFetched && data && <EventForm
+          defaultValues={queryResultToFormInputs(data)}
+          onSubmit={handleSubmit}
+          isSubmitting={isPending}
+          sessionsEndDate={moment(data.endDate)}
+          sessionsStartDate={moment(data.startDate)}
+        />}
       </Box>
       <Snackbar
         open={snackbarOpen}

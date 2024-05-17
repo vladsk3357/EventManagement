@@ -21,4 +21,19 @@ public class Session : AuditableEntity
     public Event Event { get; set; } = default!;
 
     public ICollection<Speaker> Speakers { get; set; } = [];
+
+    public string Level { get; set; } = default!;
+}
+
+public static class SessionLevels
+{
+    public const string Beginner = "Beginner";
+
+    public const string Intermediate = "Intermediate";
+
+    public const string Advanced = "Advanced";
+
+    public const string Expert = "Expert";
+
+    public static IEnumerable<string> All => [Beginner, Intermediate, Advanced, Expert];
 }

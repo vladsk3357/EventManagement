@@ -1,10 +1,10 @@
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
-import ShieldIcon from '@mui/icons-material/Shield';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MicIcon from '@mui/icons-material/Mic';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { NavItem } from '../types';
 
 const navConfig = (communityId: string, eventId: string) => {
@@ -26,11 +26,6 @@ const navConfig = (communityId: string, eventId: string) => {
       icon: <PeopleIcon />,
     },
     {
-      title: 'Реєстраційна форма',
-      path: `${baseUrl}/registrations`,
-      icon: <ShieldIcon />,
-    },
-    {
       title: 'Програма',
       path: `${baseUrl}/schedule`,
       icon: <AccessTimeIcon />,
@@ -44,6 +39,11 @@ const navConfig = (communityId: string, eventId: string) => {
       title: 'Завантаження',
       path: `${baseUrl}/uploads`,
       icon: <FileUploadIcon />,
+    },
+    {
+      title: 'Комунікація',
+      path: `${baseUrl}/communication`,
+      icon: <AlternateEmailIcon />,
     },
   ] as NavItem[]
 };

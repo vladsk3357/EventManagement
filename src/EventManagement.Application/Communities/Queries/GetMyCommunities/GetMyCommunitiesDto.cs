@@ -4,4 +4,5 @@ public sealed record GetMyCommunitiesDto(
     int Id,
     string Name,
     int SubscribersCount,
-    bool IsOwner);
+    bool IsOwner,
+    string? CommunityImageUrl);

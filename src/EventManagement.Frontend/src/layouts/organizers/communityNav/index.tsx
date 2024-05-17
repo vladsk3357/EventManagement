@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { Box, Drawer, Typography } from '@mui/material';
+import { Box, Drawer, Typography, Alert } from '@mui/material';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
@@ -39,15 +39,18 @@ const CommunityNav = ({ openNav, onCloseNav }: Props) => {
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'stretch',
+            flexDirection: 'column',
             px: 2,
             pt: 2,
           }}
         >
           <Box sx={{ mr: 1 }}>
-            <Typography variant="subtitle1">
-              {data.name}
-            </Typography>
+            <Alert severity='info' variant='outlined' icon={false}>
+              <Typography variant="subtitle1">
+                {data.name}
+              </Typography>
+            </Alert>
           </Box>
         </Box>
       )}

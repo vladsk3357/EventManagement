@@ -31,6 +31,7 @@ import CommunityInvitationPage from './pages/organizers/community/CommunityInvit
 import DiscoverCommunitiesPage from './pages/discover/DiscoverCommunitiesPage';
 import DiscoverEventsPage from './pages/discover/DiscoverEventsPage';
 import EventUploadsPage from './pages/organizers/events/EventUploadsPage';
+import EventCommunicationPage from './pages/organizers/events/EventCommunicationPage';
 
 export default function Router() {
   const routes = useRoutes([
@@ -81,6 +82,7 @@ export default function Router() {
             { path: ':eventId/speakers', element: <EventSpeakersListPage /> },
             { path: ':eventId/schedule', element: <EventSchedulePage /> },
             { path: ':eventId/uploads', element: <EventUploadsPage /> },
+            { path: ':eventId/communication', element: <EventCommunicationPage /> },
           ]
         },
         { path: 'events/create', element: <CreateEventPage /> },

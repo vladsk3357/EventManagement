@@ -73,7 +73,7 @@ const Form = ({ formFields, onSubmit, isPending }: Props) => {
       <Box>
         <Stack direction="column" spacing={3}>
           {fields.map((field, index) => (
-            <FormFieldCard key={field.id} index={index} field={field} onDelete={() => remove(index)} />
+            <FormFieldCard key={field.id} index={index} onDelete={() => remove(index)} />
           ))}
           <Box>
             <Button

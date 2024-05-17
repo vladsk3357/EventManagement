@@ -2,7 +2,6 @@
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities;
-using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,20 +14,16 @@ public sealed record EditSessionCommand(
     DateTime StartTime,
     int Duration,
     string Description,
+    string Level,
     ICollection<int> SpeakerIds) : IRequest;
 
-internal sealed class EditSessionCommandHandler : IRequestHandler<EditSessionCommand>
+internal sealed class EditSessionCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor) 
+    : IRequestHandler<EditSessionCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public EditSessionCommandHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task Handle(EditSessionCommand request, CancellationToken cancellationToken)
     {
@@ -54,31 +49,6 @@ internal sealed class EditSessionCommandHandler : IRequestHandler<EditSessionCom
         session.Description = request.Description;
         session.Speakers.Clear();
         session.Speakers = session.Event.Speakers.Where(s => request.SpeakerIds.Contains(s.Id)).ToList();
-
-        ////var sessionsSpeakerIds = session.Speakers.Select(s => s.Id).ToList();
-        ////foreach (var speakerId in request.SpeakerIds)
-        ////{
-        ////    if (sessionsSpeakerIds.Contains())
-        ////}
-
-        //var speakers = session.Event.Speakers.Where(s => speakersSet.Contains(s.Id)).ToList();
-
-        //speakers.ForEach(session.Speakers.Add);
-        
-        //foreach (var speakerId in request.SpeakerIds)
-        //{
-        //    if (!session.Speakers.Any(s => s.Id == speakerId))
-        //    {
-        //        session.Speakers.Add(session.Event.Speakers.First(s => s.Id == speakerId));
-        //    }
-        //}
-
-        //foreach (var speaker in session.Speakers)
-        //{
-        //    if (!request.SpeakerIds.Contains(speaker.Id))
-        //    {
-        //        session.Speakers.Remove(speaker);
-        //    }
-        //}
+        session.Level = request.Level;
     }
 }

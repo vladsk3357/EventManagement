@@ -18,7 +18,9 @@ internal sealed class EventCancelledEventHandler(
     private readonly IUserService _userService = userService;
     private readonly IMailService _mailService = mailService;
 
-    public async Task Handle(DomainEventNotification<EventCancelledEvent> notification, CancellationToken cancellationToken)
+    public async Task Handle(
+        DomainEventNotification<EventCancelledEvent> notification, 
+        CancellationToken cancellationToken)
     {
         var eventId = notification.DomainEvent.EventId;
         var attendees = await _applicationDbContext.Attendees

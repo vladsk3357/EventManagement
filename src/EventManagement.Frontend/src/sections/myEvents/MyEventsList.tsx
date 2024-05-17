@@ -39,9 +39,9 @@ const MyEventsList = () => {
 
       <Stack spacing={3}>
         {data.items.length === 0 && (
-          <Box component={Paper} alignItems="center">
-            <Typography variant="h4" gutterBottom>Подій немає</Typography>
-          </Box>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="body1" align="center">Ви поки не є учасником події</Typography>
+          </Paper>
         )}
         {data.items.map(item => (
           <Box key={item.date.toISOString(true)}>

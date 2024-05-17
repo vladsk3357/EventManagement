@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EventManagement.Application.Common.Exceptions;
+﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities.CommunityEvent;
 using EventManagement.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventManagement.Application.Organizers.Events.Commands.CancelEvent;
 
@@ -27,7 +21,8 @@ internal sealed class CancelEventCommandHandler(
     public async Task Handle(CancelEventCommand request, CancellationToken cancellationToken)
     {
         var @event = await _context.Events
-            .FirstOrDefaultAsync(e => e.Id == request.EventId && e.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
+            .FirstOrDefaultAsync(e => e.Id == request.EventId 
+                && e.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new NotFoundException(nameof(Event), request.EventId);
 
         if (@event.StartDate < DateTime.UtcNow)
@@ -41,3 +36,4 @@ internal sealed class CancelEventCommandHandler(
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
+

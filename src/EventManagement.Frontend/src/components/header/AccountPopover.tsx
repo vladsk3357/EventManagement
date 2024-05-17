@@ -96,7 +96,7 @@ export default function AccountPopover() {
           </Link>
           <Link component={RouterLink} to="/organizers" variant="body2" sx={{ textDecoration: 'none', color: 'inherit' }}>
             <MenuItem>
-              Мої спільноти
+              Спільноти організатора
             </MenuItem>
           </Link>
           <MenuItem onClick={() => remove()}>

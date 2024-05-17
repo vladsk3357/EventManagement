@@ -16,7 +16,7 @@ const CommunityCard = ({ community }: Props) => {
         <CardActionArea sx={{ minHeight: 200 }}>
           <CardMedia
             sx={{ height: 140 }}
-            image={community.communityImageUrl || "https://via.placeholder.com/1"}
+            image={community.communityImageUrl || undefined}
             title="community image"
           />
           <CardContent>

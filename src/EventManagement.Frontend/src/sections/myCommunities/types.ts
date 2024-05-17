@@ -3,4 +3,5 @@ export type Community = {
   name: string;
   subscribersCount: number;
   isOwner: boolean;
+  communityImageUrl: string | null;
 };

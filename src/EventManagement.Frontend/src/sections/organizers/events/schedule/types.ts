@@ -6,6 +6,7 @@ export type FormInputs = {
   duration: number;
   description: string;
   speakerIds: number[];
+  level: string;
 }
 
 export type Session = {
@@ -16,6 +17,7 @@ export type Session = {
   endTime: moment.Moment;
   duration: number;
   speakers: SessionSpeaker[];
+  level: string;
 };
 
 type SessionSpeaker = {
