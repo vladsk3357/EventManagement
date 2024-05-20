@@ -51,42 +51,46 @@ const EventSchedule = () => {
         </TableRow>
       );
 
-    return currentSessions.map((session) => (
-      <TableRow
-        key={session.id}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-      >
-        <TableCell component="th" scope="row">
-          <Stack direction="row">
-            {data && session.endTime.isAfter(moment(data.endDate)) && (
-              <Tooltip title="Доповідь закінчується після кінця події. ЇЇ не показано в розкладі." placement="top">
-                <Typography mr={1} color="orange"><WarningIcon /></Typography>
-              </Tooltip>
-            )}
-            {session.title}
-          </Stack>
-        </TableCell>
-        <TableCell align="right">{session.startTime.format("kk:mm")} - {session.endTime.format("kk:mm")}</TableCell>
-        <TableCell align="right">{session.duration}</TableCell>
-        <TableCell align="right">{levels.get(session.level)}</TableCell>
-        <TableCell align="right">
-          {session.speakers.map(s => s.name).join(', ')}
-        </TableCell>
-        <TableCell align="right" sx={{ display: 'flex', justifyContent: 'end' }}>
-          <Stack spacing={2} direction="row" >
-            {isFetchedSpeakers && isFetched && speakersData && data && (
-              <EditSessionButton
-                speakers={speakersData.speakers}
-                session={session}
-                endDate={moment(data.endDate)}
-                startDate={moment(data.startDate)}
-              />
-            )}
-            <DeleteSessionButton session={session} />
-          </Stack>
-        </TableCell>
-      </TableRow>
-    ));
+    return (
+      <>
+        {currentSessions.map((session) => (
+          <TableRow
+            key={session.id}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
+            <TableCell component="th" scope="row">
+              <Stack direction="row">
+                {data && session.endTime.isAfter(moment(data.endDate)) && (
+                  <Tooltip title="Доповідь закінчується після кінця події. ЇЇ не показано в розкладі." placement="top">
+                    <Typography mr={1} color="orange"><WarningIcon /></Typography>
+                  </Tooltip>
+                )}
+                {session.title}
+              </Stack>
+            </TableCell>
+            <TableCell align="right">{session.startTime.format("kk:mm")} - {session.endTime.format("kk:mm")}</TableCell>
+            <TableCell align="right">{session.duration}</TableCell>
+            <TableCell align="right">{levels.get(session.level)}</TableCell>
+            <TableCell align="right">
+              {session.speakers.map(s => s.name).join(', ')}
+            </TableCell>
+            <TableCell align="right" sx={{ display: 'flex', justifyContent: 'end' }}>
+              <Stack spacing={2} direction="row" >
+                {isFetchedSpeakers && isFetched && speakersData && data && (
+                  <EditSessionButton
+                    speakers={speakersData.speakers}
+                    session={session}
+                    endDate={moment(data.endDate)}
+                    startDate={moment(data.startDate)}
+                  />
+                )}
+                <DeleteSessionButton session={session} />
+              </Stack>
+            </TableCell>
+          </TableRow>
+        ))}
+      </>
+    );
   }
 
   return (
