@@ -1,0 +1,1 @@
+export { useDeleteEventAttendeeMutation } from './hooks';

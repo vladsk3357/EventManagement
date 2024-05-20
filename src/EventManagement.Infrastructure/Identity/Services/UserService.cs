@@ -1,26 +1,15 @@
-﻿using System.Threading;
-using EventManagement.Application.Common.Interfaces;
-using EventManagement.Application.Common.Models.User;
-using EventManagement.Domain.Common;
+﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Domain.Entities;
-using EventManagement.Domain.Events;
 using EventManagement.Infrastructure.Identity.Mappers;
-using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace EventManagement.Infrastructure.Identity.Services;
 
-internal class UserService : IUserService
+internal class UserService(UserManager<ApplicationUser> userManager) : IUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public UserService(UserManager<ApplicationUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
@@ -47,17 +36,18 @@ internal class UserService : IUserService
         UpdateUserInfo(storedUser, applicationUser);
         var result = await _userManager.UpdateAsync(storedUser);
 
-        return !result.Succeeded ? throw new InvalidOperationException("Не вдалося оновити інформацію про користувача") : user;
+        return !result.Succeeded 
+            ? throw new InvalidOperationException("Не вдалося оновити інформацію про користувача") 
+            : storedUser.ToEntity();
     }
 
-    private void UpdateUserInfo(ApplicationUser storedUser, ApplicationUser updatedUser)
+    private static void UpdateUserInfo(ApplicationUser storedUser, ApplicationUser updatedUser)
     {
         storedUser.Name = updatedUser.Name;
-        storedUser.PhoneNumber = updatedUser.PhoneNumber;
-        storedUser.Birthday = updatedUser.Birthday;
         storedUser.Location = updatedUser.Location;
         storedUser.Information = updatedUser.Information;
         storedUser.UserName = updatedUser.UserName;
+        storedUser.ProfileImage = updatedUser.ProfileImage;
     }
 
     public async Task<User?> GetUserByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -77,4 +67,13 @@ internal class UserService : IUserService
 
         return users.Select(u => u.ToEntity()).ToList();
     }
+
+    public Task<List<User>> GetUsersByEmailListAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(emails);
+
+        return _userManager.Users.Where(u => emails.Contains(u.Email))
+            .Select(u => u.ToEntity())
+            .ToListAsync(cancellationToken);
+    }    
 }

@@ -2,6 +2,7 @@
 using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Search;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +15,16 @@ internal sealed class DeleteEventCommandHandler : IRequestHandler<DeleteEventCom
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IEventsSearchService _searchService;
 
-    public DeleteEventCommandHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
+    public DeleteEventCommandHandler(
+        IApplicationDbContext context, 
+        ICurrentUserAccessor currentUserAccessor, 
+        IEventsSearchService searchService)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
+        _searchService = searchService;
     }
 
     public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
@@ -30,5 +36,6 @@ internal sealed class DeleteEventCommandHandler : IRequestHandler<DeleteEventCom
         _context.Events.Remove(eventEntity);
 
         await _context.SaveChangesAsync(cancellationToken);
+        await _searchService.DeleteAsync(eventEntity.Id, cancellationToken);
     }
 }

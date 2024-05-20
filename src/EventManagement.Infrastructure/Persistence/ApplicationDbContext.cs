@@ -4,6 +4,8 @@ using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Common;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
+using EventManagement.Domain.Entities.CommunityEvent;
 using EventManagement.Domain.Entities.Form;
 using EventManagement.Domain.Entities.Form.Answer;
 using EventManagement.Infrastructure.Identity;
@@ -12,28 +14,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Infrastructure;
 
-internal class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
+internal class ApplicationDbContext(
+    DbContextOptions<ApplicationDbContext> options,
+    ICurrentUserService currentUserService,
+    IDateTime dateTime,
+    IDomainEventService domainEventService) : IdentityDbContext<ApplicationUser>(options), IApplicationDbContext
 {
     // dotnet ef migrations add "InitialMigration" --project src\EventManagement.Infrastructure --startup-project src\EventManagement.WebApi --output-dir Persistence\Migrations
     // dotnet ef database update --project src\EventManagement.Infrastructure --startup-project src\EventManagement.WebApi 
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IDateTime _dateTime;
-    private readonly IDomainEventService _domainEventService;
-
-    public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options,
-        ICurrentUserService currentUserService,
-        IDateTime dateTime,
-        IDomainEventService domainEventService) : base(options)
-    {
-        _currentUserService = currentUserService;
-        _dateTime = dateTime;
-        _domainEventService = domainEventService;
-    }
+    private readonly ICurrentUserService _currentUserService = currentUserService;
+    private readonly IDateTime _dateTime = dateTime;
+    private readonly IDomainEventService _domainEventService = domainEventService;
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     public DbSet<Community> Communities => Set<Community>();
+
+    public DbSet<SocialMedia> CommunitySocialMedia => Set<SocialMedia>();
 
     public DbSet<Event> Events => Set<Event>();
 
@@ -54,6 +51,8 @@ internal class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IAppli
     public DbSet<CommunityForm> CommunityForms => Set<CommunityForm>();
 
     public DbSet<FormAnswer> FormAnswers => Set<FormAnswer>();
+
+    public DbSet<EventImage> EventImages => Set<EventImage>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

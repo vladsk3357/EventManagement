@@ -1,14 +1,11 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-//
-import SimpleLayout from './layouts/simple';
 import HomeLayout from './layouts/home';
 import DefaultLayout from './layouts/default';
 import SimpleOrganizersLayout from './layouts/organizers/SimpleOrganizersLayout';
-import CommunityLayout from './layouts/organizers/CommunityLayout';
+import OrganizersLayout from './layouts/organizers/OrganizersLayout';
 import RegistrationPage from './pages/profile/RegistrationPage';
 import LoginPage from './pages/profile/LoginPage';
 import Page404 from './pages/error/Page404';
-import HomePage from './pages/HomePage';
 import UserDetailsPage from './pages/UserDetailsPage';
 import Edit from './layouts/edit';
 import EditProfilePage from './pages/edit/EditProfilePage';
@@ -24,8 +21,17 @@ import MyCommunitiesPage from './pages/myCommunities/MyCommunitiesPage';
 import EventPage from './pages/event/EventPage';
 import CommunitySubscriptionFormPage from './pages/organizers/community/CommunitySubscriptionFormPage';
 import CommunitySubscriptionFormAnswerDetailsPage from './pages/organizers/community/CommunitySubscriptionFormAnswerDetailsPage';
-
-// ----------------------------------------------------------------------
+import EventDetailsPage from './pages/organizers/events/EventDetailsPage';
+import EventAttendeesListPage from './pages/organizers/events/EventAttendeesListPage';
+import EventSpeakersListPage from './pages/organizers/events/EventSpeakersListPage';
+import EventSchedulePage from './pages/organizers/events/EventSchedulePage';
+import MyEventsPage from './pages/myEvents/MyEventsPage';
+import CommunityCommunicationPage from './pages/organizers/community/CommunityCommunicationPage';
+import CommunityInvitationPage from './pages/organizers/community/CommunityInvitationPage';
+import DiscoverCommunitiesPage from './pages/discover/DiscoverCommunitiesPage';
+import DiscoverEventsPage from './pages/discover/DiscoverEventsPage';
+import EventUploadsPage from './pages/organizers/events/EventUploadsPage';
+import EventCommunicationPage from './pages/organizers/events/EventCommunicationPage';
 
 export default function Router() {
   const routes = useRoutes([
@@ -33,8 +39,11 @@ export default function Router() {
       path: '',
       element: <HomeLayout />,
       children: [
-        { element: <HomePage />, index: true },
+        { element: <Navigate to='my-communities' />, index: true },
         { path: 'my-communities', element: <MyCommunitiesPage /> },
+        { path: 'my-events', element: <MyEventsPage /> },
+        { path: 'discover-communities', element: <DiscoverCommunitiesPage /> },
+        { path: 'discover-events', element: <DiscoverEventsPage /> },
       ],
     },
     {
@@ -62,15 +71,27 @@ export default function Router() {
     },
     {
       path: 'organizers/:communityId',
-      element: <CommunityLayout />,
+      element: <OrganizersLayout />,
       children: [
         { path: 'dashboard', element: <CommunityDashboardPage />, },
-        { path: 'events', element: <CommunityEventsPage /> },
+        {
+          path: 'events', children: [
+            { path: 'list/*', element: <CommunityEventsPage /> },
+            { path: ':eventId/details', element: <EventDetailsPage /> },
+            { path: ':eventId/attendees/*', element: <EventAttendeesListPage /> },
+            { path: ':eventId/speakers', element: <EventSpeakersListPage /> },
+            { path: ':eventId/schedule', element: <EventSchedulePage /> },
+            { path: ':eventId/uploads', element: <EventUploadsPage /> },
+            { path: ':eventId/communication', element: <EventCommunicationPage /> },
+          ]
+        },
         { path: 'events/create', element: <CreateEventPage /> },
         { path: 'settings', element: <SettingsPage /> },
         { path: 'members', element: <SubscribersPage /> },
         { path: 'registrations', element: <CommunitySubscriptionFormPage /> },
         { path: 'registrations/:answerId', element: <CommunitySubscriptionFormAnswerDetailsPage /> },
+        { path: 'communication', element: <CommunityCommunicationPage /> },
+        { path: 'invite', element: <CommunityInvitationPage /> },
       ],
     },
     {
@@ -81,20 +102,13 @@ export default function Router() {
         { path: ':eventId', element: <EventPage /> },
       ],
     },
-
-    // {
-    //   path: 'create',
-    //   element: <DefaultLayout />,
-    //   children: [
-    //   ],
-    // },
-    // {
-    //   path: ':username',
-    //   element: <DefaultLayout />,
-    //   children: [
-    //     { element: <UserDetailsPage />, index: true },
-    //   ],
-    // },
+    {
+      path: 'profile',
+      element: <DefaultLayout />,
+      children: [
+        { element: <UserDetailsPage />, index: true },
+      ],
+    },
 
     {
       path: '*',

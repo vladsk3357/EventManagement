@@ -1,23 +1,19 @@
-﻿using EventManagement.Application.Common.Interfaces;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace EventManagement.Application.Profile.Info.Commands.EditInfo;
 
 internal sealed class EditInfoCommandValidator : AbstractValidator<EditInfoCommand>
 {
-
-    public EditInfoCommandValidator(IDateTime dateTime)
+    public EditInfoCommandValidator()
     {
-        RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage("Номер телефону обов'язковий");
+        RuleFor(x => x.UserName)
+            .NotEmpty().WithMessage("Ім'я користувача обов'язкове")
+            .MaximumLength(100).WithMessage("Ім'я користувача не може бути більше 100 символів")
+            .Matches("^[a-zA-Z0-9_]+$").WithMessage("Ім'я користувача може містити тільки латинські літери, цифри та символ \"_\"");
 
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Ім'я обов'язкове")
             .MaximumLength(100).WithMessage("Ім'я не може бути більше 100 символів");
-
-        RuleFor(x => x.Birthday)
-            .NotEmpty().WithMessage("Дата народження обов'язкова")
-            .LessThanOrEqualTo(DateOnly.FromDateTime(dateTime.Now)).WithMessage("Дата народження має бути в минулому");
 
         RuleFor(x => x.Location)
             .NotEmpty().WithMessage("Поточна локація обов'язкова");

@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN } from "./constants";
+import UserContext from "./UserContext";
 
 type Props = {
   children: React.ReactNode;
@@ -9,14 +10,16 @@ type Props = {
 
 const AuthenticationRedirectProvider = ({ children, authenticationRequired }: Props) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { tokens } = useContext(UserContext);
 
   useEffect(() => {
-    if (authenticationRequired && !localStorage.getItem(ACCESS_TOKEN)) {
+    if (authenticationRequired && !tokens && pathname !== '/login') {
       navigate('/login', { replace: true });
     }
-  }, [authenticationRequired]);
+  }, [authenticationRequired, pathname, tokens, navigate]);
 
-  return children;
+  return <>{children}</>;
 };
 
 export default AuthenticationRedirectProvider;

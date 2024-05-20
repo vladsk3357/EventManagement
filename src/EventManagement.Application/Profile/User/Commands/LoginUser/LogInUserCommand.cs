@@ -21,7 +21,7 @@ internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand
     {
         var jwt = await _identityService.AuthenticateAsync(request.Email, request.Password, cancellationToken);
         if (jwt is null)
-            throw new UnauthorizedRequestException();
+            throw new InvalidRequestException(nameof(request.Email), "Електронна пошта або пароль неправильні");
 
         return new LoginUserResultData(jwt.AccessToken, jwt.RefreshToken);
     }

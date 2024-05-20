@@ -6,14 +6,9 @@ using RazorEngineCore;
 
 namespace EventManagement.Infrastructure.Mail.Services;
 
-internal class MailServiceCore
+internal class MailServiceCore(IOptions<MailOptions> options)
 {
-    private readonly MailOptions _options;
-
-    public MailServiceCore(IOptions<MailOptions> options)
-    {
-        _options = options.Value;
-    }
+    private readonly MailOptions _options = options.Value;
 
     public async Task SendEmailAsync<T>(IEnumerable<string> to, string subject, string templateName, T model, CancellationToken cancellationToken = default)
     {
@@ -21,7 +16,7 @@ internal class MailServiceCore
         await SendEmailAsync(to, subject, message, cancellationToken);
     }
 
-    private async Task SendEmailAsync(IEnumerable<string> to, string subject, string message, CancellationToken cancellationToken = default)
+    public async Task SendEmailAsync(IEnumerable<string> to, string subject, string message, CancellationToken cancellationToken = default)
     {
         var mail = CreateMailMessage(to, subject, message);
 
@@ -53,7 +48,7 @@ internal class MailServiceCore
     {
         var templateText = await GetEmailTemplateTextAsync(templateName, cancellationToken);
         var razorEngine = new RazorEngine();
-        var compiledTemplate = await razorEngine.CompileAsync<RazorEngineTemplateBase<T>>(templateText);
+        var compiledTemplate = await razorEngine.CompileAsync<RazorEngineTemplateBase<T>>(templateText, cancellationToken: cancellationToken);
         return await compiledTemplate.RunAsync(i => i.Model = model);
     }
 

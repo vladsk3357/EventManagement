@@ -4,4 +4,5 @@ public record CommunityDto(
     int Id,
     string Name,
     string Location,
-    string Domain);
+    string Domain,
+    string? CommunityImageUrl);

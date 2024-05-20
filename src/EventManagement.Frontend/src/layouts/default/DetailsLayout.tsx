@@ -3,6 +3,9 @@ import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 //
 import Header from '../../components/header';
+import BaseLayout from '../base/BaseLayout';
+import Nav from '../home/nav';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -31,12 +34,18 @@ const Main = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DefaultLayout() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <StyledRoot>
-      <Header />
-      <Main>
-        <Outlet />
-      </Main>
-    </StyledRoot>
+    <BaseLayout>
+      <StyledRoot>
+        <Header onOpenNav={() => setOpen(true)} />
+        <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+
+        <Main>
+          <Outlet />
+        </Main>
+      </StyledRoot>
+    </BaseLayout>
   );
 }

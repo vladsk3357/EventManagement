@@ -3,9 +3,9 @@ import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../../api';
 import { useQuery } from "@tanstack/react-query";
-import { PagedList } from "../../common";
 import { useMemo } from "react";
 import { Button } from "@mui/material";
+import { PagedList } from "../../../common/types";
 
 type Props = {
   value: string;
@@ -35,8 +35,7 @@ const AnswersPanel = ({ value }: Props) => {
         pageSizeOptions={[10, 15]}
         loading={isLoading}
         onPaginationModelChange={paginationChangeHandle}
-      >
-      </DataGrid>
+      />
     </TabPanel>
   );
 };

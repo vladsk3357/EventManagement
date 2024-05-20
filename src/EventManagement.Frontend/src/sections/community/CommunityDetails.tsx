@@ -10,6 +10,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SubscribeCommunityButton from "./SubscribeCommunityButton";
 import UnsubscribeCommunityButton from "./UnsubscribeCommunityButton";
 import CommunityOrganizerButtons from "./CommunityOrganizerButtons";
+import { SocialMedia } from "./types";
+import CommunitySocialMedia from "./communitySocialMedia";
 
 const CommunityDetails = () => {
   const { communityId: communityIdParam } = useParams();
@@ -24,30 +26,32 @@ const CommunityDetails = () => {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Avatar alt="photoURL" sx={{ width: 120, height: 120, mr: 2 }} />
-
         <Grid container>
-          <Grid item xs={8}>
+          <Grid item xs={12} md={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }}>
-              <Typography variant="h4">
-                {data?.name}
-              </Typography>
-            </Stack>
-            <Stack direction="row">
-              <LocationOnIcon />
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                {data?.location}
-              </Typography>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                &#8226;
-              </Typography>
-              <Typography variant="body2" sx={{ mr: 2 }}>
-                {data?.subscriberCount} учасників
-              </Typography>
+              <Avatar alt="community image" src={data?.communityImageUrl || undefined} sx={{ width: 120, height: 120, mr: 2 }} />
+              <Stack direction="column">
+                <Typography variant="h2">
+                  {data?.name}
+                </Typography>
+                <Stack direction="row" mb={2}>
+                  <LocationOnIcon />
+                  <Typography variant="body2" sx={{ mr: 2 }}>
+                    {data?.location}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mr: 2 }}>
+                    &#8226;
+                  </Typography>
+                  <Typography variant="body2" sx={{ mr: 2 }}>
+                    {data?.subscriberCount} учасників
+                  </Typography>
+                </Stack>
+                {data && <CommunitySocialMedia socialMedia={data?.socialMedia} />}
+              </Stack>
             </Stack>
           </Grid>
-          <Grid item xs={4} sx={{ textAlign: 'right' }}>
-            <Box mb={3}>
+          <Grid item xs={12} md={4}>
+            <Box mb={3} sx={{ display: 'flex', justifyContent: 'end' }}>
               {data && (data.isOrganizer ? (
                 <CommunityOrganizerButtons communityId={communityId} />
               ) : data.isSubscribed ? (
@@ -102,4 +106,6 @@ export type GetCommunityDetailsQueryResult = {
   isOrganizer: boolean;
   requiresFormAnswer: boolean;
   formId: number;
+  communityImageUrl: string | null;
+  socialMedia: SocialMedia;
 }

@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Domain.Entities;
+﻿using EventManagement.Domain.Entities.CommunityEvent;
+
+namespace EventManagement.Domain.Entities;
 
 public class Speaker: AuditableEntity
 {
@@ -15,4 +17,6 @@ public class Speaker: AuditableEntity
     public int EventId { get; set; } = default!;
 
     public Event Event { get; set; } = default!;
+
+    public ICollection<Session> Sessions { get; set; } = [];
 }

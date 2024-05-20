@@ -1,21 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../api';
-import { DataGrid, GridActionsCellItem, GridColDef, type GridPaginationModel } from '@mui/x-data-grid';
-import EditIcon from '@mui/icons-material/Edit';
-import BlockIcon from '@mui/icons-material/Block';
+import { DataGrid, GridColDef, type GridPaginationModel } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ActionCellItemWithConfirmation } from "../common";
+import { ActionCellItemWithConfirmation, useSubscribersList } from "../common";
 import { type PagedList } from "../../common/types";
-import { Link as RouterLink } from 'react-router-dom';
 import { UserContext } from "../../../components/user";
 import { useContext } from "react";
 
 const SubscribersList = () => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
+  const { communityId: communityIdParam } = useParams();
   const page = Number(urlSearchParams.get('page')) || 1;
   const pageSize = Number(urlSearchParams.get('pageSize')) || 10;
-  const { data, isLoading } = useSubscribersList(page, pageSize);
+  const communityId = Number(communityIdParam);
+  const { data, isLoading } = useSubscribersList(communityId, page, pageSize);
   const columns = useColumns();
 
   const paginationChangeHandle = (model: GridPaginationModel) => {
@@ -100,29 +99,6 @@ function useColumns(): GridColDef[] {
       },
     },
   ];
-}
-
-function useSubscribersList(page: number, pageSize: number) {
-  const { communityId } = useParams();
-
-  return useQuery({
-    queryKey: ['organizer', communityId, 'subscribers', page, pageSize],
-    queryFn: () => axios.get<GetCommunitySubscribersQueryResultType>(`/api/organizers/communities/${communityId}/subscribers`, {
-      params: {
-        page,
-        pageSize,
-      }
-    }).then(res => res.data),
-  });
-}
-
-type GetCommunitySubscribersQueryResultType = PagedList<CommunityEvent>;
-
-type CommunityEvent = {
-  id: number;
-  name: string;
-  userName: string;
-  joinDate: string;
 }
 
 function useDeleteSubscriberMutation() {

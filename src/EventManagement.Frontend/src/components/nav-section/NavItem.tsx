@@ -26,7 +26,6 @@ const NavItem = ({ item }: Props) => {
           fontWeight: 'fontWeightBold',
         },
       }}
-
     >
       <StyledNavItemIcon>{icon && icon}</StyledNavItemIcon>
 

@@ -1,6 +1,6 @@
 import { TabPanel } from "@mui/lab";
-import { CircularProgress } from "@mui/material";
-import { useCallback } from "react";
+import { Alert, CircularProgress, Snackbar } from "@mui/material";
+import { useCallback, useState } from "react";
 import { FormField } from "../../types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axios } from '../../../../api';
@@ -14,43 +14,32 @@ type Props = {
 const FormConstructorPanel = ({ value }: Props) => {
   const { communityId: communityIdParam } = useParams();
   const communityId = Number(communityIdParam);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { data, isLoading, isFetched } = useGetCommunitySubscriptionForm(communityId);
-  const { mutate, isPending } = useEditCommunitySubscriptionForm(communityId);
+  const { mutate, isPending } = useEditCommunitySubscriptionForm(communityId, () => setSnackbarOpen(true));
 
   const handleSubmit = useCallback((data: FormInputs) => {
-    // mutate({
-    //   fields: data.fields.map(f => {
-    //     if (f.type === 'SingleOption' || f.type === 'MultipleOptions') {
-    //       return {
-    //         name: f.name,
-    //         description: f.description,
-    //         type: f.type,
-    //         isRequired: f.isRequired,
-    //         order: f.order,
-    //         properties: { options: f.options },
-    //       }
-    //     }
-    //     else {
-    //       return {
-    //         name: f.name,
-    //         description: f.description,
-    //         type: f.type,
-    //         isRequired: f.isRequired,
-    //         order: f.order,
-    //       }
-    //     }
-    //   }), communityId
-    // });
     mutate({ fields: data.fields, communityId });
   }, [mutate]);
 
   return (
-    <TabPanel value={value}>
-      {isLoading && <CircularProgress />}
-      {isFetched && data && (
-        <Form formFields={data.fields} onSubmit={handleSubmit} isPending={isPending} />
-      )}
-    </TabPanel >
+    <>
+      <TabPanel value={value}>
+        {isLoading && <CircularProgress />}
+        {isFetched && data && (
+          <Form formFields={data.fields} onSubmit={handleSubmit} isPending={isPending} />
+        )}
+      </TabPanel >
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Реєстраційну форму успішно оновлено
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
@@ -71,30 +60,6 @@ function useGetCommunitySubscriptionForm(communityId: number) {
     queryFn: async () => {
       const res = await axios.get<GetCommunitySubscriptionFormQueryResult>(`/api/organizers/communities/${communityId}/subscription-form`);
       return res.data;
-      // return {
-      //   communityId: res.data.communityId,
-      //   fields: res.data.fields.map(f => {
-      //     if (f.type === "SingleOption" || f.type === "MultipleOptions") {
-      //       return {
-      //         name: f.name,
-      //         description: f.description,
-      //         isRequired: f.isRequired,
-      //         order: f.order,
-      //         type: f.type,
-      //         options: f.properties.options,
-      //       }
-      //     }
-      //     else {
-      //       return {
-      //         name: f.name,
-      //         description: f.description,
-      //         isRequired: f.isRequired,
-      //         order: f.order,
-      //         type: f.type,
-      //       }
-      //     }
-      //   })
-      // };
     }
   });
 }
@@ -108,8 +73,6 @@ type FieldInput = {
 
 export type OptionFieldInput = FieldInput & {
   type: 'SingleOption' | 'MultipleOptions';
-  // properties: {
-  // };
   options: string[];
 }
 
@@ -124,7 +87,7 @@ type UpdateCommunitySubscriptionFormInput = {
   fields: FormFieldInput[];
 };
 
-function useEditCommunitySubscriptionForm(communityId: number) {
+function useEditCommunitySubscriptionForm(communityId: number, onSuccess?: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -134,6 +97,7 @@ function useEditCommunitySubscriptionForm(communityId: number) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communitySubscriptionForm', { communityId }] });
+      onSuccess?.();
     }
   })
 }

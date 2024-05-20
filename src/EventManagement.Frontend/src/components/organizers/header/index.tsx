@@ -1,17 +1,12 @@
-// @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
-// utils
+import { Box, Stack, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import { bgBlur } from '../../../utils/cssStyles';
-// components
 import Iconify from '../../iconify';
-//
 import AccountPopover from './AccountPopover';
 import { MouseEventHandler } from 'react';
 import ShowOnEventsButton from './ShowOnEventsButton';
 import CommunitiesDropdown from './CommunitiesDropdown';
-
-// ----------------------------------------------------------------------
+import { Link } from 'react-router-dom';
 
 const NAV_WIDTH = 280;
 
@@ -21,7 +16,7 @@ const HEADER_DESKTOP = 92;
 
 const StyledRoot = styled(AppBar)(({ theme }) => {
   return {
-    ...bgBlur({ color: theme.palette.background.default }),
+    ...bgBlur({ color: theme.palette.background.neutral }),
     boxShadow: 'none',
     [theme.breakpoints.up('lg')]: {
       width: `calc(100% - ${NAV_WIDTH + 1}px)`,
@@ -37,13 +32,12 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
-
 type Props = {
   onOpenNav?: MouseEventHandler<HTMLButtonElement>;
+  showCommunitiesDropdown?: boolean;
 }
 
-export default function Header({ onOpenNav }: Props) {
+export default function Header({ showCommunitiesDropdown, onOpenNav }: Props) {
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -57,20 +51,30 @@ export default function Header({ onOpenNav }: Props) {
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
-        <CommunitiesDropdown />
+        <Stack direction="row" spacing={3}>
+          <Link to="/"><Typography variant='h3'>Events</Typography></Link>
+          {showCommunitiesDropdown && <CommunitiesDropdown />}
+        </Stack>
         <Box sx={{ flexGrow: 1 }} />
         <Stack
           direction="row"
           alignItems="center"
           spacing={{
-            xs: 0.5,
+            xs: 1,
             sm: 3,
           }}
         >
-          <ShowOnEventsButton />
+          <Box sx={{
+            display: {
+              lg: 'block',
+              xs: 'none'
+            }
+          }}>
+            <ShowOnEventsButton />
+          </Box>
           <AccountPopover />
         </Stack>
       </StyledToolbar>
-    </StyledRoot>
+    </StyledRoot >
   );
 }

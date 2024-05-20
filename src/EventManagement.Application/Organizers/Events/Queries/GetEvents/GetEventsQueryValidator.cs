@@ -9,7 +9,5 @@ public sealed class GetEventsQueryValidator : PagedRequestValidator<GetEventsQue
     {
         RuleFor(x => x.CommunityId).NotEmpty();
         RuleFor(x => x.SearchTerm).NotEmpty().When(x => x.SearchTerm is not null);
-        RuleFor(x => x.SortBy).NotEmpty().When(x => x.SortBy is not null);
-        RuleFor(x => x.SortOrder).NotEmpty().When(x => x.SortOrder is not null);
     }
 }

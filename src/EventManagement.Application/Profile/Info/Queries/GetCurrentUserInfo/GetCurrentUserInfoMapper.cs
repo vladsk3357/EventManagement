@@ -2,13 +2,12 @@
 
 internal static class GetCurrentUserInfoMapper
 {
-    public static GetCurrentUserInfoDto ToDto(this Domain.Entities.User user) => new(
+    public static GetCurrentUserInfoDto ToDto(this Domain.Entities.User user, string? profileImageUrl) => new(
         user.Id, 
         user.Email,
-        user.PhoneNumber,
         user.Name, 
         user.UserName, 
-        user.Birthday,
         user.Location,
-        user.Information);
+        user.Information,
+        profileImageUrl);
 }

@@ -1,22 +1,12 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-// @mui
-import { styled, alpha } from '@mui/material/styles';
-import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
-// hooks
+import { Box, Drawer } from '@mui/material';
 import useResponsive from '../../../hooks/useResponsive';
-// components
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-//
 import navConfig from './config';
-import { UserContext } from '../../../components/user';
-
-// ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
-
-// ----------------------------------------------------------------------
 
 type Props = {
   openNav: boolean;

@@ -1,0 +1,30 @@
+﻿@model EventManagement.WebApi.Areas.Admin.Models.Account.LogInViewModel
+@{
+    Layout = "_EmptyLayout";
+    ViewData["Title"] = "Вхід";
+}
+<body class="text-center">
+	<main class="form-signin">
+		<form asp-action="Login" method="post">
+			<input name="ReturnUrl" value="@ViewBag.ReturnUrl" type="hidden"/>
+			<h1 class="h3 mb-3 fw-normal">Вхід в акаунт</h1>
+			<div class="form-floating">
+				<input asp-for="Email" class="form-control" placeholder="name@example.com">
+				<label asp-for="Email"></label>
+			</div>
+			<div class="mb-3">
+				<span asp-validation-for="@Model.Email" class="invalid-feedback"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Password" class="form-control" placeholder="Password">
+				<label asp-for="Password"></label>
+			</div>
+			<div class="mb-3">
+				<span asp-validation-for="@Model.Password" class="invalid-feedback"></span>
+			</div>
+            <div class="mb-3" asp-validation-summary="All" class="invalid-feedback">
+            </div>
+			<button class="w-100 btn btn-lg btn-primary" type="submit">Увійти</button>
+		</form>
+	</main>
+</body>

@@ -18,6 +18,7 @@ const AttendEventButton = ({ eventId, isOrganizer }: Props) => {
       disabled={isOrganizer}
       loading={isPending}
       onClick={() => mutate()}
+      fullWidth
     >
       Стати учасником
     </LoadingButton>

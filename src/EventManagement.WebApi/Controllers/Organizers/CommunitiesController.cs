@@ -1,7 +1,10 @@
 ﻿using EventManagement.Application.Common.Pagination;
+using EventManagement.Application.Organizers.Communication.Commands.SendCommunityEmail;
+using EventManagement.Application.Organizers.Communication.Commands.SendEventEmail;
 using EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
 using EventManagement.Application.Organizers.Communities.Commands.DeleteCommunity;
 using EventManagement.Application.Organizers.Communities.Commands.EditCommunity;
+using EventManagement.Application.Organizers.Communities.Commands.EditSocialMedia;
 using EventManagement.Application.Organizers.Communities.Queries.GetCommunities;
 using EventManagement.Application.Organizers.Communities.Queries.GetCommunity;
 using EventManagement.Application.Organizers.CommunitySubscriptionForms.Commands.EditCommunitySubscriptionForm;
@@ -10,7 +13,11 @@ using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.
 using EventManagement.Application.Organizers.CommunitySubscriptionForms.Queries.GetCommunitySubscriptionFormAnswers;
 using EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 using EventManagement.Application.Organizers.Events.Queries.GetEvents;
+using EventManagement.Application.Organizers.Forms.Queries.GetAllForms;
+using EventManagement.Application.Organizers.Invitations.Commands;
 using EventManagement.Application.Organizers.Subscribers.Queries.GetSubscribers;
+using EventManagement.WebApi.Models;
+using EventManagement.WebApi.Models.Organizers.Communities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.WebApi.Controllers.Organizers;
@@ -43,12 +50,20 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCommunityAsync(int id, EditCommunityCommand command)
+    public async Task<IActionResult> UpdateCommunityAsync(int id, [FromForm] EditCommunityModel model)
     {
-        if (id != command?.Id)
+        if (id != model?.Id)
             return BadRequest();
 
-        await Mediator.Send(command);
+        await Mediator.Send(new EditCommunityCommand(
+            model.Id,
+            model.Name,
+            model.Location,
+            model.Domain,
+            model.ShortDescription,
+            model.Description,
+            model.CommunityImage is null ? null : new FormFileProxy(model.CommunityImage)));
+
         return NoContent();
     }
 
@@ -64,9 +79,9 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     }
 
     [HttpGet("{communityId}/events")]
-    public async Task<PagedList<GetEventsEventDto>> GetEventsAsync(int communityId, string? q, string? sortBy, string? sortOrder, int page, int pageSize)
+    public async Task<PagedList<EventDto>> GetEventsAsync(int communityId, string? q, bool isPast, int page, int pageSize)
     {
-        return await Mediator.Send(new GetEventsQuery(communityId, q, sortBy, sortOrder, page, pageSize));
+        return await Mediator.Send(new GetEventsQuery(communityId, q, isPast, page, pageSize));
     }
 
     [HttpGet("{communityId}/subscribers")]
@@ -84,7 +99,7 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     [HttpPut("{communityId}/subscription-form")]
     public async Task<IActionResult> UpdateSubscriptionFormAsync(int communityId, EditCommunitySubscriptionFormCommand command)
     {
-        if (communityId != command.CommunityId)
+        if (communityId != command?.CommunityId)
             return BadRequest();
 
         await Mediator.Send(command);
@@ -101,5 +116,51 @@ public sealed class CommunitiesController : OrganizersApiControllerBase
     public async Task<GetCommunitySubscriptionFormAnswerDetailsDto> GetSubscriptionFormAnswerDetailsAsync(int communityId, int answerId)
     {
         return await Mediator.Send(new GetCommunitySubscriptionFormAnswerDetailsQuery(communityId, answerId));
+    }
+
+    [HttpGet("{communityId}/all-forms")]
+    public async Task<NonPagedList<FormDto>> GetAllFormsAsync(int communityId)
+    {
+        return await Mediator.Send(new GetAllFormsQuery(communityId));
+    }
+
+    [HttpPost("{communityId}/send-email")]
+    public async Task<IActionResult> SendCommunityEmailAsync(int communityId, SendCommunityEmailCommand command)
+    {
+        if (communityId != command?.CommunityId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("{eventId}/send-event-email")]
+    public async Task<IActionResult> SendEventEmailAsync(int eventId, SendEventEmailCommand command)
+    {
+        if (eventId != command?.EventId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPost("{communityId}/invite")]
+    public async Task<IActionResult> InviteToCommunity(int communityId, InviteToCommunityCommand command)
+    {
+        if (communityId != command?.CommunityId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPut("{communityId}/social-media")]
+    public async Task<IActionResult> UpdateSocialMedia(int communityId, [FromBody] EditSocialMediaCommand command)
+    {
+        if (communityId != command?.CommunityId)
+            return BadRequest();
+
+        await Mediator.Send(command);
+        return NoContent();
     }
 }

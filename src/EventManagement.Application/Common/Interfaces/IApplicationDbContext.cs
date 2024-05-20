@@ -1,8 +1,11 @@
 ﻿using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
+using EventManagement.Domain.Entities.CommunityEvent;
 using EventManagement.Domain.Entities.Form;
 using EventManagement.Domain.Entities.Form.Answer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EventManagement.Application.Common.Interfaces;
 
@@ -25,7 +28,7 @@ public interface IApplicationDbContext
     DbSet<Form> Forms { get; }
 
     DbSet<CommunitySubscriptionForm> CommunitySubscriptionForms { get; }
-    
+
     DbSet<EventAttendanceForm> EventRegistrationForms { get; }
 
     DbSet<CommunityForm> CommunityForms { get; }
@@ -33,4 +36,10 @@ public interface IApplicationDbContext
     DbSet<FormAnswer> FormAnswers { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    DatabaseFacade Database { get; }
+
+    DbSet<SocialMedia> CommunitySocialMedia { get; }
+
+    DbSet<EventImage> EventImages { get; }
 }

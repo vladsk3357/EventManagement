@@ -3,9 +3,8 @@
 public sealed record EditInfoResult(
     string Id, 
     string Email, 
-    string? PhoneNumber,
     string Name, 
     string UserName,
-    DateOnly? Birthday,
     string? Location,
-    string? Information);
+    string? Information,
+    string? ProfileImageUrl);

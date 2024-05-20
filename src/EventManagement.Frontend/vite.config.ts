@@ -35,11 +35,15 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://localhost:7165',
+                target: 'https://localhost:443',
                 secure: false,
             },
             '/swagger': {
                 target: 'https://localhost:7165',
+                secure: false,
+            },
+            '/admin': {
+                target: 'https://localhost:443',
                 secure: false,
             },
         },

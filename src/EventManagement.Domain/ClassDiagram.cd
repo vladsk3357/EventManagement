@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="EventManagement.Domain.ValueObjects.Address" Collapsed="true">
+    <Position X="7.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAIAAAAAAAAAAAABAAIAAAAAAAA=</HashCode>
+      <FileName>ValueObjects\Address.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Community.Community" Collapsed="true">
+    <Position X="6" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAAAAggAAAAAAIAAAQAAgAAAAAkAAQEAAAAAQA=</HashCode>
+      <FileName>Entities\Community\Community.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Community.SocialMedia" Collapsed="true">
+    <Position X="12.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAgBQAABEAEwAAAAAgAAIAAAgCAEAAA=</HashCode>
+      <FileName>Entities\Community\SocialMedia.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.CommunityEvent.Event" Collapsed="true">
+    <Position X="9.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAIIgAAAAgCAABAQgAAAAABEAAAAAIEAEAQQ=</HashCode>
+      <FileName>Entities\CommunityEvent\Event.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.CommunityEvent.EventImage" Collapsed="true">
+    <Position X="11" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAAAAAAAAAAAAAAAAAgAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Entities\CommunityEvent\EventImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.CommunityEvent.EventVenueBase" Collapsed="true">
+    <Position X="5.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Entities\CommunityEvent\EventVenueBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.CommunityEvent.EventVenueTypes" Collapsed="true">
+    <Position X="12.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAgAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\CommunityEvent\EventVenueTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.CommunityEvent.OfflineEventVenue" Collapsed="true">
+    <Position X="4" Y="9.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAAAAAAA=</HashCode>
+      <FileName>Entities\CommunityEvent\OfflineEventVenue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.CommunityEvent.OnlineEventVenue" Collapsed="true">
+    <Position X="5.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAAAAAAA=</HashCode>
+      <FileName>Entities\CommunityEvent\OnlineEventVenue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.Answer.FormAnswer" Collapsed="true">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAAAAAAAAAgAACAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entities\Form\Answer\FormAnswer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.Answer.FormFieldAnswer" Collapsed="true">
+    <Position X="7.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Entities\Form\Answer\FormFieldAnswer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.FormFieldBase" Collapsed="true">
+    <Position X="6.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAACgAAAAAAAAAAQgAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Entities\Form\FormField\FormFieldBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.FormFieldNames" Collapsed="true">
+    <Position X="9" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAQAAAAAACAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Entities\Form\FormField\FormFieldNames.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.FormFieldOption" Collapsed="true">
+    <Position X="10.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Form\FormField\FormFieldOption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.LongTextFormField" Collapsed="true">
+    <Position X="4.25" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Entities\Form\FormField\LongTextFormField.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.MultipleOptionsFormField" Collapsed="true">
+    <Position X="6.25" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAABAAAA=</HashCode>
+      <FileName>Entities\Form\FormField\MultipleOptionsFormField.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.ShortTextFormField" Collapsed="true">
+    <Position X="8.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Entities\Form\FormField\ShortTextFormField.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.FormField.SingleOptionFormField" Collapsed="true">
+    <Position X="10.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAQAAAABAAAA=</HashCode>
+      <FileName>Entities\Form\FormField\SingleOptionFormField.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.CommunityForm" Collapsed="true">
+    <Position X="9" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAAAACAAAAAAAAAAAAEEAAA=</HashCode>
+      <FileName>Entities\Form\CommunityForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.CommunitySubscriptionForm" Collapsed="true">
+    <Position X="10.75" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAAAACAAAAAAAAAAAAEEAAA=</HashCode>
+      <FileName>Entities\Form\CommunitySubscriptionForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.EventAttendanceForm" Collapsed="true">
+    <Position X="9" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAAAAAAAAAAAAAAAAAiAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entities\Form\EventAttendanceForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Form.Form" Collapsed="true">
+    <Position X="12" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIAAAAAAAAAAAAAAAAAQAAAAAAAAAQQAAAQAAwAA=</HashCode>
+      <FileName>Entities\Form\Form.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Attendee" Collapsed="true">
+    <Position X="15" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAkAAAAAAAAAAAAAAgAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Attendee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.EventAttendance" Collapsed="true">
+    <Position X="7.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\EventAttendance.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Session" Collapsed="true">
+    <Position X="7.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAAAiAEAAAAAAAAAAIgAgAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entities\Session.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Speaker" Collapsed="true">
+    <Position X="12.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAgAAAAAEAACCAAAAQAAgAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Entities\Speaker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.Subscription" Collapsed="true">
+    <Position X="13" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAgAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Entities\Subscription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Entities.User" Collapsed="true">
+    <Position X="16" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACGAAAACAAAAACAAIAAAQAAAAAAAEAAQAAAAAAAAA=</HashCode>
+      <FileName>Entities\User.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="EventManagement.Domain.Common.AuditableEntity" Collapsed="true">
+    <Position X="12" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAACAAAAAAQAAAAAAAAAAAE=</HashCode>
+      <FileName>Common\AuditableEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Common.DomainEvent" Collapsed="true">
+    <Position X="13.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAA=</HashCode>
+      <FileName>Common\DomainEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventManagement.Domain.Common.ValueObject" Collapsed="true">
+    <Position X="7.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAoAAAAAAAAAAAAIAAAAAAAACAAAA=</HashCode>
+      <FileName>Common\ValueObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="EventManagement.Domain.Common.IHasDomainEvent" Collapsed="true">
+    <Position X="9.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Common\DomainEvent.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="EventManagement.Domain.Entities.Form.FormType" Collapsed="true">
+    <Position X="11.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAQAAA=</HashCode>
+      <FileName>Entities\Form\Form.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EventManagement.Domain.Entities.AttendeeStatus" Collapsed="true">
+    <Position X="9.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAA=</HashCode>
+      <FileName>Entities\Attendee.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

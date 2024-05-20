@@ -13,13 +13,16 @@ internal sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.HasIndex(e => e.EventId);
 
         builder.HasMany(e => e.Speakers)
-            .WithMany()
+            .WithMany(s => s.Sessions)
             .UsingEntity(
                 l => l.HasOne(typeof(Speaker)).WithMany().OnDelete(DeleteBehavior.Restrict),
                 r => r.HasOne(typeof(Session)).WithMany().OnDelete(DeleteBehavior.Cascade));
 
         builder.Property(e => e.Title)
             .HasMaxLength(200);
+
+        builder.Property(e => e.Level)
+            .HasMaxLength(50);
 
         builder.Property(e => e.Description)
             .HasMaxLength(1000);

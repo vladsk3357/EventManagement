@@ -12,29 +12,30 @@ public sealed record EditSessionCommand(
     int Id,
     string Title,
     DateTime StartTime,
-    TimeSpan Duration,
+    int Duration,
     string Description,
-    ICollection<int> SpeakerIds,
-    int EventId) : IRequest;
+    string Level,
+    ICollection<int> SpeakerIds) : IRequest;
 
-internal sealed class EditSessionCommandHandler : IRequestHandler<EditSessionCommand>
+internal sealed class EditSessionCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor) 
+    : IRequestHandler<EditSessionCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public EditSessionCommandHandler(
-        IApplicationDbContext context, 
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task Handle(EditSessionCommand request, CancellationToken cancellationToken)
     {
-        var session = await _context.Sessions.Include(s => s.Event)
+        var session = await _context.Sessions.Include(s => s.Speakers).Include(s => s.Event).ThenInclude(e => e.Speakers)
             .FirstOrDefaultAsync(s => s.Id == request.Id && s.Event.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new InvalidRequestException(nameof(request.Id), "Доповіді не існує.");
+
+        var eventSpeakersSet = session.Event.Speakers.Select(s => s.Id).ToHashSet();
+        var speakersSet = request.SpeakerIds.ToHashSet();
+
+        if (!speakersSet.IsSubsetOf(eventSpeakersSet))
+            throw new InvalidRequestException(nameof(request.SpeakerIds), "Один або декілька доповідачів не відносяться до цієї події.");
 
         UpdateSessionWithCommand(session, request);
         await _context.SaveChangesAsync(cancellationToken);
@@ -44,8 +45,10 @@ internal sealed class EditSessionCommandHandler : IRequestHandler<EditSessionCom
     {
         session.Title = request.Title;
         session.StartTime = request.StartTime;
-        session.Duration = request.Duration;
+        session.Duration = TimeSpan.FromMinutes(request.Duration);
         session.Description = request.Description;
-        session.Speakers = request.SpeakerIds.Select(id => new Speaker { Id = id }).ToList();
+        session.Speakers.Clear();
+        session.Speakers = session.Event.Speakers.Where(s => request.SpeakerIds.Contains(s.Id)).ToList();
+        session.Level = request.Level;
     }
-}   
+}

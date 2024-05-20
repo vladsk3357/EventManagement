@@ -1,9 +1,8 @@
-﻿using System.Linq.Expressions;
-using EventManagement.Application.Common.Exceptions;
+﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Pagination;
 using EventManagement.Application.Common.Security;
-using EventManagement.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,51 +12,52 @@ namespace EventManagement.Application.Organizers.Events.Queries.GetEvents;
 public sealed record GetEventsQuery(
     int CommunityId,
     string? SearchTerm,
-    string? SortBy,
-    string? SortOrder,
+    bool IsPast,
     int Page,
-    int PageSize) : PagedRequest(Page, PageSize), IRequest<PagedList<GetEventsEventDto>>;
+    int PageSize) : PagedRequest(Page, PageSize), IRequest<PagedList<EventDto>>;
 
-internal sealed class GetEventsQueryHandler : IRequestHandler<GetEventsQuery, PagedList<GetEventsEventDto>>
+internal sealed class GetEventsQueryHandler : IRequestHandler<GetEventsQuery, PagedList<EventDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IDateTime _dateTime;
 
     public GetEventsQueryHandler(
-        IApplicationDbContext context, 
-        ICurrentUserAccessor currentUserAccessor)
+        IApplicationDbContext context,
+        ICurrentUserAccessor currentUserAccessor,
+        IDateTime dateTime)
     {
         _context = context;
         _currentUserAccessor = currentUserAccessor;
+        _dateTime = dateTime;
     }
 
-    public async Task<PagedList<GetEventsEventDto>> Handle(GetEventsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedList<EventDto>> Handle(GetEventsQuery request, CancellationToken cancellationToken)
     {
         var community = await _context.Communities.FirstOrDefaultAsync(
             c => c.Id == request.CommunityId && c.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new NotFoundException(nameof(request.CommunityId), request.CommunityId);
 
-        var eventsQuery = _context.Events.Where(e => e.CommunityId == request.CommunityId);
+        var eventsQuery = _context.Events.Include(e => e.Attendees)
+            .Where(e => e.CommunityId == request.CommunityId);
+
+        eventsQuery = request.IsPast
+            ? eventsQuery.Where(e => e.EndDate < _dateTime.Now).OrderByDescending(e => e.StartDate)
+            : eventsQuery.Where(e => e.EndDate >= _dateTime.Now).OrderBy(e => e.StartDate);
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             eventsQuery = eventsQuery.Where(e => e.Name.Contains(request.SearchTerm));
 
-        eventsQuery = request.SortOrder?.ToLower() == "desc"
-            ? eventsQuery.OrderByDescending(GetSortProperty(request))
-            : eventsQuery.OrderBy(GetSortProperty(request));
-
-        var eventsDtosQuery = eventsQuery.Include(e => e.Attendees)
+        var eventsDtosQuery = eventsQuery
             .Select(e => new { Event = e, AttendeesCount = e.Attendees.Count() })
-            .Select(e => new GetEventsEventDto(e.Event.Id, e.Event.Name, e.Event.Location, e.Event.StartDate, e.AttendeesCount));
+            .Select(e => new EventDto(
+                e.Event.Id, 
+                e.Event.Name,
+                e.Event.Venue.ToDto(), 
+                e.Event.StartDate, 
+                e.AttendeesCount,
+                e.Event.IsCancelled));
 
-        return await PagedList<GetEventsEventDto>.CreateAsync(eventsDtosQuery, request.Page, request.PageSize);
+        return await PagedList<EventDto>.CreateAsync(eventsDtosQuery, request.Page, request.PageSize);
     }
-
-    private static Expression<Func<Event, object>> GetSortProperty(GetEventsQuery request)
-        => request.SortBy?.ToLower() switch
-        {
-            "name" => c => c.Name,
-            "startdate" => c => c.StartDate,
-            _ => c => c.Id
-        };
 }
