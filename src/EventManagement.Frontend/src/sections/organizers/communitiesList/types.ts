@@ -3,4 +3,5 @@ export type Community = {
   name: string;
   location: string;
   domain: string;
+  communityImageUrl: string | null;
 };

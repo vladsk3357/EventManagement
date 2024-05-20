@@ -49,6 +49,7 @@ const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => 
           startTime: session.startTime,
           duration: session.duration,
           speakerIds: session.speakers.map(s => s.id),
+          level: session.level,
         }}
         speakers={speakers}
         endDate={endDate}
@@ -93,4 +94,5 @@ type EditSessionMutationVariables = {
   startTime: string;
   duration: number;
   speakerIds: number[];
+  level: string;
 };

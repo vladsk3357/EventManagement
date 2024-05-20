@@ -1,5 +1,4 @@
 ﻿using Elastic.Clients.Elasticsearch;
-using Elastic.Clients.Elasticsearch.Mapping;
 using Elastic.Clients.Elasticsearch.QueryDsl;
 using EventManagement.Application.Common.Services.Documents;
 using EventManagement.Application.Common.Services.Search;
@@ -35,7 +34,6 @@ internal class CommunitiesSearchService(ElasticsearchClient client, IOptions<Ela
         var createIndexResponse = await _client.Indices.CreateAsync(_options.Indices.Community, config =>
             {
                 config.Mappings(m => m
-                    .Dynamic(DynamicMapping.True)
                     .Properties<CommunityDocument>(p => p
                         .SearchAsYouType(d => d.NameSuggestion)
                         .Keyword(d => d.Name)

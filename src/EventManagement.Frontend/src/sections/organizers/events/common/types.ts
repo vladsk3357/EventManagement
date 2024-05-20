@@ -6,7 +6,7 @@ export type FormInputs = {
   endDate: moment.Moment;
   description: string;
   venueType: VenueType;
-  address?: OfflineVenue['address'];
+  address?: OfflineVenue['address'] | null;
   url?: string | undefined;
   limit: string;
   limitNumber?: number;

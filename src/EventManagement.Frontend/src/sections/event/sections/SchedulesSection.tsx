@@ -1,5 +1,12 @@
-import { Box, Typography, Card, CardContent } from "@mui/material";
+import { Box, Typography, Card, CardContent, Chip } from "@mui/material";
 import { Schedule } from "../types";
+
+const levels = new Map([
+  ['Beginner', 'Початковий'],
+  ['Intermediate', 'Середній'],
+  ['Advanced', 'Професійний'],
+  ['Expert', 'Експертний'],
+]);
 
 type Props = {
   schedules: Schedule[];
@@ -18,6 +25,9 @@ const SchedulesSection = ({ schedules }: Props) => {
                 <Typography variant="body2">{session.startTime.format("LT")} - {session.endTime.format("LT")}</Typography>
                 <Typography variant="subtitle1" gutterBottom>{session.title}</Typography>
                 <Typography variant="body2">{session.speakers.map(speaker => speaker.name).join(', ')}</Typography>
+                <Box my={1}>
+                  <Chip label={levels.get(session.level)} color="info" variant="filled" size="small" />
+                </Box>
               </CardContent>
             </Card>
           ))}

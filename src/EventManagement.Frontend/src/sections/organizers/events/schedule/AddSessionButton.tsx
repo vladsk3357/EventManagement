@@ -31,6 +31,7 @@ const AddSessionButton = ({ speakers, date, endDate, startDate }: Props) => {
     duration: undefined,
     speakerIds: [],
     startTime: date,
+    level: undefined,
   }), [date]);
 
   const handleSubmit = (data: FormInputs) => {
@@ -89,6 +90,9 @@ function useAddSession(onSuccess?: () => void) {
       queryClient.invalidateQueries({
         queryKey: ["organizers", "sessions", eventId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["organizers", "event", eventId],
+      });
       onSuccess && onSuccess();
     },
   });
@@ -101,4 +105,5 @@ type AddSessionsMutationVariables = {
   description: string;
   speakerIds: number[];
   eventId: number;
+  level: string;
 };

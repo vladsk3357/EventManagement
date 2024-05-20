@@ -15,10 +15,14 @@ type Props = {
 }
 
 const schema: yup.ObjectSchema<FormInputs> = yup.object().shape({
-  name: yup.string().required("Ім'я є обов'язковим"),
-  title: yup.string().required("Посада є обов'язковою"),
-  company: yup.string().required("Компанія є обов'язковим"),
-  bio: yup.string().required("Біографія є обов'язковою"),
+  name: yup.string().required("Ім'я є обов'язковим")
+    .max(100, "Ім'я повинно містити максимум 100 символів"),
+  title: yup.string().required("Посада є обов'язковою")
+    .max(100, "Посада повинна містити максимум 100 символів"),
+  company: yup.string().required("Компанія є обов'язковим")
+    .max(100, "Компанія повинна містити максимум 100 символів"),
+  bio: yup.string().required("Біографія є обов'язковою")
+    .max(500, "Біографія повинна містити максимум 500 символів")
 });
 
 const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }: Props) => {

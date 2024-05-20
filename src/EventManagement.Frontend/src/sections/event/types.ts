@@ -15,6 +15,7 @@ export type Session = {
   startTime: moment.Moment;
   endTime: moment.Moment;
   speakers: Speaker[];
+  level: string;
 }
 
 export type Speaker = {

@@ -1,4 +1,5 @@
 ﻿using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities.Form;
 using EventManagement.Domain.Entities.Form.FormField;
 using MediatR;
@@ -6,23 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Application.Organizers.CommunitySubscriptionForms.Commands.EditCommunitySubscriptionForm;
 
+[Authorize]
 public sealed record EditCommunitySubscriptionFormCommand(
        int CommunityId,
        IList<CommunitySubscriptionFormFieldDto> Fields) : IRequest;
 
-internal class EditCommunitySubscriptionFormCommandHandler
-    : IRequestHandler<EditCommunitySubscriptionFormCommand>
+internal class EditCommunitySubscriptionFormCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor)
+        : IRequestHandler<EditCommunitySubscriptionFormCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public EditCommunitySubscriptionFormCommandHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task Handle(EditCommunitySubscriptionFormCommand request, CancellationToken cancellationToken)
     {

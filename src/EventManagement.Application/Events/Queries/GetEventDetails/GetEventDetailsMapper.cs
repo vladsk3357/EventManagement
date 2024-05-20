@@ -50,7 +50,8 @@ internal static class GetEventDetailsMapper
             entity.StartTime,
             entity.EndTime,
             entity.Description,
-            entity.Speakers.Select(s => s.ToDto()).ToList());
+            entity.Speakers.Select(s => s.ToDto()).ToList(),
+            entity.Level);
     }
 
     public static SpeakerDto ToDto(this Speaker entity)
