@@ -6,6 +6,9 @@
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>680033a2-0c3f-4ea9-af36-fc747f398543</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup>
+    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
