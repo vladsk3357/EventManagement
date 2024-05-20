@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EventManagement.Application.Common.Interfaces;
+﻿using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Pagination;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

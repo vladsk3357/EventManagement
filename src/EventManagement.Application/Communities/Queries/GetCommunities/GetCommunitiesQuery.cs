@@ -34,7 +34,7 @@ internal sealed class GetCommunitiesQueryHandler(
             Page = request.Page - 1,
             PageSize = request.PageSize,
             SortBy = request.SortBy,
-            IsSortAscending = request.SortOrder == "asc",
+            IsSortAscending = request.SortOrder == SearchRequestSortingOrder.Ascending,
         };
 
         if (request.Location is not null)
@@ -59,16 +59,25 @@ internal sealed class GetCommunitiesQueryHandler(
 
         var communityImages = await _fileStorageService.GetFileUrlsAsync(images, cancellationToken);
 
+        var dtos = new List<CommunityDto>();
+        foreach (var result in searchResult.Results)
+        {
+            var community = communities[result.Id];
+            string? communityImage = null;
+            if (community.CommunityImage is not null && communityImages.TryGetValue(community.CommunityImage, out var imageUrl))
+                communityImage = imageUrl.ToString();
+
+            dtos.Add(new CommunityDto(
+                result.Id,
+                result.Name,
+                result.Location,
+                communityImage,
+                result.Domain,
+                result.SubscribersCount));
+        }
+
         return new PagedList<CommunityDto>(
-            searchResult.Results.Select(c => new CommunityDto(
-                c.Id, 
-                c.Name, 
-                c.Location,
-                communities[c.Id].CommunityImage is not null 
-                    ? communityImages[communities[c.Id].CommunityImage].ToString() 
-                    : null,
-                c.Domain,
-                c.SubscribersCount)).ToList(),
+            dtos,
             searchResult.Page,
             searchResult.PageSize,
             searchResult.Total);

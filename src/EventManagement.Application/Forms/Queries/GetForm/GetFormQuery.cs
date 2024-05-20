@@ -1,21 +1,18 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities.Form;
 using EventManagement.Domain.Entities.Form.FormField;
 using MediatR;
 
 namespace EventManagement.Application.Forms.Queries.GetForm;
 
+[Authorize]
 public sealed record GetFormQuery(int Id) : IRequest<FormDto>;
 
-public sealed class GetFormQueryHandler : IRequestHandler<GetFormQuery, FormDto>
+public sealed class GetFormQueryHandler(IApplicationDbContext context) : IRequestHandler<GetFormQuery, FormDto>
 {
-    private readonly IApplicationDbContext _context;
-
-    public GetFormQueryHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private readonly IApplicationDbContext _context = context;
 
     public async Task<FormDto> Handle(GetFormQuery request, CancellationToken cancellationToken)
     {
@@ -24,14 +21,6 @@ public sealed class GetFormQueryHandler : IRequestHandler<GetFormQuery, FormDto>
 
         return new FormDto(form.Id, form.Fields.OrderBy(f => f.Order).Select(MapToDto).ToList());
     }
-
-    //private static FieldTypeSpecificProperties? GetFieldTypeSpecificProperties(FormFieldBase formField)
-    //=> formField switch
-    //{
-    //    SingleOptionFormField singleOptionFormField => new FieldTypeSpecificProperties(singleOptionFormField.Options),
-    //    MultipleOptionsFormField multipleOptionsFormField => new FieldTypeSpecificProperties(multipleOptionsFormField.Options),
-    //    _ => null
-    //};
 
     private static FormFieldDto MapToDto(FormFieldBase field)
     {
