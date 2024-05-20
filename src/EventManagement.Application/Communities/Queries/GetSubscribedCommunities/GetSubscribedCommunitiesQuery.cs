@@ -6,16 +6,13 @@ namespace EventManagement.Application.Communities.Queries.GetSubscribedCommuniti
 
 public sealed record GetSubscribedCommunitiesQuery() : IRequest<List<CommunityDto>>;
 
-internal class GetSubscribedCommunitiesQueryHandler : IRequestHandler<GetSubscribedCommunitiesQuery, List<CommunityDto>>
+internal class GetSubscribedCommunitiesQueryHandler(
+    IApplicationDbContext context, 
+    ICurrentUserAccessor currentUserAccessor) 
+    : IRequestHandler<GetSubscribedCommunitiesQuery, List<CommunityDto>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public GetSubscribedCommunitiesQueryHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task<List<CommunityDto>> Handle(GetSubscribedCommunitiesQuery request, CancellationToken cancellationToken)
     {

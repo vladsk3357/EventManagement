@@ -25,7 +25,6 @@ internal sealed class GetEventDetailsQueryHandler(
         var @event = await _context.Events.Include(e => e.Community)
             .Include(e => e.Attendees)
             .Include(e => e.Speakers)
-            //.Include(e => e.Sessions.Where(s => s.StartTime >= e.StartDate && s.EndTime <= e.EndDate))
             .Include(e => e.Sessions)
             .ThenInclude(s => s.Speakers)
             .Include(e => e.Images)

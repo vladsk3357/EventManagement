@@ -13,12 +13,10 @@ public sealed record SubscribeCommunityCommand(int CommunityId, FormAnswerDto? F
 
 internal class SubscribeCommunityCommandHandler(
     IApplicationDbContext context, 
-    ICurrentUserAccessor currentUserAccessor,
-    ICommunitiesSearchService searchService) : IRequestHandler<SubscribeCommunityCommand>
+    ICurrentUserAccessor currentUserAccessor) : IRequestHandler<SubscribeCommunityCommand>
     {
     private readonly IApplicationDbContext _context = context;
     private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
-    private readonly ICommunitiesSearchService _searchService = searchService;
 
     public async Task Handle(SubscribeCommunityCommand request, CancellationToken cancellationToken)
     {
@@ -49,7 +47,6 @@ internal class SubscribeCommunityCommandHandler(
             {
                 if (!fieldAnswersInput.TryGetValue(field.Name, out var fieldAnswer))
                     throw new ValidationException($"Поле {field.Name} обов'язкове для заповнення");
-
 
                 if (!field.Validate(fieldAnswer.Value))
                     throw new ValidationException($"Поле {field.Name} має невірне значення");
