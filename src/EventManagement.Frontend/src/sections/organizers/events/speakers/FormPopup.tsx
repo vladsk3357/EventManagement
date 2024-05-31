@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Dialog, DialogTitle, DialogContent, Stack, DialogActions, Button } from "@mui/material";
-import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
+import { FormContainer, SubmitHandler, TextFieldElement, useForm } from "react-hook-form-mui";
 import { FormInputs } from "./types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
@@ -31,6 +31,11 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }:
     resolver: yupResolver(schema),
   });
 
+  const successHandler: SubmitHandler<FormInputs> = data => {
+    onSubmit(data);
+    form.reset();
+  };
+
   return (
     <Dialog
       open={show}
@@ -39,7 +44,7 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }:
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <FormContainer<FormInputs> formContext={form} onSuccess={onSubmit}>
+        <FormContainer<FormInputs> formContext={form} onSuccess={successHandler}>
           <Stack spacing={2}>
             <TextFieldElement
               name="name"
@@ -67,7 +72,7 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }:
               required
               fullWidth
             />
-            <Button onClick={onClose} variant="contained" color="secondary">Закрити</Button>
+            <Button onClick={onClose} variant="outlined" color="secondary">Закрити</Button>
             <LoadingButton type="submit" variant="contained" color="primary" loading={isPending}>Зберегти</LoadingButton>
           </Stack>
         </FormContainer>

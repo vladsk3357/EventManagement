@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Card, CardContent, Accordion, AccordionSummary, Stack, AccordionDetails } from "@mui/material";
+import { Box, Typography, Grid, Accordion, AccordionSummary, Stack, AccordionDetails } from "@mui/material";
 import { Speaker } from "../types";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 

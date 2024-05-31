@@ -2,6 +2,7 @@ import { Card, CardActionArea, CardContent, Stack, Typography, Alert, Box } from
 import { Event } from "./types";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Link } from "react-router-dom";
+import { formatAsTime } from "../../utils/dateFormatters";
 
 type Props = {
   event: Event;
@@ -9,13 +10,13 @@ type Props = {
 
 const EventCard = ({ event }: Props) => {
   return (
-    <Card>
+    <Card sx={{ mb: 2 }}>
       <Link to={`/community/${event.community.id}/${event.id}`}>
         <CardActionArea>
           <CardContent>
             <Typography variant="h5">{event.name}</Typography>
-            <Stack direction="row" spacing={3} mb={2}>
-              <Typography variant="subtitle2">{event.startDate.format("kk:mm")}</Typography>
+            <Stack direction="row" spacing={2} mb={2}>
+              <Typography variant="subtitle2">{formatAsTime(event.startDate)}</Typography>
               <Typography variant="subtitle2">Від {event.community.name}</Typography>
             </Stack>
             <Box mb={2}>

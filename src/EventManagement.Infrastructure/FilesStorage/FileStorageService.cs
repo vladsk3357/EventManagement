@@ -31,15 +31,8 @@ internal class FileStorageService(
         var fileName = Path.GetRandomFileName() + Path.GetExtension(file.FileName);
 
         var blobClient = containerClient.GetBlobClient(fileName);
-        var uploadOptions = new BlobUploadOptions
-        {
-            Metadata = new Dictionary<string, string>
-            {
-                { "OriginalFileName", file.FileName }
-            }
-        };
 
-        await blobClient.UploadAsync(file.GetReadStream(), uploadOptions, cancellationToken);
+        await blobClient.UploadAsync(file.GetReadStream(), cancellationToken);
 
         return (blobClient.Uri, fileName);
     }

@@ -15,6 +15,7 @@ import { Components, Theme } from '@mui/material';
 
 const ComponentsOverrides = (theme: Theme): Components<Theme> => {
   return Object.assign(
+    theme.components!,
     Card(theme),
     Table(theme),
     Input(theme),

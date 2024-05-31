@@ -7,14 +7,16 @@ import { RichTextEditorElement } from "../../common/primitives";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import FileUploadFieldElement from "../../../components/organizers/fileUploadFieldElement";
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 type FormInputs = {
   name: string;
   location: string
   domain: string;
-  shortDescription?: string;
+  shortDescription?: string | null;
   description: string;
-  communityImage: FileList | null;
+  communityImage: FileList | null | undefined;
 }
 
 type Props = {
@@ -22,20 +24,33 @@ type Props = {
   communityImageUrl: string | null;
 };
 
+const schema: yup.ObjectSchema<FormInputs> = yup.object({
+  name: yup.string().required('Це поле обов\'язкове').max(100, 'Максимальна довжина 100 символів'),
+  location: yup.string().required('Це поле обов\'язкове').max(100, 'Максимальна довжина 100 символів'),
+  domain: yup.string().required('Це поле обов\'язкове').max(100, 'Максимальна довжина 100 символів'),
+  shortDescription: yup.string().notRequired().max(400, 'Максимальна довжина 400 символів'),
+  description: yup.string().required('Це поле обов\'язкове'),
+  communityImage: yup.mixed<FileList>(),
+});
+
 const SettingsForm = ({ defaultValues, communityImageUrl }: Props) => {
   const { communityId } = useParams();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { mutate, isPending } = saveCommunitySettings(() => setSnackbarOpen(true));
   const [communityImagePreview, setCommunityImagePreview] = useState<string | null>(communityImageUrl);
 
-  const form = useForm<FormInputs>({ defaultValues, mode: 'onBlur' });
-  const { formState, watch } = form;
+  const form = useForm<FormInputs>({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(schema),
+  });
+  const { formState } = form;
 
   const onSubmit = (data: FormInputs) => {
     const variables = createMutationVariables(data, Number(communityId));
     mutate(variables);
   };
-  
+
   return (
     <>
       <FormContainer<FormInputs>

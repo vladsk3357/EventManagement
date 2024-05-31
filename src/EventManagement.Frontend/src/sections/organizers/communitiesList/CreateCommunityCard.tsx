@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Typography, CardMedia } from "@mui/material";
+import { Card, CardActionArea, CardContent, Typography, Box } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 
 const CreateCommunityCard = () => {
@@ -6,10 +6,7 @@ const CreateCommunityCard = () => {
     <Card>
       <RouterLink to="/organizers/create">
         <CardActionArea sx={{ minHeight: 200 }}>
-          <CardMedia
-            sx={{ height: 140 }}
-            image={undefined}
-          />
+          <Box sx={{ height: 140 }} />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               + Створити нову спільноту

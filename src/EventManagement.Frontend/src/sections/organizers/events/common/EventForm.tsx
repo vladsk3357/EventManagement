@@ -8,8 +8,8 @@ import moment from "moment";
 import { LoadingButton } from "@mui/lab";
 import { FormInputs, VenueType } from "./types";
 import { RichTextEditorElement } from "../../../common/primitives";
-import { start } from "repl";
 import { useMemo } from "react";
+import { formatAsDateMonthYearTime } from "../../../../utils/dateFormatters";
 
 type Props = {
   defaultValues?: Partial<FormInputs>;
@@ -19,7 +19,7 @@ type Props = {
   sessionsEndDate?: moment.Moment | null;
 };
 
-const schema: yup.ObjectSchema<FormInputs> = yup.object({
+const schema: any = yup.object({
   name: yup.string().required('Це поле є обов\'язковим'),
   startDate: yup.mixed((input): input is moment.Moment => moment.isMoment(input)).test({
     message: 'Дата початку повинна бути в майбутньому',
@@ -46,14 +46,20 @@ const schema: yup.ObjectSchema<FormInputs> = yup.object({
     is: 'online',
     then: schema => schema.required('Це поле є обов\'язковим'),
   }),
-  address: yup.object().notRequired().default(undefined).shape({
-    city: yup.string().required('Це поле є обов\'язковим'),
-    street: yup.string().required('Це поле є обов\'язковим'),
-    locationName: yup.string().required('Це поле є обов\'язковим'),
-    zipCode: yup.string(),
-  }).when('venueType', {
+  address: yup.object().notRequired().default(undefined).when('venueType', {
     is: 'offline',
-    then: schema => schema.required('Це поле є обов\'язковим'),
+    then: schema => schema.required('Це поле є обов\'язковим').shape({
+      city: yup.string().required('Це поле є обов\'язковим'),
+      street: yup.string().required('Це поле є обов\'язковим'),
+      locationName: yup.string().required('Це поле є обов\'язковим'),
+      zipCode: yup.string().notRequired(),
+    }),
+    otherwise: schema => schema.shape({
+      city: yup.string().notRequired(),
+      street: yup.string().notRequired(),
+      locationName: yup.string().notRequired(),
+      zipCode: yup.string().notRequired(),
+    }),
   }),
   limit: yup.string().required('Це поле є обов\'язковим'),
   limitNumber: yup.number().when('limit', {
@@ -78,37 +84,32 @@ const emptyDefaultValues: Partial<FormInputs> = {
 
 const EventForm = ({ isSubmitting, onSubmit, defaultValues, sessionsEndDate, sessionsStartDate }: Props) => {
   const form = useForm<FormInputs>({
-    resolver: async function (...args) {
-      console.log(args);
-      const a = await yupResolver(schema)(...args);
-      console.log(a);
-      return a;
-    },
+    resolver: yupResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: defaultValues || emptyDefaultValues,
   });
   const { watch } = form;
 
+  const endDate = watch('endDate');
   const maxStartDate = useMemo(() => {
-    const endDate = watch('endDate');
     if (endDate && sessionsStartDate)
       return endDate < sessionsStartDate ? endDate : sessionsStartDate;
     if (endDate && !sessionsStartDate)
       return endDate;
     else
       return undefined;
-  }, [watch, sessionsStartDate]);
+  }, [endDate, sessionsStartDate]);
 
+  const startDate = watch('startDate');
   const minEndDate = useMemo(() => {
-    const startDate = watch('startDate');
     if (startDate && sessionsEndDate)
       return startDate < sessionsEndDate ? sessionsEndDate : startDate;
     if (startDate && !sessionsEndDate)
       return startDate;
     else
       return undefined;
-  }, [watch, sessionsEndDate]);
+  }, [startDate, sessionsEndDate]);
 
   return (
     <FormContainer<FormInputs> formContext={form} onSuccess={onSubmit} >
@@ -128,7 +129,7 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues, sessionsEndDate, ses
               maxDateTime={maxStartDate}
               disablePast
             />
-            {sessionsStartDate && <Typography variant="caption" color="textSecondary">Максимальна дата початку: {sessionsStartDate?.format('DD.MM.YYYY HH:mm')}. Змініть програму, щоб обрати іншу дату початку.</Typography>}
+            {sessionsStartDate && <Typography variant="caption" color="textSecondary">Максимальна дата початку: {formatAsDateMonthYearTime(sessionsStartDate)}. Змініть програму, щоб обрати іншу дату початку.</Typography>}
           </Stack>
         </Grid>
         <Grid item xs={12} md={6} mb={2}>
@@ -141,7 +142,7 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues, sessionsEndDate, ses
               minDateTime={minEndDate}
               disablePast
             />
-            {sessionsEndDate && <Typography variant="caption" color="textSecondary">Мінімальна дата кінця: {sessionsEndDate?.format('DD.MM.YYYY HH:mm')}. Змініть програму, щоб обрати іншу дату кінця.</Typography>}
+            {sessionsEndDate && <Typography variant="caption" color="textSecondary">Мінімальна дата кінця: {formatAsDateMonthYearTime(sessionsEndDate)}. Змініть програму, щоб обрати іншу дату кінця.</Typography>}
           </Stack>
         </Grid>
         <Grid item xs={12} mb={2}>

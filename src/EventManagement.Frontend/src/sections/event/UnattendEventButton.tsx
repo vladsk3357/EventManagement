@@ -2,7 +2,7 @@ import { LoadingButton } from "@mui/lab";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { EventDetailsQueryResultType } from "./EventDetails";
-import { useUnattendEvent } from './hooks';
+import { AttendeeStatus } from "./types";
 
 type Props = {
   eventId: number;
@@ -25,3 +25,14 @@ const UnattendEventButton = ({ eventId }: Props) => {
 };
 
 export default UnattendEventButton;
+
+export function useUnattendEvent(eventId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => axios.post(`/api/events/${eventId}/unattend`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['event', { id: eventId }] })
+    },
+  });
+}

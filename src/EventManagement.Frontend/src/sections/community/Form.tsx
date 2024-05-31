@@ -51,9 +51,14 @@ const Form = ({ fields, onSubmit, isSubmitting }: Props) => {
     }, {}),
   ), [yup, fields]);
 
+  const form = useForm<FormInputs>({
+    resolver: yupResolver(schema),
+  });
+  const { watch } = form;
+
   return (
     <Box>
-      <FormContainer<FormInputs> onSuccess={onSubmit} resolver={yupResolver(schema)}>
+      <FormContainer<FormInputs> onSuccess={onSubmit} formContext={form}>
         <Stack spacing={2}>
           {fields.map(field => {
             switch (field.type) {
@@ -65,6 +70,7 @@ const Form = ({ fields, onSubmit, isSubmitting }: Props) => {
                     label={field.name}
                     required={field.isRequired}
                     helperText={field.description}
+                    onInput={e => console.log(watch(field.name))}
                   />
                 );
               case 'LongText':
@@ -76,6 +82,7 @@ const Form = ({ fields, onSubmit, isSubmitting }: Props) => {
                     required={field.isRequired}
                     helperText={field.description}
                     multiline
+                    rows={4}
                   />
                 );
               case 'SingleOption':

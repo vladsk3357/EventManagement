@@ -1,9 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-// @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, FormControlLabel, Typography, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// components
 import Iconify from '../../../components/iconify';
 import * as yup from 'yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -11,8 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { axios } from '../../../api';
 import { UserContext } from '../../../components/user';
-
-// ----------------------------------------------------------------------
 
 type FormInputs = {
   email: string;
@@ -91,15 +87,6 @@ export default function LoginForm() {
         />
         {errors.root && <Typography color="red">Електронна пошта або пароль неправильні</Typography>}
       </Stack>
-
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <FormControlLabel control={<Checkbox name="remember" />} label="Запам'ятати мене" />
-        {/* <Checkbox name="remember" label="Remember me" /> */}
-        <Link variant="subtitle2" underline="hover">
-          Забули пароль?
-        </Link>
-      </Stack>
-
       <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isPending}>
         Вхід
       </LoadingButton>

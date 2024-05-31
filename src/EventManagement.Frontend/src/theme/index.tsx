@@ -7,7 +7,7 @@ import typography from './typography';
 import GlobalStyles from './globalStyles';
 import customShadows from './customShadows';
 import componentsOverride from './overrides';
-import { ukUA } from '@mui/material/locale';
+import { ukUA } from '@mui/x-data-grid/locales';
 
 type Props = {
   children: ReactNode;

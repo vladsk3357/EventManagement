@@ -8,8 +8,8 @@ const ImagesSection = ({ imagesUrls }: Props) => {
   return (
     <Stack spacing={2} pb={5}>
       {imagesUrls.map((imageUrl, i) => (
-        <Card key={i}>
-          <img src={imageUrl} alt="event image" />
+        <Card key={i} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+          <img src={imageUrl} alt="event image" width="100%" />
         </Card>
       ))}
     </Stack>

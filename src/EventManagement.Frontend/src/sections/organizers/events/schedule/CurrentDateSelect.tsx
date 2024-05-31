@@ -1,6 +1,7 @@
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import moment from "moment";
+import { formatAsDateMonthYear } from "../../../../utils/dateFormatters";
 
 type Props = {
   value: moment.Moment | null;
@@ -27,7 +28,7 @@ const CurrentDateSelect = ({ value, setValue, startDate, endDate }: Props) => {
         onChange={(e) => setValue(moment(e.target.value))}
       >
         {dates.map((date) => (
-          <MenuItem value={date.toISOString(true)} key={date.toISOString(true)}>{date.format('LL')}</MenuItem>
+          <MenuItem value={date.toISOString(true)} key={date.toISOString(true)}>{formatAsDateMonthYear(date)}</MenuItem>
         ))}
       </Select>
     </FormControl>

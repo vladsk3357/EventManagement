@@ -4,6 +4,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useEventsList } from "../common";
 import EventIcon from '@mui/icons-material/Event';
 import moment from "moment";
+import { formatAsTime } from "../../../utils/dateFormatters";
 
 type Props = {
   communityId: number;
@@ -35,7 +36,7 @@ const FutureEventsSection = ({ communityId }: Props) => {
                     <Typography variant="body2">{event.attendeesCount} учасників йде</Typography>
                     <Stack direction="row" alignItems="center" spacing={1}>
                       <EventIcon />
-                      <Typography variant="body2">{moment(event.startDate).format("LL")}</Typography>
+                      <Typography variant="body2">{formatAsTime(event.startDate)}</Typography>
                     </Stack>
                   </CardContent>
                 </CardActionArea>

@@ -2,6 +2,7 @@ import { LoadingButton } from "@mui/lab";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { EventDetailsQueryResultType } from "./EventDetails";
+import { AttendeeStatus } from "../organizers/events/common";
 
 type Props = {
   eventId: number;
@@ -33,9 +34,7 @@ function useAttendEvent(eventId: number) {
   return useMutation({
     mutationFn: () => axios.post(`/api/events/${eventId}/attend`),
     onSuccess: () => {
-      queryClient.setQueryData(['event', { id: eventId }], (data: EventDetailsQueryResultType) => {
-        return { ...data, isAttending: true };
-      });
+      queryClient.invalidateQueries({ queryKey: ['event', { id: eventId }] })
     },
   });
 }

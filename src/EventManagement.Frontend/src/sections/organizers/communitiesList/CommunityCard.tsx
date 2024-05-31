@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, CardActions, Button, CardActionArea, CardMedia } from "@mui/material";
+import { Card, CardContent, Typography, CardActionArea, CardMedia, Box } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import { Community } from "./types";
 
@@ -11,11 +11,16 @@ const CommunityCard = ({ community }: Props) => {
     <Card>
       <RouterLink to={`/organizers/${community.id}/dashboard`}>
         <CardActionArea sx={{ minHeight: 200 }}>
-          <CardMedia
-            sx={{ height: 140 }}
-            image={community.communityImageUrl || undefined}
-            title="community image"
-          />
+          {community.communityImageUrl ? (
+            <CardMedia
+              sx={{ height: 140 }}
+              image={community.communityImageUrl || undefined}
+              title="community image"
+            />
+
+          ) : (
+            <Box sx={{ height: 140 }} />
+          )}
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {community.name}

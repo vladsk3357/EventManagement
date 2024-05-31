@@ -53,7 +53,6 @@ const DeleteCommunitySection = ({ communityId }: Props) => {
               onClick={() => mutate()}
               variant="contained"
               color="error"
-              size="large"
             >
               Видалити
             </LoadingButton>
@@ -74,7 +73,7 @@ function useDeleteCommunityMutation(communityId: number) {
     mutationFn: () => axios.delete(`/api/organizers/communities/${communityId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['community', communityId] });
-      navigate('/organizers/communities');
+      navigate('/organizers');
     },
   });
 }

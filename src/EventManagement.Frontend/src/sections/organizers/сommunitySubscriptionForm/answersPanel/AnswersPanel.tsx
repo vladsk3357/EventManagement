@@ -50,7 +50,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
         {
           field: 'name',
           headerName: 'Ім\'я',
-          width: 150,
+          minWidth: 150,
           type: 'string',
           sortable: false,
           filterable: false,
@@ -58,7 +58,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
         {
           field: 'userName',
           headerName: 'Логін',
-          width: 150,
+          minWidth: 150,
           type: 'string',
           sortable: false,
           filterable: false,
@@ -68,7 +68,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
           field: 'answerDate',
           headerName: 'Дата відповіді',
           type: 'date',
-          width: 250,
+          minWidth: 250,
           sortable: false,
           filterable: false,
           valueGetter: ({ value }) => value && new Date(value),
@@ -79,7 +79,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
           headerName: '',
           sortable: false,
           filterable: false,
-          width: 150,
+          minWidth: 150,
           renderCell: ({ row }) => <Link to={`/organizers/${communityId}/registrations/${row.id}`}><Button variant="contained" color="secondary">Відповіді</Button></Link>
         }
       ];

@@ -6,6 +6,7 @@ import moment from "moment";
 import { AttendeeStatus, Schedule, Speaker, Venue } from "./types";
 import InformationPanel from "./InformationPanel";
 import { DescriptionSection, ImagesSection, SchedulesSection, SpeakersSection } from "./sections";
+import { formatAsDateAndMonth } from "../../utils/dateFormatters";
 
 const EventDetails = () => {
   const { eventId: eventIdParam } = useParams();
@@ -21,9 +22,9 @@ const EventDetails = () => {
         <Grid container columnSpacing={3}>
           <Grid item xs={12} xl={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }} spacing={2}>
-              <Box bgcolor="Background" textAlign="center" p={1} sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box bgcolor="Background" textAlign="center" p={1} sx={{ display: 'flex', alignItems: 'center', width: 'min-content' }}>
                 <Typography variant="h2" color="ButtonText">
-                  {data.startDate.format("D MMM")}
+                  {formatAsDateAndMonth(data.startDate)}
                 </Typography>
               </Box>
               <Box>
@@ -88,7 +89,7 @@ function useEventDetails(eventId: number) {
           endTime: moment(ses.endTime),
         })),
       })),
-    } as EventDetails)
+    } as EventDetails),
   })
 }
 

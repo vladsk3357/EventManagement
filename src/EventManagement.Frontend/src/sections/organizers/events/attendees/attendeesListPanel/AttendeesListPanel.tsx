@@ -10,6 +10,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { AttendeeStatus } from "../../common/types";
 import { useDeleteEventAttendeeMutation } from "../common";
 import { PagedList } from "../../../../common/types";
+import moment from "moment";
+import { formatAsDateMonthYear } from "../../../../../utils/dateFormatters";
 
 type Props = {
   value: string;
@@ -58,7 +60,7 @@ function useColumns(): GridColDef[] {
       field: 'name',
       type: 'string',
       headerName: 'Ім\'я',
-      width: 200,
+      minWidth: 200,
       sortable: false,
       filterable: false,
     },
@@ -66,7 +68,7 @@ function useColumns(): GridColDef[] {
       field: 'userName',
       type: 'string',
       headerName: 'Логін',
-      width: 200,
+      minWidth: 200,
       sortable: false,
       filterable: false,
     },
@@ -74,10 +76,10 @@ function useColumns(): GridColDef[] {
       field: 'joinDate',
       type: 'date',
       headerName: 'Дата приєднання',
-      width: 200,
+      minWidth: 200,
       sortable: false,
-      valueGetter: ({ value }) => value && new Date(value),
-      valueFormatter: ({ value }) => value.toLocaleDateString('uk-UA', { year: 'numeric', month: 'long', day: 'numeric' }),
+      valueGetter: ({ value }) => value && moment(value),
+      valueFormatter: ({ value }) => formatAsDateMonthYear(value),
       flex: 1,
       filterable: false,
       editable: false,
@@ -86,7 +88,7 @@ function useColumns(): GridColDef[] {
       field: 'actions',
       type: 'actions',
       headerName: 'Дія',
-      width: 100,
+      minWidth: 100,
       hideable: false,
       getActions: ({ row }) => {
         if (row.userId === user!.id)

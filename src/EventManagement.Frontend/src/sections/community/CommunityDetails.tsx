@@ -25,7 +25,7 @@ const CommunityDetails = () => {
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
         <Grid container>
           <Grid item xs={12} md={8}>
             <Stack direction="row" sx={{ pt: 1, mb: 3 }}>

@@ -60,7 +60,7 @@ function useColumns(): GridColDef[] {
       field: 'name',
       type: 'string',
       headerName: 'Подія',
-      width: 500,
+      minWidth: 500,
       sortable: false,
       filterable: false,
       renderCell: ({ value, row }) => (
@@ -76,7 +76,7 @@ function useColumns(): GridColDef[] {
       field: 'venue',
       type: 'string',
       headerName: 'Локація',
-      width: 200,
+      minWidth: 200,
       sortable: false,
       filterable: false,
       renderCell: ({ value, row }) => (
@@ -87,7 +87,7 @@ function useColumns(): GridColDef[] {
       field: 'attendeesCount',
       type: 'number',
       headerName: 'Учасники',
-      width: 100,
+      minWidth: 100,
       sortable: false,
       filterable: false,
     },
@@ -95,7 +95,7 @@ function useColumns(): GridColDef[] {
       field: 'startDate',
       type: 'date',
       headerName: 'Дата',
-      width: 200,
+      minWidth: 200,
       sortable: false,
       valueGetter: ({ value }) => value && new Date(value),
       valueFormatter: ({ value }) => value.toLocaleDateString('uk-UA', { year: 'numeric', month: 'long', day: 'numeric' }),
@@ -107,7 +107,7 @@ function useColumns(): GridColDef[] {
       field: 'actions',
       type: 'actions',
       headerName: 'Дія',
-      width: 100,
+      minWidth: 100,
       hideable: false,
       getActions: ({ row }) => [
         <GridActionsCellItem
@@ -148,7 +148,7 @@ function useDeleteEventMutation() {
 
   return useMutation({
     mutationFn: (eventId: number) => axios.delete(`/api/organizers/events/${eventId}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', communityId, 'events'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', Number(communityId), 'events'] }),
   });
 }
 
@@ -158,6 +158,6 @@ function useCancelEventMutation() {
 
   return useMutation({
     mutationFn: (eventId: number) => axios.put(`/api/organizers/events/${eventId}/cancel`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', communityId, 'events'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', Number(communityId), 'events'] }),
   });
 }

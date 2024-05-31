@@ -32,8 +32,8 @@ const EditEventForm = () => {
           defaultValues={queryResultToFormInputs(data)}
           onSubmit={handleSubmit}
           isSubmitting={isPending}
-          sessionsEndDate={moment(data.endDate)}
-          sessionsStartDate={moment(data.startDate)}
+          sessionsEndDate={moment(data.sessionsEndDate)}
+          sessionsStartDate={moment(data.sessionsStartDate)}
         />}
       </Box>
       <Snackbar

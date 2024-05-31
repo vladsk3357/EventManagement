@@ -31,14 +31,16 @@ const AddSpeakerButton = () => {
       >
         Додати спікера
       </Button>
-      <FormPopup
-        title="Додати нового спікера"
-        onClose={() => setShowModal(false)}
-        isPending={isPending}
-        show={showModal}
-        onSubmit={data => mutate({ ...data, eventId })}
-        defaultValues={defaultValues}
-      />
+      {showModal && (
+        <FormPopup
+          title="Додати нового спікера"
+          onClose={() => setShowModal(false)}
+          isPending={isPending}
+          show={showModal}
+          onSubmit={data => mutate({ ...data, eventId })}
+          defaultValues={defaultValues}
+        />
+      )}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

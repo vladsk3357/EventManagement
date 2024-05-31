@@ -1,4 +1,5 @@
-﻿using EventManagement.Application.Common.Interfaces;
+﻿using System.Text.RegularExpressions;
+using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Events;
 using EventManagement.Infrastructure.Identity.Mappers;
@@ -37,7 +38,7 @@ internal class IdentityService : IIdentityService
         {
             Email = input.Email,
             Name = input.Name,
-            UserName = input.Email,
+            UserName = ReplaceNonAlphaNumericWithUnderscore(input.Email),
         };
 
         var entity = user.ToEntity();
@@ -48,6 +49,18 @@ internal class IdentityService : IIdentityService
             result.Succeeded,
             result.Errors.Select(x => x.Description).FirstOrDefault(),
             result.Succeeded ? entity : null);
+    }
+
+    private static string ReplaceNonAlphaNumericWithUnderscore(string input)
+    {
+        if (input is null)
+        {
+            throw new ArgumentNullException(nameof(input), "Input string cannot be null.");
+        }
+
+        // Replace all non-alphanumeric characters with an underscore
+        string result = Regex.Replace(input, @"[^a-zA-Z0-9]", "_");
+        return result;
     }
 
     public async Task<bool> ConfirmEmailAsync(string token, string email, CancellationToken cancellationToken = default)

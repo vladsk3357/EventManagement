@@ -42,17 +42,15 @@ const SubscribeCommunityButton = ({ communityId, isShowForm, formId }: Props) =>
       <Dialog
         open={openModal}
         onClose={() => setOpenModal(false)}
+        keepMounted
       >
         <DialogTitle>Форма учасника</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText mb={2}>
             Для того щоб стати учасником спільноти, заповніть форму.
           </DialogContentText>
           {isFetched && !isLoading && data && <Form fields={data.fields} onSubmit={handleSubmitForm} isSubmitting={isPending} />}
         </DialogContent>
-        <DialogActions>
-          <LoadingButton variant="contained" loading={isPending}>Стати учасником</LoadingButton>
-        </DialogActions>
       </Dialog>
     </>
   );

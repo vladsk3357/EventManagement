@@ -16,7 +16,7 @@ internal static class DependencyInjection
             q.AddTrigger(opts => opts
                 .ForJob("IndexCommunitiesJob")
                 .WithIdentity("IndexCommunitiesJob-trigger")
-                .WithSimpleSchedule(s => s.WithIntervalInMinutes(1).RepeatForever())
+                .WithSimpleSchedule(s => s.WithIntervalInMinutes(60).RepeatForever())
             );
 
             var indexEventsJobKey = new JobKey("IndexEventsJob");
@@ -25,7 +25,7 @@ internal static class DependencyInjection
             q.AddTrigger(opts => opts
                 .ForJob("IndexEventsJob")
                 .WithIdentity("IndexEventsJob-trigger")
-                .WithSimpleSchedule(s => s.WithIntervalInMinutes(1).RepeatForever())
+                .WithSimpleSchedule(s => s.WithIntervalInMinutes(60).RepeatForever())
             );
 
             q.UseMicrosoftDependencyInjectionJobFactory();
