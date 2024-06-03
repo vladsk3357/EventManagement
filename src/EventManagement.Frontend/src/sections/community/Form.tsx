@@ -70,7 +70,6 @@ const Form = ({ fields, onSubmit, isSubmitting }: Props) => {
                     label={field.name}
                     required={field.isRequired}
                     helperText={field.description}
-                    onInput={e => console.log(watch(field.name))}
                   />
                 );
               case 'LongText':

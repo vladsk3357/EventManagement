@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { axios } from '../../api';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const GroupHeader = styled('div')(({ theme }) => ({
   position: 'sticky',
@@ -21,12 +22,13 @@ const GroupItems = styled('ul')({
 
 const SearchBox = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [value, setValue] = useState('');
-  const { data, mutate, isPending } = useSearchMutation(10);
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  const { data, mutate } = useSearchMutation(10);
 
   useEffect(() => {
-    searchQuery && mutate(searchQuery);
-  }, [searchQuery]);
+    debouncedSearchQuery && mutate(debouncedSearchQuery);
+  }, [debouncedSearchQuery]);
 
   const getOptionLabel = (option: CommunitySearchSuggestion | EventSearchSuggestion | string) => {
     if (typeof option === 'string') {

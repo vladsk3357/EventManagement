@@ -2,15 +2,15 @@
 using EventManagement.Application.Common.MailTemplateModels;
 using EventManagement.Domain.Entities.Community;
 using EventManagement.Infrastructure.Mail.Options;
-using EventManagement.Infrastructure.Options.Frontend;
+using EventManagement.Infrastructure.Services;
 using Microsoft.Extensions.Options;
 
 namespace EventManagement.Infrastructure.Mail.Services;
 
-internal class MailService(IOptions<MailOptions> options, IOptions<FrontendOptions> frontendOptions) 
+internal class MailService(IOptions<MailOptions> options, FrontendUrlService frontendUrlService) 
     : MailServiceCore(options), IMailService
 {
-    private readonly FrontendOptions _frontendOptions = frontendOptions.Value;
+    private readonly FrontendUrlService _frontendUrlService = frontendUrlService;
 
     public async Task SendEmailConfirmationMailAsync(string to, EmailConfirmationMailTemplateModel model, CancellationToken cancellation = default!)
     {
@@ -46,7 +46,7 @@ internal class MailService(IOptions<MailOptions> options, IOptions<FrontendOptio
     {
         ArgumentException.ThrowIfNullOrEmpty(to);
 
-        var model = new InvitationToCommunityMailTemplateModel(community.Name, _frontendOptions.Url + "community/" + community.Id);
+        var model = new InvitationToCommunityMailTemplateModel(community.Name, _frontendUrlService.GetUrl() + "/community/" + community.Id);
         await SendEmailAsync([to], $"Тебе запросили приєднатися до {model.CommunityName}", MailTemplateNames.InvitationToCommunity, model, cancellation);
     }
 

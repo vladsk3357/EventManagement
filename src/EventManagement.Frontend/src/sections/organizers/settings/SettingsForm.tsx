@@ -16,7 +16,7 @@ type FormInputs = {
   domain: string;
   shortDescription?: string | null;
   description: string;
-  communityImage: FileList | null | undefined;
+  communityImage?: FileList | null;
 }
 
 type Props = {
@@ -147,7 +147,7 @@ type SaveCommunitySettingsMutationVariables = {
   name: string;
   location: string
   domain: string;
-  shortDescription?: string;
+  shortDescription?: string | null;
   description: string;
   communityImage: File | null;
 };

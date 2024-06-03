@@ -91,7 +91,7 @@ function useColumns(): GridColDef[] {
       minWidth: 100,
       hideable: false,
       getActions: ({ row }) => {
-        if (row.userId === user!.id)
+        if (user && row.userId === user.id)
           return [];
 
         return [

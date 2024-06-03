@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EventManagement.Application.Admin.Common;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
@@ -10,20 +11,20 @@ internal static class DependencyInjection
     {
         services.AddQuartz(q =>
         {
-            var indexCommunitiesJobKey = new JobKey("IndexCommunitiesJob");
+            var indexCommunitiesJobKey = new JobKey("IndexCommunitiesJob", "Index");
             q.AddJob<IndexCommunitiesJob>(opts => opts.WithIdentity(indexCommunitiesJobKey));
 
             q.AddTrigger(opts => opts
-                .ForJob("IndexCommunitiesJob")
+                .ForJob("IndexCommunitiesJob", "Index")
                 .WithIdentity("IndexCommunitiesJob-trigger")
                 .WithSimpleSchedule(s => s.WithIntervalInMinutes(60).RepeatForever())
             );
 
-            var indexEventsJobKey = new JobKey("IndexEventsJob");
+            var indexEventsJobKey = new JobKey("IndexEventsJob", "Index");
             q.AddJob<IndexEventsJob>(opts => opts.WithIdentity(indexEventsJobKey));
 
             q.AddTrigger(opts => opts
-                .ForJob("IndexEventsJob")
+                .ForJob("IndexEventsJob", "Index")
                 .WithIdentity("IndexEventsJob-trigger")
                 .WithSimpleSchedule(s => s.WithIntervalInMinutes(60).RepeatForever())
             );
@@ -32,6 +33,7 @@ internal static class DependencyInjection
         });
 
         services.AddQuartzHostedService();
+        services.AddScoped<IReindexService, ReindexService>();
 
         return services;
     }

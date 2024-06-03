@@ -84,7 +84,7 @@ function useSubscribeToCommunity(communityId: number) {
     },
     onSuccess: () => {
       queryClient.setQueryData(['community', { id: communityId }], (data: GetCommunityDetailsQueryResult) => {
-        return { ...data, isSubscribed: true };
+        return { ...data, isSubscribed: true, subscriberCount: data.subscriberCount + 1 };
       });
     },
   });

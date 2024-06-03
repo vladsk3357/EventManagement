@@ -1,8 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from '../../api';
-import { EventDetailsQueryResultType } from "./EventDetails";
-import { AttendeeStatus } from "../organizers/events/common";
 
 type Props = {
   eventId: number;

@@ -63,11 +63,6 @@ const Form = ({ initialValues, onSubmit, isPending }: Props) => {
   });
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(initialValues?.profileImageUrl || null);
   const { watch } = form;
-  const file = watch('profileImage');
-
-  useEffect(() => {
-    console.log(file);
-  }, [file]);
 
   return (
     <FormContainer onSuccess={onSubmit} formContext={form}>

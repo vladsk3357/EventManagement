@@ -5,6 +5,7 @@ import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import dns from 'dns';
+import child_process from 'child_process';
 
 const baseFolder =
     process.env.APPDATA !== undefined && process.env.APPDATA !== ''
@@ -22,6 +23,23 @@ if (!certificateName) {
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
+if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+    if (0 !== child_process.spawnSync('dotnet', [
+        'dev-certs',
+        'https',
+        '--export-path',
+        certFilePath,
+        '--format',
+        'Pem',
+        '--no-password',
+    ], { stdio: 'inherit', }).status) {
+        throw new Error("Could not create certificate.");
+    }
+}
+
+const target = process.env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${process.env.ASPNETCORE_HTTPS_PORT}` :
+    process.env.ASPNETCORE_URLS ? process.env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:443';
+
 dns.setDefaultResultOrder('ipv4first');
 
 // https://vitejs.dev/config/
@@ -35,15 +53,11 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://localhost:443',
-                secure: false,
-            },
-            '/swagger': {
-                target: 'https://localhost:7165',
+                target,
                 secure: false,
             },
             '/admin': {
-                target: 'https://localhost:443',
+                target,
                 secure: false,
             },
         },
