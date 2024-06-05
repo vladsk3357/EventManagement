@@ -18,6 +18,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Ім'я</th>
                     <th scope="col">Електронна пошта</th>
+                    <th scope="col">Статус</th>
                     <th></th>
                 </tr>
             </thead>
@@ -28,7 +29,21 @@
                         <td>@user.Id</td>
                         <td>@user.Name</td>
                         <td>@user.Email</td>
-                        <td class="d-flex justify-content-end">
+                        <td>
+                            @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == user.Id)
+                            {
+                                <span class="badge bg-success">Адміністратор</span>
+                            }
+                            else if (user.IsOrganizer)
+                            {
+                                <span class="badge bg-primary">Організатор</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Відвідувач</span>
+                            }
+                        </td>
+                        <td>
                             @if (User.FindFirstValue(ClaimTypes.NameIdentifier) != user.Id)
                             {
                                 if (user.IsLocked)
@@ -36,7 +51,10 @@
                                     <form method="post" asp-action="Lock">
                                         <input type="hidden" asp-for="@user.Id" name="id">
                                         <input type="hidden" value="false" name="isLocked">
-                                        <button type="submit" class="btn btn-success">
+                                        <button type="submit"
+                                                class="btn btn-success btn-sm"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="Розблокувати">
                                             <i class="fa-solid fa-unlock"></i>
                                         </button>
                                     </form>
@@ -46,7 +64,10 @@
                                     <form method="post" asp-action="Lock">
                                         <input type="hidden" asp-for="@user.Id" name="id">
                                         <input type="hidden" value="true" name="isLocked">
-                                        <button type="submit" class="btn btn-warning">
+                                        <button type="submit"
+                                                class="btn btn-warning btn-sm"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="Блокувати">
                                             <i class="fa-solid fa-lock"></i>
                                         </button>
                                     </form>

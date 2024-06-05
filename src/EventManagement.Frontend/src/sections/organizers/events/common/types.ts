@@ -29,7 +29,7 @@ export type OfflineVenue = {
     city: string;
     street: string;
     locationName: string;
-    zipCode?: string;
+    zipCode?: string | null;
   }
 };
 

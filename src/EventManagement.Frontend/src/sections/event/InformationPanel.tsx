@@ -6,6 +6,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import moment from "moment";
 import AttendEventButton from "./AttendEventButton";
 import UnattendEventButton from "./UnattendEventButton";
+import { formatAsDateMonthYear, formatAsTime } from "../../utils/dateFormatters";
 
 type Props = {
   startDate: moment.Moment;
@@ -49,13 +50,13 @@ const InformationPanel = ({
           <Box>
             <Typography variant="caption"><AccessTimeIcon /></Typography><br />
             <Typography variant="caption">ДАТА ПОЧАТКУ</Typography>
-            <Typography variant="subtitle2">{startDate.format("LL")}</Typography>
-            <Typography variant="caption">{startDate.format("kk:mm")}</Typography>
+            <Typography variant="subtitle2">{formatAsDateMonthYear(startDate)}</Typography>
+            <Typography variant="caption">{formatAsTime(startDate)}</Typography>
           </Box>
           <Box>
             <Typography variant="caption">ДАТА ЗАВЕРШЕННЯ</Typography>
-            <Typography variant="subtitle2">{endDate.format("LL")}</Typography>
-            <Typography variant="caption">{endDate.format("kk:mm")}</Typography>
+            <Typography variant="subtitle2">{formatAsDateMonthYear(endDate)}</Typography>
+            <Typography variant="caption">{formatAsTime(endDate)}</Typography>
           </Box>
         </Stack>
         <Box>

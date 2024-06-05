@@ -43,8 +43,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => options.CustomSchemaIds(type => type.ToString()));
 
@@ -83,12 +82,14 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "EmailConfirmation",
     pattern: "users/confirmation",
-    defaults: new {controller = "Users", action = "Confirmation"});
+    defaults: new { controller = "Users", action = "Confirmation" });
 
 app.MapControllerRoute(
     name: "ResetPassword",
     pattern: "users/reset-password",
     defaults: new { controller = "Users", action = "ResetPassword" });
+
+app.MapFallbackToFile("/index.html");
 
 app.UseCors();
 app.Run();

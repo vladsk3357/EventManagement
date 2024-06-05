@@ -47,6 +47,9 @@ const CommunityNav = ({ openNav, onCloseNav }: Props) => {
         >
           <Box sx={{ mr: 1 }}>
             <Alert severity='info' variant='outlined' icon={false}>
+              <Typography variant="subtitle2">
+                Спільнота:
+              </Typography>
               <Typography variant="subtitle1">
                 {data.name}
               </Typography>

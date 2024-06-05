@@ -41,7 +41,7 @@ const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => 
         onSubmit={data => mutate({
           ...data,
           id: session.id,
-          startTime: data.startTime.set({ h: session.startTime.get("h"), m: session.startTime.get("m") }).format('YYYY-MM-DDTHH:mm:ss'),
+          startTime: data.startTime.format(),
         })}
         defaultValues={{
           title: session.title,

@@ -73,16 +73,18 @@ export default function Router() {
       path: 'organizers/:communityId',
       element: <OrganizersLayout />,
       children: [
-        { path: 'dashboard', element: <CommunityDashboardPage />, },
+        { path: '', element: <Navigate to='dashboard' />, index: true },
+        { path: 'dashboard', element: <CommunityDashboardPage /> },
+        { path: 'events/list/*', element: <CommunityEventsPage /> },
         {
-          path: 'events', children: [
-            { path: 'list/*', element: <CommunityEventsPage /> },
-            { path: ':eventId/details', element: <EventDetailsPage /> },
-            { path: ':eventId/attendees/*', element: <EventAttendeesListPage /> },
-            { path: ':eventId/speakers', element: <EventSpeakersListPage /> },
-            { path: ':eventId/schedule', element: <EventSchedulePage /> },
-            { path: ':eventId/uploads', element: <EventUploadsPage /> },
-            { path: ':eventId/communication', element: <EventCommunicationPage /> },
+          path: 'events/:eventId', children: [
+            { path: '', element: <Navigate to='details' />, index: true },
+            { path: 'details', element: <EventDetailsPage /> },
+            { path: 'attendees/*', element: <EventAttendeesListPage /> },
+            { path: 'speakers', element: <EventSpeakersListPage /> },
+            { path: 'schedule', element: <EventSchedulePage /> },
+            { path: 'uploads', element: <EventUploadsPage /> },
+            { path: 'communication', element: <EventCommunicationPage /> },
           ]
         },
         { path: 'events/create', element: <CreateEventPage /> },

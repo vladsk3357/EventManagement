@@ -9,12 +9,13 @@ using EventManagement.Infrastructure.Options.Frontend;
 using EventManagement.Infrastructure.Search;
 using EventManagement.Infrastructure.Jobs;
 using EventManagement.Infrastructure.FilesStorage;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EventManagement.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         services.ConfigureOptions<FrontendOptionsSetup>();
 
@@ -30,6 +31,7 @@ public static class DependencyInjection
 
         services.AddDistributedMemoryCache();
         services.AddSingleton<ICacheService, CacheService>();
+        services.AddTransient<FrontendUrlService>();
 
         return services;
     }

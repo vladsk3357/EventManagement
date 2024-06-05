@@ -6,6 +6,7 @@ import moment from "moment";
 import { Event } from './types';
 import EventCard from "./EventCard";
 import { useState } from "react";
+import { formatAsDateMonthYear } from "../../utils/dateFormatters";
 
 const MyEventsList = () => {
   const [isPast, setIsPast] = useState(false);
@@ -45,7 +46,7 @@ const MyEventsList = () => {
         )}
         {data.items.map(item => (
           <Box key={item.date.toISOString(true)}>
-            <Typography variant="h4" gutterBottom>{item.date.format("LL")}</Typography>
+            <Typography variant="h4" gutterBottom>{formatAsDateMonthYear(item.date)}</Typography>
             {item.events.map(event => (
               <EventCard key={event.id} event={event} />
             ))}

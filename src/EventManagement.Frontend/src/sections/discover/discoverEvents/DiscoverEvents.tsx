@@ -12,7 +12,7 @@ import { CommunityEvent } from "./types";
 const DiscoverEvents = () => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
   const page = Number(urlSearchParams.get('page')) || 1;
-  const pageSize = Number(urlSearchParams.get('pageSize')) || 10;
+  const pageSize = Number(urlSearchParams.get('pageSize')) || 9;
   const { data, isFetched, isLoading } = useDiscoverEventsList(
     page,
     pageSize,
@@ -43,14 +43,14 @@ const DiscoverEvents = () => {
               <EventCard event={event} />
             </Grid>
           ))}
-          <Box display="flex" justifyContent="center" flexDirection="row" width="100%">
+          <Box display="flex" justifyContent="center" mt={3} flexDirection="row" width="100%">
             {data!.totalCount > pageSize && (
               <Pagination
                 count={Math.ceil(data!.totalCount / data!.pageSize)}
                 hideNextButton={!data!.hasNextPage}
                 hidePrevButton={!data!.hasPreviousPage}
                 page={page}
-                onChange={(_, page) => setUrlSearchParams({ page: page.toString() })}
+                onChange={(_, page) => setUrlSearchParams(params => { params.set("page", page.toString()); return params; })}
               />
             )}
           </Box>

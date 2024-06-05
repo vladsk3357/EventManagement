@@ -23,7 +23,6 @@ COPY ["src/EventManagement.WebApi/EventManagement.WebApi.csproj", "src/EventMana
 COPY ["src/EventManagement.Application/EventManagement.Application.csproj", "src/EventManagement.Application/"]
 COPY ["src/EventManagement.Domain/EventManagement.Domain.csproj", "src/EventManagement.Domain/"]
 COPY ["src/EventManagement.Infrastructure/EventManagement.Infrastructure.csproj", "src/EventManagement.Infrastructure/"]
-COPY ["src/EventManagement.Frontend/nuget.config", "src/EventManagement.Frontend/"]
 COPY ["src/EventManagement.Frontend/eventmanagement.frontend.esproj", "src/EventManagement.Frontend/"]
 RUN dotnet restore "./src/EventManagement.WebApi/EventManagement.WebApi.csproj"
 RUN npm install typescript

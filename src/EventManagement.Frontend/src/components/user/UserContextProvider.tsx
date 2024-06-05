@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import UserContext, { Tokens, User } from "./UserContext";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constants";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axios } from "../../api";
 
 type Props = {
@@ -19,14 +19,15 @@ const UserContextProvider = ({ children }: Props) => {
       refreshToken: localStorage.getItem(REFRESH_TOKEN)!,
     };
   });
+  const queryClient = useQueryClient();
 
-  const { data, isSuccess, refetch, isFetching } = useQuery({
+  const { data, isSuccess, refetch, isFetching, status, dataUpdatedAt } = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
       const res = await axios.get<GetProfileShortInfoQueryResult>('/api/profileinfo');
       return res.data;
     },
-    enabled: false
+    enabled: false,
   });
 
   useEffect(() => {
@@ -48,9 +49,9 @@ const UserContextProvider = ({ children }: Props) => {
   }, [tokens]);
 
   useEffect(() => {
-    if (isSuccess)
+    if (status === 'success')
       setUser(data);
-  }, [data]);
+  }, [data, status, dataUpdatedAt]);
 
   const context = {
     user,
@@ -64,6 +65,7 @@ const UserContextProvider = ({ children }: Props) => {
     },
     remove: () => {
       setTokens(null);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
       // setUser(null);
     },
     requestUser: () => refetch(),

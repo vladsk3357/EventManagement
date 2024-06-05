@@ -11,6 +11,7 @@ import {
   Alert,
   ToggleButtonGroup,
   ToggleButton,
+  Paper,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from '../../api';
@@ -22,6 +23,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Venue } from "../event/types";
 import moment from "moment";
 import { useState } from "react";
+import { formatAsDateMonthYear } from "../../utils/dateFormatters";
 
 type Props = {
   value: string;
@@ -60,46 +62,47 @@ const EventsTabPanel = ({ value }: Props) => {
           </ToggleButtonGroup>
         </Box>
         {isLoading && <CircularProgress />}
+        {isFetched && data?.totalCount === 0 && (
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="body1" align="center">Список подій порожній</Typography>
+          </Paper>
+        )}
         {isFetched && (
           <>
             <Grid container gap={3}>
-              {
-                data!.items.map(event => (
-                  <Grid item xs={12} key={event.id}>
-                    <Card>
-                      <RouterLink to={`/community/${communityId}/${event.id}`}>
-                        <CardActionArea sx={{ minHeight: 200 }} >
-                          <CardContent>
-                            <Box mb={2}>
-                              <Typography variant="h6">{event.name}</Typography>
-                              <Typography variant="body2">{event.attendeesCount} учасників йде</Typography>
-                              <Typography variant="body2"><EventIcon /> {moment(event.startDate).format("LL")}</Typography>
-                              <Typography variant="body2"><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.address.locationName}</Typography>
-                            </Box>
-                            {event.isCancelled && (
-                              <Alert severity="error">
-                                Ця подія була скасована
-                              </Alert>
-                            )}
-                          </CardContent>
-                        </CardActionArea>
-                      </RouterLink>
-                    </Card>
-                  </Grid>
-                ))
-              }
+              {data!.items.map(event => (
+                <Grid item xs={12} key={event.id}>
+                  <Card>
+                    <RouterLink to={`/community/${communityId}/${event.id}`}>
+                      <CardActionArea sx={{ minHeight: 200 }} >
+                        <CardContent>
+                          <Box mb={2}>
+                            <Typography variant="h6">{event.name}</Typography>
+                            <Typography variant="body2">{event.attendeesCount} учасників йде</Typography>
+                            <Typography variant="body2"><EventIcon /> {formatAsDateMonthYear(event.startDate)}</Typography>
+                            <Typography variant="body2"><LocationOnIcon /> {event.venue.type === 'Online' ? 'Онлайн' : event.venue.address.locationName}</Typography>
+                          </Box>
+                          {event.isCancelled && (
+                            <Alert severity="error">
+                              Ця подія була скасована
+                            </Alert>
+                          )}
+                        </CardContent>
+                      </CardActionArea>
+                    </RouterLink>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
-            {
-              data!.totalCount > pageSize && (
-                <Pagination
-                  count={Math.ceil(data!.totalCount / data!.pageSize)}
-                  hideNextButton={!data!.hasNextPage}
-                  hidePrevButton={!data!.hasPreviousPage}
-                  page={page}
-                  onChange={(_, page) => setUrlSearchParams({ page: page.toString() })}
-                />
-              )
-            }
+            {data!.totalCount > pageSize && (
+              <Pagination
+                count={Math.ceil(data!.totalCount / data!.pageSize)}
+                hideNextButton={!data!.hasNextPage}
+                hidePrevButton={!data!.hasPreviousPage}
+                page={page}
+                onChange={(_, page) => setUrlSearchParams({ page: page.toString() })}
+              />
+            )}
           </>
         )}
       </Box>

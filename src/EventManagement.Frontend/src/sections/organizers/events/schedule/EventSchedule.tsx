@@ -11,6 +11,7 @@ import { Session } from "./types";
 import EditSessionButton from "./EditSessionButton";
 import DeleteSessionButton from "./DeleteSessionButton";
 import WarningIcon from '@mui/icons-material/Warning';
+import { formatAsTime } from "../../../../utils/dateFormatters";
 
 const levels = new Map([
   ['Beginner', 'Початковий'],
@@ -68,10 +69,10 @@ const EventSchedule = () => {
                 {session.title}
               </Stack>
             </TableCell>
-            <TableCell align="right">{session.startTime.format("kk:mm")} - {session.endTime.format("kk:mm")}</TableCell>
+            <TableCell align="right">{formatAsTime(session.startTime)} - {formatAsTime(session.endTime)}</TableCell>
             <TableCell align="right">{session.duration}</TableCell>
-            <TableCell align="right">{levels.get(session.level)}</TableCell>
-            <TableCell align="right">
+            <TableCell>{levels.get(session.level)}</TableCell>
+            <TableCell>
               {session.speakers.map(s => s.name).join(', ')}
             </TableCell>
             <TableCell align="right" sx={{ display: 'flex', justifyContent: 'end' }}>
@@ -110,11 +111,11 @@ const EventSchedule = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="right">Назва</TableCell>
+              <TableCell >Назва</TableCell>
               <TableCell align="right">Початок/Кінець</TableCell>
               <TableCell align="right">Тривалість, хв</TableCell>
-              <TableCell align="right">Рівень</TableCell>
-              <TableCell align="right">Спікери</TableCell>
+              <TableCell>Рівень</TableCell>
+              <TableCell>Спікери</TableCell>
               <TableCell align="right">Дія</TableCell>
             </TableRow>
           </TableHead>

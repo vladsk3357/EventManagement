@@ -1,9 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-// @mui
 import { Stack, IconButton, InputAdornment, TextField, Box, Typography, Link } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// components
 import Iconify from '../../../components/iconify';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -11,8 +9,6 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useMutation } from '@tanstack/react-query';
 import { axios } from '../../../api';
 import { UserContext } from '../../../components/user';
-
-// ----------------------------------------------------------------------
 
 type FormInputs = {
   name: string;
@@ -43,7 +39,7 @@ export default function RegistrationForm() {
 
   const { register, handleSubmit, setError, formState: { errors } } = useForm<FormInputs>({ resolver: yupResolver(schema) });
 
-  const { mutate } = useMutation<RegisterUserMutationResult, Error, RegisterUserMutationVariables>({
+  const { mutate, isPending } = useMutation<RegisterUserMutationResult, Error, RegisterUserMutationVariables>({
     mutationFn: variables => axios.post<RegisterUserMutationResult>('/api/profileuser/register', variables).then(res => res.data),
     onError: error => {
       if (axios.isAxiosError<RegisterUserMutationError>(error)) {
@@ -59,25 +55,14 @@ export default function RegistrationForm() {
     },
     onSuccess: data => {
       setTokens(data);
-      navigate('/dashboard');
+      navigate('/');
     },
   });
-
-  // const onError = (errors: RegistrationFormErrors) => {
-  //   Object.entries(errors).forEach(([key, value]) => {
-  //     setError(key as keyof FormInputs, {
-  //       type: 'validate',
-  //       message: value[0],
-  //     });
-  //   });
-  // };
 
   const onSuccess = ({ accessToken, refreshToken }: RegisterUserMutationResult) => {
     setTokens({ accessToken, refreshToken });
     navigate('/dashboard');
   };
-
-  // const { mutate } = useRegister(onSuccess, onError);
 
   const handleClick: SubmitHandler<FormInputs> = variables => {
     mutate(variables);
@@ -119,7 +104,7 @@ export default function RegistrationForm() {
           />
         </Stack>
 
-        <LoadingButton fullWidth size="large" type="submit" variant="contained">
+        <LoadingButton loading={isPending} fullWidth size="large" type="submit" variant="contained">
           Зареєструватися
         </LoadingButton>
         <Box mt={2}>
@@ -134,17 +119,6 @@ export default function RegistrationForm() {
     </>
   );
 }
-
-function useRegister(onSuccess: (token: RegisterUserMutationResult) => void, onError: (error: RegistrationFormErrors) => void) {
-  return useMutation<RegisterUserMutationResult, RegisterUserMutationError, RegisterUserMutationVariables>({
-    mutationFn: registerUserMutationVariables => axios('/api/profileuser/register', {
-      data: registerUserMutationVariables,
-      method: 'POST',
-    }).then(res => res.data).catch(res => res.response.data),
-    onError: error => onError(error.errors),
-    onSuccess: data => onSuccess(data),
-  });
-};
 
 type RegisterUserMutationVariables = {
   name: string;

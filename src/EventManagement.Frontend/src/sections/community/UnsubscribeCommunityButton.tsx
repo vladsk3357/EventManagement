@@ -32,7 +32,7 @@ function useUnsubscribeToCommunity(communityId: number) {
     mutationFn: () => axios.post(`/api/communities/${communityId}/unsubscribe`),
     onSuccess: () => {
       queryClient.setQueryData(['community', { id: communityId }], (data: GetCommunityDetailsQueryResult) => {
-        return { ...data, isSubscribed: false };
+        return { ...data, isSubscribed: false, subscriberCount: data.subscriberCount - 1 };
       });
     },
   });

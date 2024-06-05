@@ -16,11 +16,6 @@ const facetNameMap = new Map<string, string>([['location', 'Локація'], ['
 
 const Filters = () => {
   const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  const sortBy = urlSearchParams.get('sortBy');
-  const sortOrder = urlSearchParams.get('sortOrder');
-
   const form = useForm({
     defaultValues: {
       location: urlSearchParams.get('location')?.split(','),

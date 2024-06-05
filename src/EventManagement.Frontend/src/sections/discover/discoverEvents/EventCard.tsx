@@ -2,7 +2,7 @@ import { Card, CardActionArea, CardContent, Stack, Typography, Box, Alert } from
 import { CommunityEvent } from "./types";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Link } from "react-router-dom";
-
+import { formatAsDateMonthYearTime } from "../../../utils/dateFormatters";
 
 type Props = {
   event: CommunityEvent;
@@ -15,8 +15,8 @@ const EventCard = ({ event }: Props) => {
         <CardActionArea>
           <CardContent>
             <Typography variant="h5">{event.name}</Typography>
-            <Stack direction="row" spacing={3} mb={2}>
-              <Typography variant="subtitle2">{event.startDate.format("lll")}</Typography>
+            <Stack direction="row" spacing={2} mb={2}>
+              <Typography variant="subtitle2">{formatAsDateMonthYearTime(event.startDate)}</Typography>
               <Typography variant="subtitle2">Від {event.community.name}</Typography>
             </Stack>
             <Box mb={2}>

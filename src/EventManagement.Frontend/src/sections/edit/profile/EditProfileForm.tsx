@@ -19,7 +19,6 @@ const EditProfileForm = () => {
   const { mutate, isPending } = useEditUserProfileMutation(() => setSnackbarOpen(true));
 
   const handleClick: SubmitHandler<FormInputs> = data => {
-    console.log(data);
     const { profileImage, ...formData } = data;
     mutate({ profileImage: profileImage?.[0], ...formData });
   };
