@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useSubscribersList } from "../common";
@@ -22,6 +22,7 @@ const SubscribersSection = ({ communityId }: Props) => {
         {isFetched && data && (
           <Typography variant="body1" gutterBottom>{data.totalCount} учасники</Typography>
         )}
+        <Box mb={"auto"} />
         <CardActions sx={{ justifyContent: 'end' }}>
           <Link to={`/organizers/${communityId}/members`}>
             <Button endIcon={<ArrowForwardIcon />}>Переглянути всі</Button>

@@ -34,5 +34,7 @@ internal sealed class EventConfiguration : IEntityTypeConfiguration<Event>
 
         builder.Property(e => e.LastModifiedBy)
             .HasMaxLength(450);
+
+        builder.Ignore(e => e.DomainEvents);
     }
 }

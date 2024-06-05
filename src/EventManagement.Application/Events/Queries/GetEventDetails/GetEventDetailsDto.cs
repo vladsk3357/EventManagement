@@ -17,7 +17,9 @@ public sealed record GetEventDetailsDto(
     int? AttendanceCountLeft,
     GetEventDetailsCommunityDto Community,
     ICollection<ScheduleDto> Schedules,
-    ICollection<SpeakerDto> Speakers);
+    ICollection<SpeakerDto> Speakers,
+    List<string> ImagesUrls,
+    bool IsCancelled);
 
 public sealed record ScheduleDto(
     DateTime Date,
@@ -29,7 +31,8 @@ public sealed record SessionDto(
     DateTime StartTime,
     DateTime EndTime,
     string Description,
-    ICollection<SpeakerDto> Speakers);
+    ICollection<SpeakerDto> Speakers, 
+    string Level);
 
 public sealed record SpeakerDto(
     int Id,

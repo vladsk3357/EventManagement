@@ -1,6 +1,8 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
+using EventManagement.Application.Services.Search;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using EventManagement.Domain.Entities.Form.Answer;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +11,12 @@ namespace EventManagement.Application.Communities.Commands.SubscribeCommunity;
 
 public sealed record SubscribeCommunityCommand(int CommunityId, FormAnswerDto? FormAnswer = null) : IRequest;
 
-internal class SubscribeCommunityCommandHandler : IRequestHandler<SubscribeCommunityCommand>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public SubscribeCommunityCommandHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
+internal class SubscribeCommunityCommandHandler(
+    IApplicationDbContext context, 
+    ICurrentUserAccessor currentUserAccessor) : IRequestHandler<SubscribeCommunityCommand>
     {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task Handle(SubscribeCommunityCommand request, CancellationToken cancellationToken)
     {
@@ -49,7 +47,6 @@ internal class SubscribeCommunityCommandHandler : IRequestHandler<SubscribeCommu
             {
                 if (!fieldAnswersInput.TryGetValue(field.Name, out var fieldAnswer))
                     throw new ValidationException($"Поле {field.Name} обов'язкове для заповнення");
-
 
                 if (!field.Validate(fieldAnswer.Value))
                     throw new ValidationException($"Поле {field.Name} має невірне значення");

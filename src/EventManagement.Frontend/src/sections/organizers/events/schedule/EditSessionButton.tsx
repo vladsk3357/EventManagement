@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 import { useState } from "react";
 import FormPopup from "./FormPopup";
 import { Session } from "./types";
@@ -18,7 +18,11 @@ type Props = {
 
 const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useEditSpeaker(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useEditSpeaker(() => {
+    setShowModal(false)
+    setSnackbarOpen(true);
+  });
   return (
     <>
       <Button
@@ -37,7 +41,7 @@ const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => 
         onSubmit={data => mutate({
           ...data,
           id: session.id,
-          startTime: data.startTime.set({ h: session.startTime.get("h"), m: session.startTime.get("m") }).format('YYYY-MM-DDTHH:mm:ss'),
+          startTime: data.startTime.format(),
         })}
         defaultValues={{
           title: session.title,
@@ -45,11 +49,21 @@ const EditSessionButton = ({ session, speakers, endDate, startDate }: Props) => 
           startTime: session.startTime,
           duration: session.duration,
           speakerIds: session.speakers.map(s => s.id),
+          level: session.level,
         }}
         speakers={speakers}
         endDate={endDate}
         startDate={startDate}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Доповідь успішно оновлено
+        </Alert>
+      </Snackbar>
     </>
   );
 };
@@ -80,4 +94,5 @@ type EditSessionMutationVariables = {
   startTime: string;
   duration: number;
   speakerIds: number[];
+  level: string;
 };

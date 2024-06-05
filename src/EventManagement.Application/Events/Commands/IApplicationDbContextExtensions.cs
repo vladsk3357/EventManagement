@@ -12,7 +12,7 @@ internal static class IApplicationDbContextExtensions
         string userId,
         CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrEmpty(userId, nameof(userId));
+        ArgumentException.ThrowIfNullOrEmpty(userId);
 
         return await context.Attendees
                 .FirstOrDefaultAsync(er => er.EventId == eventId && er.UserId == userId, cancellationToken);

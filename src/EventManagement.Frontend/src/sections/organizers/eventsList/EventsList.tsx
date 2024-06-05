@@ -1,10 +1,11 @@
 import { useParams, useNavigate, Route, Routes, useLocation } from "react-router-dom";
-import { Tab } from "@mui/material";
+import { Stack, Tab } from "@mui/material";
 import { Box } from "@mui/material";
 import { TabContext, TabList } from "@mui/lab";
 import { useState, useMemo, SyntheticEvent } from "react";
 import FutureEventsListPanel from "./FutureEventsListPanel";
 import PastEventsListPanel from "./PastEventsListPanel";
+import CreateEventButton from "./CreateEventButton";
 
 const getUrls = (communityId: string) => [
   `/organizers/${communityId}/events/list/`,
@@ -26,6 +27,9 @@ const EventsList = () => {
 
   return (
     <Box>
+      <Stack justifyContent="end" direction="row">
+        <CreateEventButton />
+      </Stack>
       <TabContext value={tabIndex}>
         <TabList onChange={handleChange}>
           <Tab label="Майбутні події" value="0" />

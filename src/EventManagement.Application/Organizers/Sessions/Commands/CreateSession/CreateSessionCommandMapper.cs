@@ -11,5 +11,6 @@ internal static class CreateSessionCommandMapper
         Duration = TimeSpan.FromMinutes(command.Duration),
         Description = command.Description,
         EventId = command.EventId,
+        Level = command.Level
     };
 }

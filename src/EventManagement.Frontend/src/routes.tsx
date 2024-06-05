@@ -1,6 +1,4 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-//
-import SimpleLayout from './layouts/simple';
 import HomeLayout from './layouts/home';
 import DefaultLayout from './layouts/default';
 import SimpleOrganizersLayout from './layouts/organizers/SimpleOrganizersLayout';
@@ -8,7 +6,6 @@ import OrganizersLayout from './layouts/organizers/OrganizersLayout';
 import RegistrationPage from './pages/profile/RegistrationPage';
 import LoginPage from './pages/profile/LoginPage';
 import Page404 from './pages/error/Page404';
-import HomePage from './pages/HomePage';
 import UserDetailsPage from './pages/UserDetailsPage';
 import Edit from './layouts/edit';
 import EditProfilePage from './pages/edit/EditProfilePage';
@@ -29,9 +26,12 @@ import EventAttendeesListPage from './pages/organizers/events/EventAttendeesList
 import EventSpeakersListPage from './pages/organizers/events/EventSpeakersListPage';
 import EventSchedulePage from './pages/organizers/events/EventSchedulePage';
 import MyEventsPage from './pages/myEvents/MyEventsPage';
-
-
-// ----------------------------------------------------------------------
+import CommunityCommunicationPage from './pages/organizers/community/CommunityCommunicationPage';
+import CommunityInvitationPage from './pages/organizers/community/CommunityInvitationPage';
+import DiscoverCommunitiesPage from './pages/discover/DiscoverCommunitiesPage';
+import DiscoverEventsPage from './pages/discover/DiscoverEventsPage';
+import EventUploadsPage from './pages/organizers/events/EventUploadsPage';
+import EventCommunicationPage from './pages/organizers/events/EventCommunicationPage';
 
 export default function Router() {
   const routes = useRoutes([
@@ -39,9 +39,11 @@ export default function Router() {
       path: '',
       element: <HomeLayout />,
       children: [
-        { element: <HomePage />, index: true },
+        { element: <Navigate to='my-communities' />, index: true },
         { path: 'my-communities', element: <MyCommunitiesPage /> },
         { path: 'my-events', element: <MyEventsPage /> },
+        { path: 'discover-communities', element: <DiscoverCommunitiesPage /> },
+        { path: 'discover-events', element: <DiscoverEventsPage /> },
       ],
     },
     {
@@ -71,14 +73,18 @@ export default function Router() {
       path: 'organizers/:communityId',
       element: <OrganizersLayout />,
       children: [
-        { path: 'dashboard', element: <CommunityDashboardPage />, },
+        { path: '', element: <Navigate to='dashboard' />, index: true },
+        { path: 'dashboard', element: <CommunityDashboardPage /> },
+        { path: 'events/list/*', element: <CommunityEventsPage /> },
         {
-          path: 'events', children: [
-            { path: 'list/*', element: <CommunityEventsPage /> },
-            { path: ':eventId/details', element: <EventDetailsPage /> },
-            { path: ':eventId/attendees/*', element: <EventAttendeesListPage /> },
-            { path: ':eventId/speakers', element: <EventSpeakersListPage /> },
-            { path: ':eventId/schedule', element: <EventSchedulePage /> },
+          path: 'events/:eventId', children: [
+            { path: '', element: <Navigate to='details' />, index: true },
+            { path: 'details', element: <EventDetailsPage /> },
+            { path: 'attendees/*', element: <EventAttendeesListPage /> },
+            { path: 'speakers', element: <EventSpeakersListPage /> },
+            { path: 'schedule', element: <EventSchedulePage /> },
+            { path: 'uploads', element: <EventUploadsPage /> },
+            { path: 'communication', element: <EventCommunicationPage /> },
           ]
         },
         { path: 'events/create', element: <CreateEventPage /> },
@@ -86,6 +92,8 @@ export default function Router() {
         { path: 'members', element: <SubscribersPage /> },
         { path: 'registrations', element: <CommunitySubscriptionFormPage /> },
         { path: 'registrations/:answerId', element: <CommunitySubscriptionFormAnswerDetailsPage /> },
+        { path: 'communication', element: <CommunityCommunicationPage /> },
+        { path: 'invite', element: <CommunityInvitationPage /> },
       ],
     },
     {

@@ -17,6 +17,7 @@ const CommunitiesDropdown = () => {
         labelId="communities-dropdown-label"
         value={communityId}
         onChange={e => navigate(`/organizers/${e.target.value as string}/dashboard`)}
+        size="small"
       >
         {data?.items.map(community => (
           <MenuItem key={community.id} value={community.id}>{community.name}</MenuItem>

@@ -35,7 +35,7 @@ const OrganizersLayout = () => {
   return (
     <BaseLayout>
       <StyledRoot>
-        <Header onOpenNav={() => setOpen(true)} />
+        <Header showCommunitiesDropdown={!eventId} onOpenNav={() => setOpen(true)} />
         {eventId ? (
           <EventNav openNav={open} onCloseNav={() => setOpen(false)} />) : (
           <CommunityNav openNav={open} onCloseNav={() => setOpen(false)} />

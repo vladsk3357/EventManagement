@@ -10,16 +10,13 @@ public sealed record GetSubscribersQuery(
     int Page, 
     int PageSize) : PagedRequest(Page, PageSize), IRequest<PagedList<SubscriberDto>>;
 
-internal sealed class GetSubscribersQueryHandler : IRequestHandler<GetSubscribersQuery, PagedList<SubscriberDto>>
+internal sealed class GetSubscribersQueryHandler(
+    IApplicationDbContext context, 
+    IUserService userService) 
+    : IRequestHandler<GetSubscribersQuery, PagedList<SubscriberDto>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IUserService _userService;
-
-    public GetSubscribersQueryHandler(IApplicationDbContext context, IUserService userService)
-    {
-        _context = context;
-        _userService = userService;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly IUserService _userService = userService;
 
     public async Task<PagedList<SubscriberDto>> Handle(GetSubscribersQuery request, CancellationToken cancellationToken)
     {

@@ -11,11 +11,13 @@ internal sealed class GetCurrentUserInfoQueryHandler : IRequestHandler<GetCurren
 {
     private readonly ICurrentUserAccessor _currentUserAccessor;
     private readonly IUserService _userService;
+    private readonly IFileStorageService _fileStorageService;
 
-    public GetCurrentUserInfoQueryHandler(ICurrentUserAccessor currentUserAccessor, IUserService userService)
+    public GetCurrentUserInfoQueryHandler(ICurrentUserAccessor currentUserAccessor, IUserService userService, IFileStorageService fileStorageService)
     {
         _currentUserAccessor = currentUserAccessor;
         _userService = userService;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<GetCurrentUserInfoDto> Handle(GetCurrentUserInfoQuery request, CancellationToken cancellationToken)
@@ -23,7 +25,12 @@ internal sealed class GetCurrentUserInfoQueryHandler : IRequestHandler<GetCurren
         var user = await _userService.GetUserByIdAsync(_currentUserAccessor.UserId, cancellationToken)
             ?? throw new UnauthorizedAccessException();
 
-       return user.ToDto();
+        if (user.ProfileImage is not null)
+        {
+            var imageUrl = await _fileStorageService.GetFileUrlAsync(user.ProfileImage, cancellationToken);
+            return user.ToDto(imageUrl.ToString());
+        }
+
+        return user.ToDto(null);
     }
 }
-

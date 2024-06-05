@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="4.4.0" />
+    <PackageReference Include="Azure.Identity" Version="1.11.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.13.7" />
+    <PackageReference Include="MailKit" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Quartz" Version="3.8.1" />
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.8.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.1" />
     <PackageReference Include="RazorEngineCore" Version="2023.11.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
@@ -24,12 +30,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mail\Templates\" />
     <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Mail\Templates\Communication.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Mail\Templates\EmailConfirmation.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mail\Templates\EventCancelled.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Mail\Templates\InvitationToCommunity.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

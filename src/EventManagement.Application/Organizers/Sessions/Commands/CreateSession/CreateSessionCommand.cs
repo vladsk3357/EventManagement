@@ -12,21 +12,17 @@ public sealed record CreateSessionCommand(
     DateTime StartTime,
     int Duration,
     string Description,
+    string Level,
     ICollection<int> SpeakerIds,
     int EventId) : IRequest<CreateSessionCommandResult>;
 
-internal sealed class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, CreateSessionCommandResult>
+internal sealed class CreateSessionCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor) 
+    : IRequestHandler<CreateSessionCommand, CreateSessionCommandResult>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public CreateSessionCommandHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task<CreateSessionCommandResult> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
     {

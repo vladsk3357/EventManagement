@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Dialog, DialogTitle, DialogContent, Stack, DialogActions, Button, Grid } from "@mui/material";
-import { FormContainer, TextFieldElement, useForm, MultiSelectElement, TimePickerElement } from "react-hook-form-mui";
+import { FormContainer, TextFieldElement, useForm, MultiSelectElement, TimePickerElement, SelectElement } from "react-hook-form-mui";
 import { FormInputs } from "./types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
@@ -20,7 +20,7 @@ type Props = {
 }
 
 const schema: yup.ObjectSchema<FormInputs> = yup.object().shape({
-  title: yup.string().required("Посада є обов'язковою"),
+  title: yup.string().required("Назва є обов'язковою"),
   startTime: yup.mixed((input): input is moment.Moment => moment.isMoment(input)).test({
     message: 'Дата початку повинна бути в майбутньому',
     test: function (value) {
@@ -32,6 +32,7 @@ const schema: yup.ObjectSchema<FormInputs> = yup.object().shape({
   duration: yup.number().min(1, 'Мінімальне значення 1').required('Це поле є обов\'язковим'),
   description: yup.string().required('Це поле є обов\'язковим'),
   speakerIds: yup.array().of(yup.number().required()).required('Це поле є обов\'язковим'),
+  level: yup.string().required('Це поле є обов\'язковим'),
 });
 
 const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit, speakers, startDate, endDate }: Props) => {
@@ -80,6 +81,20 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit, s
               />
             </Grid>
             <Grid item xs={12}>
+              <SelectElement
+                name="level"
+                label="Рівень"
+                fullWidth
+                required
+                options={[
+                  { id: 'Beginner', label: 'Початковий' },
+                  { id: 'Intermediate', label: 'Середній' },
+                  { id: 'Advanced', label: 'Професійний' },
+                  { id: 'Expert', label: 'Експернтий' },
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <TextFieldElement
                 name="description"
                 label="Опис"
@@ -106,7 +121,7 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit, s
                 fullWidth
                 onClick={onClose}
                 variant="contained"
-                color="secondary"
+                color="error"
               >
                 Закрити
               </Button>

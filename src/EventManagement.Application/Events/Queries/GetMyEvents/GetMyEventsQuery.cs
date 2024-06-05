@@ -8,21 +8,14 @@ namespace EventManagement.Application.Events.Queries.GetMyEvents;
 
 public sealed record GetMyEventsQuery(bool IsPast) : IRequest<NonPagedList<GetMyEventsDto>>;
 
-internal sealed class GetMyEventsQueryHandler : IRequestHandler<GetMyEventsQuery, NonPagedList<GetMyEventsDto>>
+internal sealed class GetMyEventsQueryHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor,
+    IDateTime dateTime) : IRequestHandler<GetMyEventsQuery, NonPagedList<GetMyEventsDto>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-    private readonly IDateTime _dateTime;
-
-    public GetMyEventsQueryHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor,
-        IDateTime dateTime)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-        _dateTime = dateTime;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+    private readonly IDateTime _dateTime = dateTime;
 
     public async Task<NonPagedList<GetMyEventsDto>> Handle(GetMyEventsQuery request, CancellationToken cancellationToken)
     {
@@ -33,11 +26,15 @@ internal sealed class GetMyEventsQueryHandler : IRequestHandler<GetMyEventsQuery
             .Include(a => a.Event.Attendees)
             .Select(a => a.Event);
 
-        eventsQuery = request.IsPast ? eventsQuery.Where(e => e.StartDate < now) : eventsQuery.Where(e => e.StartDate >= now);
+        var groupedEventsQuery = request.IsPast 
+            ? eventsQuery.Where(e => e.StartDate < now)
+                .GroupBy(e => e.StartDate.Date)
+                .OrderByDescending(e => e.Key)
+            : eventsQuery.Where(e => e.StartDate >= now)
+                .GroupBy(e => e.StartDate.Date)
+                .OrderBy(e => e.Key);
 
-        var events = await eventsQuery
-            .OrderBy(e => e.StartDate)
-            .GroupBy(e => e.StartDate.Date)
+        var events = await groupedEventsQuery
             .Select(e => new GetMyEventsDto(
                 e.Key,
                 e.Select(e => new EventDto(
@@ -47,7 +44,8 @@ internal sealed class GetMyEventsQueryHandler : IRequestHandler<GetMyEventsQuery
                     e.Venue.ToDto(),
                     e.Attendees.Count,
                     new CommunityDto(e.Community.Id, e.Community.Name),
-                    e.StartDate < now))))
+                    e.StartDate < now,
+                    e.IsCancelled))))
             .ToListAsync(cancellationToken);
 
         return new NonPagedList<GetMyEventsDto>(events);

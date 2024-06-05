@@ -1,4 +1,4 @@
-﻿using EventManagement.Domain.Entities;
+﻿using EventManagement.Domain.Entities.Community;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,9 +19,12 @@ internal sealed class CommunityConfiguration : IEntityTypeConfiguration<Communit
             .HasMaxLength(450);
 
         builder.Property(e => e.Domain)
-            .HasMaxLength(200);        
-        
+            .HasMaxLength(200);
+
         builder.Property(e => e.Location)
+            .HasMaxLength(200);
+
+        builder.Property(e => e.CommunityImage)
             .HasMaxLength(200);
 
         builder.Property(e => e.ShortDescription)

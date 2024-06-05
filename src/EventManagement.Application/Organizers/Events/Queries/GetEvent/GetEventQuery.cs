@@ -19,7 +19,10 @@ public sealed record EventDto(
     DateTime EndDate,
     AttendanceDto Attendance,
     EventVenueDto Venue,
-    int CommunityId);
+    int CommunityId,
+    bool IsCancelled,
+    DateTime? SessionsStartDate,
+    DateTime? SessionsEndDate);
 
 internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
 {
@@ -38,8 +41,19 @@ internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
     {
         var @event = await _context.Events
             .Include(e => e.Community)
+            .Include(e => e.Images)
+            .Include(e => e.Sessions)
             .SingleOrDefaultAsync(e => e.Id == request.Id && e.Community.OrganizerId == _currentUserAccessor.UserId, cancellationToken)
             ?? throw new NotFoundException(nameof(Event), request.Id);
+
+        DateTime? sessionsStartDate = null;
+        DateTime? sessionsEndDate = null;
+
+        if (@event.Sessions.Count > 0)
+        {
+            sessionsStartDate = @event.Sessions.Min(s => s.StartTime);
+            sessionsEndDate = @event.Sessions.Max(s => s.EndTime);
+        }
 
         return new EventDto(
             @event.Id,
@@ -49,6 +63,9 @@ internal class GetEventQueryHandler : IRequestHandler<GetEventQuery, EventDto>
             @event.EndDate,
             new AttendanceDto(@event.Attendance.Limit, @event.Attendance.ShouldBeApproved),
             @event.Venue.ToDto(),
-            @event.CommunityId);
+            @event.CommunityId,
+            @event.IsCancelled,
+            sessionsStartDate,
+            sessionsEndDate);
     }
 }

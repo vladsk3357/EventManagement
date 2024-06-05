@@ -1,5 +1,6 @@
 ﻿using EventManagement.Application.Common.Models.Event;
 using EventManagement.Domain.Entities.CommunityEvent;
+using EventManagement.Domain.ValueObjects;
 
 namespace EventManagement.Application.Organizers.Events.Commands.CreateEvent;
 
@@ -12,7 +13,7 @@ internal static class CreateEventCommandMapper
         Venue = command.Venue switch
         {
             OnlineEventVenueDto online => new OnlineEventVenue { Url = online.Url },
-            OfflineEventVenueDto offline => new OfflineEventVenue { Location = offline.Location },
+            OfflineEventVenueDto offline => new OfflineEventVenue { Address = offline.Address.ToEntity() },
             _ => throw new NotImplementedException(),
         },
         StartDate = command.StartDate,
@@ -24,4 +25,11 @@ internal static class CreateEventCommandMapper
             ShouldBeApproved = command.Attendance.ShouldBeApproved,
         },
     };
+
+    private static Address ToEntity(this AddressDto address) 
+        => new(
+            address.City, 
+            address.Street, 
+            address.LocationName, 
+            address.ZipCode);
 }

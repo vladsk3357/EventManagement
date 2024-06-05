@@ -5,7 +5,9 @@ const CreateEventButton = () => {
   const { communityId } = useParams();
 
   return (
-    <Link to={`/organizers/${communityId}/events/create`}>Створити подію</Link>
+    <Link to={`/organizers/${communityId}/events/create`}>
+      <Button variant='contained'>Створити подію</Button>
+    </Link>
   );
 };
 

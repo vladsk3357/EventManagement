@@ -55,7 +55,8 @@ internal sealed class GetEventsQueryHandler : IRequestHandler<GetEventsQuery, Pa
                 e.Event.Name,
                 e.Event.Venue.ToDto(), 
                 e.Event.StartDate, 
-                e.AttendeesCount));
+                e.AttendeesCount,
+                e.Event.IsCancelled));
 
         return await PagedList<EventDto>.CreateAsync(eventsDtosQuery, request.Page, request.PageSize);
     }

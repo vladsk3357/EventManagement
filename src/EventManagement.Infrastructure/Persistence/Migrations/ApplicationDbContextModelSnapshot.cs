@@ -17,7 +17,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -94,13 +94,17 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.ToTable("Attendees");
                 });
 
-            modelBuilder.Entity("EventManagement.Domain.Entities.Community", b =>
+            modelBuilder.Entity("EventManagement.Domain.Entities.Community.Community", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CommunityImage")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -143,11 +147,81 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("nvarchar(400)");
 
+                    b.Property<int>("SocialMediaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrganizerId");
 
                     b.ToTable("Communities");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.Community.SocialMedia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommunityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DiscordUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("FacebookUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("InstagramUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("LinkedInUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("MediumUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("SlackUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TelegramUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TikTokUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TwitchUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TwitterUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("WebsiteUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("YouTubeUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommunityId")
+                        .IsUnique();
+
+                    b.ToTable("CommunitySocialMedia");
                 });
 
             modelBuilder.Entity("EventManagement.Domain.Entities.CommunityEvent.Event", b =>
@@ -175,6 +249,9 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -206,6 +283,28 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.HasIndex("OrganizerId");
 
                     b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("EventManagement.Domain.Entities.CommunityEvent.EventImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("EventImages");
                 });
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Form.Answer.FormAnswer", b =>
@@ -395,6 +494,11 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
@@ -555,6 +659,10 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ProfileImage")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -738,10 +846,21 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("EventManagement.Domain.Entities.Community.SocialMedia", b =>
+                {
+                    b.HasOne("EventManagement.Domain.Entities.Community.Community", "Community")
+                        .WithOne("SocialMedia")
+                        .HasForeignKey("EventManagement.Domain.Entities.Community.SocialMedia", "CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Community");
+                });
+
             modelBuilder.Entity("EventManagement.Domain.Entities.CommunityEvent.Event", b =>
                 {
-                    b.HasOne("EventManagement.Domain.Entities.Community", "Community")
-                        .WithMany()
+                    b.HasOne("EventManagement.Domain.Entities.Community.Community", "Community")
+                        .WithMany("Events")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -771,6 +890,17 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                     b.Navigation("Community");
                 });
 
+            modelBuilder.Entity("EventManagement.Domain.Entities.CommunityEvent.EventImage", b =>
+                {
+                    b.HasOne("EventManagement.Domain.Entities.CommunityEvent.Event", "Event")
+                        .WithMany("Images")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
             modelBuilder.Entity("EventManagement.Domain.Entities.Form.Answer.FormAnswer", b =>
                 {
                     b.HasOne("EventManagement.Domain.Entities.Form.Form", "Form")
@@ -784,7 +914,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Form.CommunityForm", b =>
                 {
-                    b.HasOne("EventManagement.Domain.Entities.Community", "Community")
+                    b.HasOne("EventManagement.Domain.Entities.Community.Community", "Community")
                         .WithMany("Forms")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -803,7 +933,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Form.CommunitySubscriptionForm", b =>
                 {
-                    b.HasOne("EventManagement.Domain.Entities.Community", "Community")
+                    b.HasOne("EventManagement.Domain.Entities.Community.Community", "Community")
                         .WithOne("SubscriptionForm")
                         .HasForeignKey("EventManagement.Domain.Entities.Form.CommunitySubscriptionForm", "CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -863,7 +993,7 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EventManagement.Domain.Entities.Subscription", b =>
                 {
-                    b.HasOne("EventManagement.Domain.Entities.Community", "Community")
+                    b.HasOne("EventManagement.Domain.Entities.Community.Community", "Community")
                         .WithMany("Subscriptions")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -938,9 +1068,14 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EventManagement.Domain.Entities.Community", b =>
+            modelBuilder.Entity("EventManagement.Domain.Entities.Community.Community", b =>
                 {
+                    b.Navigation("Events");
+
                     b.Navigation("Forms");
+
+                    b.Navigation("SocialMedia")
+                        .IsRequired();
 
                     b.Navigation("SubscriptionForm")
                         .IsRequired();
@@ -954,6 +1089,8 @@ namespace EventManagement.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Attendees");
+
+                    b.Navigation("Images");
 
                     b.Navigation("Sessions");
 

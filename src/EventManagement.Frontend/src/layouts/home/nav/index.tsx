@@ -1,20 +1,15 @@
 import { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-// @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
-// hooks
 import useResponsive from '../../../hooks/useResponsive';
-// components
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-//
 import navConfig from './config';
 import { useQuery } from '@tanstack/react-query';
 import { axios } from '../../../api';
 import { UserContext } from '../../../components/user';
 
-// ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
 
@@ -25,15 +20,6 @@ const StyledAccount = styled('div')(({ theme }) => ({
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
   backgroundColor: alpha(theme.palette.grey[500], 0.12),
 }));
-
-// ----------------------------------------------------------------------
-
-const account = {
-  displayName: 'Jaydon Frankie',
-  email: 'demo@minimals.cc',
-  photoURL: '/assets/images/avatars/avatar_default.jpg',
-  role: 'Manager',
-};
 
 type Props = {
   openNav: boolean;
@@ -60,30 +46,7 @@ export default function Nav({ openNav, onCloseNav }: Props) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      {/* <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
-        <Logo />
-      </Box> */}
-
-      <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none">
-          <StyledAccount>
-            <Avatar src={account.photoURL} alt="photoURL" />
-
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {user?.name}
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {user?.userName}
-              </Typography>
-            </Box>
-          </StyledAccount>
-        </Link>
-      </Box>
-
       <NavSection data={navConfig} />
-
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>
   );

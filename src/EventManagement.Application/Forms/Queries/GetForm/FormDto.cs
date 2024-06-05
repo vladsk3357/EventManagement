@@ -5,14 +5,6 @@ namespace EventManagement.Application.Forms.Queries.GetForm;
 
 public sealed record FormDto(int Id, IReadOnlyCollection<FormFieldDto> Fields);
 
-//public sealed record FormFieldDto(
-//    string Name,
-//    string? Description,
-//    bool IsRequired,
-//    string Type,
-//    int Order,
-//    FieldTypeSpecificProperties? Properties);
-
 [JsonDerivedType(typeof(ShortTextFormFieldDto), typeDiscriminator: FormFieldNames.ShortText)]
 [JsonDerivedType(typeof(LongTextFormFieldDto), typeDiscriminator: FormFieldNames.LongText)]
 [JsonDerivedType(typeof(SingleOptionFormFieldDto), typeDiscriminator: FormFieldNames.SingleOption)]
@@ -73,5 +65,3 @@ public sealed record MultipleOptionsFormFieldDto(
         IsRequired,
         Type,
         Order);
-
-//public sealed record FieldTypeSpecificProperties(ICollection<string>? Options);

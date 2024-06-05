@@ -5,20 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Application.Events.Queries.GetAttendees;
 
-public sealed record GetAttendeesQuery(int EventId, int Page, int PageSize) 
+public sealed record GetAttendeesQuery(int EventId, int Page, int PageSize)
     : PagedRequest(Page, PageSize), IRequest<PagedList<AttendeeDto>>;
 
-internal sealed class GetAttendeesQueryHandler 
+internal sealed class GetAttendeesQueryHandler(
+    IApplicationDbContext context, 
+    IUserService userService)
     : IRequestHandler<GetAttendeesQuery, PagedList<AttendeeDto>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IUserService _userService;
-
-    public GetAttendeesQueryHandler(IApplicationDbContext context, IUserService userService)
-    {
-        _context = context;
-        _userService = userService;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly IUserService _userService = userService;
 
     public async Task<PagedList<AttendeeDto>> Handle(GetAttendeesQuery request, CancellationToken cancellationToken)
     {
@@ -35,4 +31,4 @@ internal sealed class GetAttendeesQueryHandler
 
         return PagedList<AttendeeDto>.Create(dtos, request.Page, request.PageSize, totalCount);
     }
-}   
+}

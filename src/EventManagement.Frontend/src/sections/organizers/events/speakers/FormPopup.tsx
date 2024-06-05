@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Dialog, DialogTitle, DialogContent, Stack, DialogActions, Button } from "@mui/material";
-import { FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
+import { FormContainer, SubmitHandler, TextFieldElement, useForm } from "react-hook-form-mui";
 import { FormInputs } from "./types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
@@ -15,10 +15,14 @@ type Props = {
 }
 
 const schema: yup.ObjectSchema<FormInputs> = yup.object().shape({
-  name: yup.string().required("Ім'я є обов'язковим"),
-  title: yup.string().required("Посада є обов'язковою"),
-  company: yup.string().required("Компанія є обов'язковим"),
-  bio: yup.string().required("Біографія є обов'язковою"),
+  name: yup.string().required("Ім'я є обов'язковим")
+    .max(100, "Ім'я повинно містити максимум 100 символів"),
+  title: yup.string().required("Посада є обов'язковою")
+    .max(100, "Посада повинна містити максимум 100 символів"),
+  company: yup.string().required("Компанія є обов'язковим")
+    .max(100, "Компанія повинна містити максимум 100 символів"),
+  bio: yup.string().required("Біографія є обов'язковою")
+    .max(500, "Біографія повинна містити максимум 500 символів")
 });
 
 const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }: Props) => {
@@ -26,6 +30,11 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }:
     defaultValues,
     resolver: yupResolver(schema),
   });
+
+  const successHandler: SubmitHandler<FormInputs> = data => {
+    onSubmit(data);
+    form.reset();
+  };
 
   return (
     <Dialog
@@ -35,7 +44,7 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }:
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <FormContainer<FormInputs> formContext={form} onSuccess={onSubmit}>
+        <FormContainer<FormInputs> formContext={form} onSuccess={successHandler}>
           <Stack spacing={2}>
             <TextFieldElement
               name="name"
@@ -63,7 +72,7 @@ const FormPopup = ({ show, onClose, isPending, title, defaultValues, onSubmit }:
               required
               fullWidth
             />
-            <Button onClick={onClose} variant="contained" color="secondary">Закрити</Button>
+            <Button onClick={onClose} variant="outlined" color="secondary">Закрити</Button>
             <LoadingButton type="submit" variant="contained" color="primary" loading={isPending}>Зберегти</LoadingButton>
           </Stack>
         </FormContainer>

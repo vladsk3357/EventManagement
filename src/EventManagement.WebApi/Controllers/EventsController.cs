@@ -11,9 +11,9 @@ namespace EventManagement.WebApi.Controllers;
 public class EventsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PagedList<GetCommunityEventsEventDto>>> GetCommunityEvents(int communityId, bool? past, int page, int pageSize)
+    public async Task<ActionResult<PagedList<GetCommunityEventsEventDto>>> GetCommunityEvents(int communityId, bool isPast, int page, int pageSize)
     {
-        return await Mediator.Send(new GetCommunityEventsQuery(communityId, past, page, pageSize));
+        return await Mediator.Send(new GetCommunityEventsQuery(communityId, isPast, page, pageSize));
     }
 
     [HttpGet("{id}")]

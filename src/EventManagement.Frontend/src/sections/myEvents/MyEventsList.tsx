@@ -6,9 +6,9 @@ import moment from "moment";
 import { Event } from './types';
 import EventCard from "./EventCard";
 import { useState } from "react";
+import { formatAsDateMonthYear } from "../../utils/dateFormatters";
 
 const MyEventsList = () => {
-
   const [isPast, setIsPast] = useState(false);
   const { data, isFetched, isLoading } = useMyEventsList(isPast);
 
@@ -40,13 +40,13 @@ const MyEventsList = () => {
 
       <Stack spacing={3}>
         {data.items.length === 0 && (
-          <Box component={Paper} alignItems="center">
-            <Typography variant="h4" gutterBottom>Подій немає</Typography>
-          </Box>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="body1" align="center">Ви поки не є учасником події</Typography>
+          </Paper>
         )}
         {data.items.map(item => (
           <Box key={item.date.toISOString(true)}>
-            <Typography variant="h4" gutterBottom>{item.date.format("LL")}</Typography>
+            <Typography variant="h4" gutterBottom>{formatAsDateMonthYear(item.date)}</Typography>
             {item.events.map(event => (
               <EventCard key={event.id} event={event} />
             ))}
@@ -90,6 +90,7 @@ type CommunitiesListQueryResultType = {
         name: string;
       };
       isPast: boolean;
+      isCancelled: boolean;
     }[]
   }[];
   totalCount: number;

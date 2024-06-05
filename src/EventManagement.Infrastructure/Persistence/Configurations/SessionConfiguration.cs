@@ -21,6 +21,9 @@ internal sealed class SessionConfiguration : IEntityTypeConfiguration<Session>
         builder.Property(e => e.Title)
             .HasMaxLength(200);
 
+        builder.Property(e => e.Level)
+            .HasMaxLength(50);
+
         builder.Property(e => e.Description)
             .HasMaxLength(1000);
 

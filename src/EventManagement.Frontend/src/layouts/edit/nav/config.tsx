@@ -18,11 +18,6 @@ const navConfig: NavItem[] = [
     path: '/edit/profile',
     icon: icon('profile'),
   },
-  {
-    title: 'Змінити пароль',
-    path: '/edit/password',
-    icon: icon('baseline-key'),
-  },
 ];
 
 export default navConfig;

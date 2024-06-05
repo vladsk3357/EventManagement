@@ -3,9 +3,9 @@ import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { axios } from '../../../../api';
 import { useQuery } from "@tanstack/react-query";
-import { PagedList } from "../../common";
 import { useMemo } from "react";
 import { Button } from "@mui/material";
+import { PagedList } from "../../../common/types";
 
 type Props = {
   value: string;
@@ -35,8 +35,7 @@ const AnswersPanel = ({ value }: Props) => {
         pageSizeOptions={[10, 15]}
         loading={isLoading}
         onPaginationModelChange={paginationChangeHandle}
-      >
-      </DataGrid>
+      />
     </TabPanel>
   );
 };
@@ -51,7 +50,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
         {
           field: 'name',
           headerName: 'Ім\'я',
-          width: 150,
+          minWidth: 150,
           type: 'string',
           sortable: false,
           filterable: false,
@@ -59,7 +58,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
         {
           field: 'userName',
           headerName: 'Логін',
-          width: 150,
+          minWidth: 150,
           type: 'string',
           sortable: false,
           filterable: false,
@@ -69,7 +68,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
           field: 'answerDate',
           headerName: 'Дата відповіді',
           type: 'date',
-          width: 250,
+          minWidth: 250,
           sortable: false,
           filterable: false,
           valueGetter: ({ value }) => value && new Date(value),
@@ -80,7 +79,7 @@ function useColumns(): GridColDef<FormAnswer>[] {
           headerName: '',
           sortable: false,
           filterable: false,
-          width: 150,
+          minWidth: 150,
           renderCell: ({ row }) => <Link to={`/organizers/${communityId}/registrations/${row.id}`}><Button variant="contained" color="secondary">Відповіді</Button></Link>
         }
       ];

@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axios } from "../../../../api";
@@ -12,7 +12,12 @@ type Props = {
 
 const DeleteSpeakerButton = ({ speaker }: Props) => {
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useDeleteSpeaker(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useDeleteSpeaker(() => {
+    setShowModal(false);
+    setSnackbarOpen(true);
+  });
+
   return (
     <>
       <Button
@@ -51,7 +56,16 @@ const DeleteSpeakerButton = ({ speaker }: Props) => {
             Видалити
           </Button>
         </DialogActions>
-      </Dialog >
+      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Спікера успішно додано
+        </Alert>
+      </Snackbar>
     </>
   );
 };

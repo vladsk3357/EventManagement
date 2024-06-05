@@ -28,7 +28,12 @@ type CreateEventMutationError = {
   endDate?: string[];
   description?: string[];
   venueType?: string[];
-  location?: string[];
+  address?: {
+    city?: string[];
+    street?: string[];
+    locationName?: string[];
+    zipCode?: string[];
+  };
   url?: string[];
   limit?: string[];
   limitNumber?: string[];
@@ -59,7 +64,12 @@ type OnlineVenue = {
 
 type OfflineVenue = {
   type: VenueType.Offline;
-  location: string;
+  address: {
+    city: string;
+    street: string;
+    locationName: string;
+    zipCode?: string | null;
+  };
 };
 
 function useCreateEventMutation(communityId: number, onSuccess?: () => void) {
@@ -83,7 +93,7 @@ function createMutationVariables(input: FormInputs, communityId: number): Create
     },
     venue: input.venueType === VenueType.Online
       ? { type: VenueType.Online, url: input.url! }
-      : { type: VenueType.Offline, location: input.location! },
+      : { type: VenueType.Offline, address: input.address! },
     communityId,
   };
 }

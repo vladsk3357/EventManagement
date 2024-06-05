@@ -19,7 +19,7 @@ const AuthenticationRedirectProvider = ({ children, authenticationRequired }: Pr
     }
   }, [authenticationRequired, pathname, tokens, navigate]);
 
-  return children;
+  return <>{children}</>;
 };
 
 export default AuthenticationRedirectProvider;

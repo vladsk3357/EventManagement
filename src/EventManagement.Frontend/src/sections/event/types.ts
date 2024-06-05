@@ -15,6 +15,7 @@ export type Session = {
   startTime: moment.Moment;
   endTime: moment.Moment;
   speakers: Speaker[];
+  level: string;
 }
 
 export type Speaker = {
@@ -30,5 +31,10 @@ export type Venue = {
   url: string;
 } | {
   type: 'Offline';
-  location: string;
+  address: {
+    city: string;
+    street: string;
+    locationName: string;
+    zipCode?: string;
+  }
 };

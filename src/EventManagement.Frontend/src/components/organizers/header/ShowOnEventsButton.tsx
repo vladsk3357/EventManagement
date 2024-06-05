@@ -10,7 +10,7 @@ const ShowOnEventsButton = () => {
 
   return (
     <RouterLink to={`/community/${communityId}${eventId ? `/${eventId}` : ''}`} target="_blank" >
-      <Button variant='outlined'>Показати на Events</Button>
+      <Button variant='outlined'>Показати</Button>
     </RouterLink>
   );
 };

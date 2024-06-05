@@ -13,6 +13,7 @@ public sealed record EventDto(
     EventVenueDto Venue,
     int AttendeesCount,
     CommunityDto Community,
-    bool IsPast);
+    bool IsPast,
+    bool IsCancelled);
 
 public sealed record CommunityDto(int Id, string Name);

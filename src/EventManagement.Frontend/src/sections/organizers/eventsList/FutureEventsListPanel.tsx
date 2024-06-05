@@ -7,9 +7,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ActionCellItemWithConfirmation, useEventsList } from "../common";
 import { Link as RouterLink } from 'react-router-dom';
-import { Chip } from "@mui/material";
-import CreateEventButton from "./CreateEventButton";
-import { Box } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import { TabPanel } from "@mui/lab";
 
 type Props = {
@@ -54,6 +52,7 @@ export default FutureEventsListPanel;
 function useColumns(): GridColDef[] {
   const { communityId } = useParams();
   const { mutate: deleteEvent } = useDeleteEventMutation();
+  const { mutate: cancelEvent } = useCancelEventMutation();
   const navigate = useNavigate();
 
   return [
@@ -61,31 +60,34 @@ function useColumns(): GridColDef[] {
       field: 'name',
       type: 'string',
       headerName: 'Подія',
-      width: 400,
+      minWidth: 500,
       sortable: false,
       filterable: false,
       renderCell: ({ value, row }) => (
-        <RouterLink to={`/organizers/${communityId}/events/${row.id}/details`}>
-          {value}
-        </RouterLink>
+        <Stack spacing={2} direction="row" alignItems="baseline">
+          {row.isCancelled && <Chip color="error" label="Відмінено" />}
+          <RouterLink to={`/organizers/${communityId}/events/${row.id}/details`}>
+            {value}
+          </RouterLink>
+        </Stack>
       ),
     },
     {
       field: 'venue',
       type: 'string',
       headerName: 'Локація',
-      width: 200,
+      minWidth: 200,
       sortable: false,
       filterable: false,
       renderCell: ({ value, row }) => (
-        <Chip label={value.type === 'Online' ? 'Онлайн' : value.location} />
+        <Chip label={value.type === 'Online' ? 'Онлайн' : value.address.locationName} />
       ),
     },
     {
       field: 'attendeesCount',
       type: 'number',
       headerName: 'Учасники',
-      width: 200,
+      minWidth: 100,
       sortable: false,
       filterable: false,
     },
@@ -93,7 +95,7 @@ function useColumns(): GridColDef[] {
       field: 'startDate',
       type: 'date',
       headerName: 'Дата',
-      width: 200,
+      minWidth: 200,
       sortable: false,
       valueGetter: ({ value }) => value && new Date(value),
       valueFormatter: ({ value }) => value.toLocaleDateString('uk-UA', { year: 'numeric', month: 'long', day: 'numeric' }),
@@ -105,7 +107,7 @@ function useColumns(): GridColDef[] {
       field: 'actions',
       type: 'actions',
       headerName: 'Дія',
-      width: 100,
+      minWidth: 100,
       hideable: false,
       getActions: ({ row }) => [
         <GridActionsCellItem
@@ -115,7 +117,7 @@ function useColumns(): GridColDef[] {
           onClick={() => navigate(`/organizers/${communityId}/events/${row.id}`)}
         />,
         <ActionCellItemWithConfirmation
-          action={() => { }}
+          action={() => cancelEvent(row.id)}
           icon={<BlockIcon />}
           showInMenu
           dialogTitle="Відмінити подію"
@@ -123,6 +125,7 @@ function useColumns(): GridColDef[] {
           actionButtonLabel="Відмінити подію"
           label="Відмінити подію"
           closeMenuOnClick={false}
+          disabled={row.isCancelled}
         />,
         <ActionCellItemWithConfirmation
           action={() => deleteEvent(row.id)}
@@ -145,6 +148,16 @@ function useDeleteEventMutation() {
 
   return useMutation({
     mutationFn: (eventId: number) => axios.delete(`/api/organizers/events/${eventId}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', communityId, 'events'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', Number(communityId), 'events'] }),
+  });
+}
+
+function useCancelEventMutation() {
+  const queryClient = useQueryClient();
+  const { communityId } = useParams();
+
+  return useMutation({
+    mutationFn: (eventId: number) => axios.put(`/api/organizers/events/${eventId}/cancel`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['organizer', Number(communityId), 'events'] }),
   });
 }

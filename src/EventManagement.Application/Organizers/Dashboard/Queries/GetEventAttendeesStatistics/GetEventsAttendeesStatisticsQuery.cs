@@ -2,6 +2,7 @@
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Security;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +37,7 @@ internal sealed class GetEventsAttendeesStatisticsQueryHandler : IRequestHandler
             ?? throw new NotFoundException(nameof(Community), request.CommunityId);
 
         var attendeesQuery = _context.Attendees.Include(a => a.Event)
-            .Where(a => a.Event.CommunityId == community.Id);
+            .Where(a => a.Event.CommunityId == community.Id && a.Status != AttendeeStatus.Cancelled);
         
         var now = _dateTime.Now;
         var currentStartDate = now.AddMonths(-1);

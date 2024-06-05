@@ -10,18 +10,13 @@ namespace EventManagement.Application.Organizers.Sessions.Queries.GetSessions;
 [Authorize]
 public sealed record GetSessionsQuery(int EventId) : IRequest<GetSessionsResult>;
 
-internal sealed class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery, GetSessionsResult>
+internal sealed class GetSessionsQueryHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor) 
+    : IRequestHandler<GetSessionsQuery, GetSessionsResult>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public GetSessionsQueryHandler(
-        IApplicationDbContext context, 
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task<GetSessionsResult> Handle(GetSessionsQuery request, CancellationToken cancellationToken)
     {

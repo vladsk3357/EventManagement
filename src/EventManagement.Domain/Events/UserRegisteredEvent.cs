@@ -2,9 +2,7 @@
 
 namespace EventManagement.Domain.Events;
 
-public class UserRegisteredEvent : DomainEvent
+public class UserRegisteredEvent(User user) : DomainEvent
 {
-    public UserRegisteredEvent(User user) => User = user;
-
-    public User User { get; }
+    public User User { get; } = user;
 }

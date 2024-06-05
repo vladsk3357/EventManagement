@@ -2,7 +2,8 @@
 
 namespace EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
 
-public sealed class CreateCommunityCommandValidator : AbstractValidator<CreateCommunityCommand>
+public sealed class CreateCommunityCommandValidator 
+    : AbstractValidator<CreateCommunityCommand>
 {
     public CreateCommunityCommandValidator()
     {

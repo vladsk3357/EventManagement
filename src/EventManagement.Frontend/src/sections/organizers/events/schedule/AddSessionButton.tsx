@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 import { useMemo, useState } from "react";
 import FormPopup from "./FormPopup";
 import { FormInputs } from "./types";
@@ -7,7 +7,6 @@ import { axios } from "../../../../api";
 import { useParams } from "react-router-dom";
 import { Speaker } from "../common/types";
 import moment from "moment";
-
 
 type Props = {
   speakers: Speaker[];
@@ -20,7 +19,11 @@ const AddSessionButton = ({ speakers, date, endDate, startDate }: Props) => {
   const { eventId: eventIdParam } = useParams();
   const eventId = Number(eventIdParam);
   const [showModal, setShowModal] = useState(false);
-  const { mutate, isPending } = useAddSession(() => setShowModal(false));
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { mutate, isPending } = useAddSession(() => {
+    setShowModal(false);
+    setSnackbarOpen(true);
+  });
 
   const defaultValues: Partial<FormInputs> = useMemo(() => ({
     title: undefined,
@@ -28,6 +31,7 @@ const AddSessionButton = ({ speakers, date, endDate, startDate }: Props) => {
     duration: undefined,
     speakerIds: [],
     startTime: date,
+    level: undefined,
   }), [date]);
 
   const handleSubmit = (data: FormInputs) => {
@@ -58,6 +62,15 @@ const AddSessionButton = ({ speakers, date, endDate, startDate }: Props) => {
         startDate={startDate}
         endDate={endDate}
       />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Доповідь успішно додано
+        </Alert>
+      </Snackbar>
     </>
   );
 };
@@ -77,6 +90,9 @@ function useAddSession(onSuccess?: () => void) {
       queryClient.invalidateQueries({
         queryKey: ["organizers", "sessions", eventId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["organizers", "event", eventId],
+      });
       onSuccess && onSuccess();
     },
   });
@@ -89,4 +105,5 @@ type AddSessionsMutationVariables = {
   description: string;
   speakerIds: number[];
   eventId: number;
+  level: string;
 };

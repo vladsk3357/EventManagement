@@ -1,6 +1,6 @@
 ﻿using EventManagement.Application.Common.Exceptions;
 using EventManagement.Application.Common.Interfaces;
-using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.Community;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,16 +8,13 @@ namespace EventManagement.Application.Communities.Commands.UnsubscribeCommunity;
 
 public sealed record UnsubscribeCommunityCommand(int CommunityId) : IRequest;
 
-internal sealed class UnsubscribeCommunityCommandHandler : IRequestHandler<UnsubscribeCommunityCommand>
+internal sealed class UnsubscribeCommunityCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor) 
+    : IRequestHandler<UnsubscribeCommunityCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public UnsubscribeCommunityCommandHandler(IApplicationDbContext context, ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task Handle(UnsubscribeCommunityCommand request, CancellationToken cancellationToken)
     {

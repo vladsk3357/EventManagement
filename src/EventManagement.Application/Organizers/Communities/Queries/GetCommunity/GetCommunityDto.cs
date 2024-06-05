@@ -1,4 +1,6 @@
-﻿namespace EventManagement.Application.Organizers.Communities.Queries.GetCommunity;
+﻿using EventManagement.Application.Common.Models.Community;
+
+namespace EventManagement.Application.Organizers.Communities.Queries.GetCommunity;
 
 public sealed record GetCommunityDto(
     int Id,
@@ -6,5 +8,6 @@ public sealed record GetCommunityDto(
     string Location,
     string Domain,
     string? ShortDescription,
-    string? Description);
-
+    string? Description,
+    string? CommunityImageUrl,
+    SocialMediaDto SocialMedia);

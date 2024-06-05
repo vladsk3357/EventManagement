@@ -1,6 +1,6 @@
-﻿namespace EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
+﻿using EventManagement.Domain.Entities.Community;
 
-using Community = Domain.Entities.Community;
+namespace EventManagement.Application.Organizers.Communities.Commands.CreateCommunity;
 
 internal static class CreateCommunityCommandMapper
 {

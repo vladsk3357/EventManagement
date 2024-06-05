@@ -1,4 +1,4 @@
-import { Grid, Stack, InputLabel } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { DateTimePickerElement, FormContainer, TextFieldElement, useForm } from "react-hook-form-mui";
 import VenueFormGroup from "./VenueFormGroup";
 import AttendanceFormGroup from "./AttendanceFormGroup";
@@ -7,16 +7,19 @@ import * as yup from 'yup';
 import moment from "moment";
 import { LoadingButton } from "@mui/lab";
 import { FormInputs, VenueType } from "./types";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { RichTextEditorElement } from "../../../common/primitives";
+import { useMemo } from "react";
+import { formatAsDateMonthYearTime } from "../../../../utils/dateFormatters";
 
 type Props = {
   defaultValues?: Partial<FormInputs>;
   onSubmit: (data: FormInputs) => void;
   isSubmitting: boolean;
+  sessionsStartDate?: moment.Moment | null;
+  sessionsEndDate?: moment.Moment | null;
 };
 
-const schema: yup.ObjectSchema<FormInputs> = yup.object({
+const schema: any = yup.object({
   name: yup.string().required('Це поле є обов\'язковим'),
   startDate: yup.mixed((input): input is moment.Moment => moment.isMoment(input)).test({
     message: 'Дата початку повинна бути в майбутньому',
@@ -43,9 +46,20 @@ const schema: yup.ObjectSchema<FormInputs> = yup.object({
     is: 'online',
     then: schema => schema.required('Це поле є обов\'язковим'),
   }),
-  location: yup.string().when('venueType', {
+  address: yup.object().notRequired().default(undefined).when('venueType', {
     is: 'offline',
-    then: schema => schema.required('Це поле є обов\'язковим'),
+    then: schema => schema.required('Це поле є обов\'язковим').shape({
+      city: yup.string().required('Це поле є обов\'язковим'),
+      street: yup.string().required('Це поле є обов\'язковим'),
+      locationName: yup.string().required('Це поле є обов\'язковим'),
+      zipCode: yup.string().notRequired(),
+    }),
+    otherwise: schema => schema.shape({
+      city: yup.string().notRequired(),
+      street: yup.string().notRequired(),
+      locationName: yup.string().notRequired(),
+      zipCode: yup.string().notRequired(),
+    }),
   }),
   limit: yup.string().required('Це поле є обов\'язковим'),
   limitNumber: yup.number().when('limit', {
@@ -62,20 +76,40 @@ const emptyDefaultValues: Partial<FormInputs> = {
   description: undefined,
   venueType: VenueType.Online,
   url: undefined,
-  location: undefined,
+  address: undefined,
   limit: 'unlimited',
   limitNumber: undefined,
   shouldBeApproved: false,
 };
 
-const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
+const EventForm = ({ isSubmitting, onSubmit, defaultValues, sessionsEndDate, sessionsStartDate }: Props) => {
   const form = useForm<FormInputs>({
     resolver: yupResolver(schema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: defaultValues || emptyDefaultValues,
   });
-  const { setValue, watch } = form;
+  const { watch } = form;
+
+  const endDate = watch('endDate');
+  const maxStartDate = useMemo(() => {
+    if (endDate && sessionsStartDate)
+      return endDate < sessionsStartDate ? endDate : sessionsStartDate;
+    if (endDate && !sessionsStartDate)
+      return endDate;
+    else
+      return undefined;
+  }, [endDate, sessionsStartDate]);
+
+  const startDate = watch('startDate');
+  const minEndDate = useMemo(() => {
+    if (startDate && sessionsEndDate)
+      return startDate < sessionsEndDate ? sessionsEndDate : startDate;
+    if (startDate && !sessionsEndDate)
+      return startDate;
+    else
+      return undefined;
+  }, [startDate, sessionsEndDate]);
 
   return (
     <FormContainer<FormInputs> formContext={form} onSuccess={onSubmit} >
@@ -86,23 +120,34 @@ const EventForm = ({ isSubmitting, onSubmit, defaultValues }: Props) => {
           </Stack>
         </Grid>
         <Grid item xs={12} md={6} mb={2}>
-          <Stack spacing={3} direction="row">
-            <DateTimePickerElement name="startDate" label="Дата початку" required ampm={false} />
-            <DateTimePickerElement name="endDate" label="Дата закінчення" required ampm={false} />
+          <Stack spacing={1} direction="column">
+            <DateTimePickerElement
+              name="startDate"
+              label="Дата початку"
+              required
+              ampm={false}
+              maxDateTime={maxStartDate}
+              disablePast
+            />
+            {sessionsStartDate && <Typography variant="caption" color="textSecondary">Максимальна дата початку: {formatAsDateMonthYearTime(sessionsStartDate)}. Змініть програму, щоб обрати іншу дату початку.</Typography>}
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6} mb={2}>
+          <Stack spacing={1} direction="column">
+            <DateTimePickerElement
+              name="endDate"
+              label="Дата закінчення"
+              required
+              ampm={false}
+              minDateTime={minEndDate}
+              disablePast
+            />
+            {sessionsEndDate && <Typography variant="caption" color="textSecondary">Мінімальна дата кінця: {formatAsDateMonthYearTime(sessionsEndDate)}. Змініть програму, щоб обрати іншу дату кінця.</Typography>}
           </Stack>
         </Grid>
         <Grid item xs={12} mb={2}>
           <Stack spacing={3}>
-            <>
-              <InputLabel>Опис</InputLabel>
-              <CKEditor
-                editor={ClassicEditor}
-                data={watch('description')}
-                onChange={(event, editor) => {
-                  setValue('description', editor.getData());
-                }}
-              />
-            </>
+            <RichTextEditorElement name="description" label="Опис події" required />
             <VenueFormGroup />
             <AttendanceFormGroup />
           </Stack>

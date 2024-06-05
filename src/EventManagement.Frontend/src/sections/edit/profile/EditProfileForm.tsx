@@ -10,6 +10,7 @@ type FormInputs = {
   userName: string;
   location?: string;
   information?: string;
+  profileImage?: FileList | null;
 };
 
 const EditProfileForm = () => {
@@ -17,8 +18,9 @@ const EditProfileForm = () => {
   const { data, isLoading, isFetched } = useGetUserDetailsQuery();
   const { mutate, isPending } = useEditUserProfileMutation(() => setSnackbarOpen(true));
 
-  const handleClick: SubmitHandler<FormInputs> = async data => {
-    mutate(data);
+  const handleClick: SubmitHandler<FormInputs> = data => {
+    const { profileImage, ...formData } = data;
+    mutate({ profileImage: profileImage?.[0], ...formData });
   };
 
   return (
@@ -34,7 +36,7 @@ const EditProfileForm = () => {
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
-        message="Note archived"
+        onClose={() => setSnackbarOpen(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
           Профіль успішно оновлено
@@ -69,13 +71,28 @@ type EditUserProfileMutationVariables = {
   userName: string;
   location?: string;
   information?: string;
+  profileImage?: File | null;
 };
 
 function useEditUserProfileMutation(onSuccess?: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation<EditUserProfileMutationResult, Error, EditUserProfileMutationVariables>({
-    mutationFn: variables => axios.put<EditUserProfileMutationResult>('/api/profileinfo', variables).then(res => res.data),
+    mutationFn: variables => {
+      const formData = new FormData();
+      formData.append('name', variables.name);
+      formData.append('userName', variables.userName);
+      if (variables.location) {
+        formData.append('location', variables.location);
+      }
+      if (variables.information) {
+        formData.append('information', variables.information);
+      }
+      if (variables.profileImage) {
+        formData.append('profileImage', variables.profileImage);
+      }
+      return axios.put<EditUserProfileMutationResult>('/api/profileinfo', formData).then(res => res.data);
+    },
     onError: error => {
       if (axios.isAxiosError<EditUserProfileMutationError>(error)) {
         if (error.response?.status === 400) {
@@ -99,6 +116,7 @@ type UserDetailsQueryResultType = {
   userName: string;
   location: string | null;
   information: string | null;
+  profileImageUrl: string | null;
 };
 
 function useGetUserDetailsQuery() {

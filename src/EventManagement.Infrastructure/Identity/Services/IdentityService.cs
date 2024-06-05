@@ -1,4 +1,5 @@
-﻿using EventManagement.Application.Common.Interfaces;
+﻿using System.Text.RegularExpressions;
+using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.User;
 using EventManagement.Domain.Events;
 using EventManagement.Infrastructure.Identity.Mappers;
@@ -13,18 +14,20 @@ internal class IdentityService : IIdentityService
     private readonly IJwtService _jwtService;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
-
+    private readonly IDateTime _dateTime;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
         IJwtService jwtService,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IDateTime dateTime)
     {
         _userManager = userManager;
         _jwtService = jwtService;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
+        _dateTime = dateTime;
     }
 
     public async Task<RegisterUserResult> RegisterUserAsync(RegisterUserInput input, CancellationToken cancellationToken = default)
@@ -35,7 +38,7 @@ internal class IdentityService : IIdentityService
         {
             Email = input.Email,
             Name = input.Name,
-            UserName = input.Email,
+            UserName = ReplaceNonAlphaNumericWithUnderscore(input.Email),
         };
 
         var entity = user.ToEntity();
@@ -46,6 +49,18 @@ internal class IdentityService : IIdentityService
             result.Succeeded,
             result.Errors.Select(x => x.Description).FirstOrDefault(),
             result.Succeeded ? entity : null);
+    }
+
+    private static string ReplaceNonAlphaNumericWithUnderscore(string input)
+    {
+        if (input is null)
+        {
+            throw new ArgumentNullException(nameof(input), "Input string cannot be null.");
+        }
+
+        // Replace all non-alphanumeric characters with an underscore
+        string result = Regex.Replace(input, @"[^a-zA-Z0-9]", "_");
+        return result;
     }
 
     public async Task<bool> ConfirmEmailAsync(string token, string email, CancellationToken cancellationToken = default)
@@ -82,7 +97,7 @@ internal class IdentityService : IIdentityService
         ArgumentException.ThrowIfNullOrEmpty(email);
         ArgumentException.ThrowIfNullOrEmpty(password);
         ArgumentException.ThrowIfNullOrEmpty(token);
-
+        
         var user = await _userManager.FindByEmailAsync(email) 
             ?? throw new InvalidOperationException("Користувача з таким email не знайдено");
 
@@ -99,7 +114,7 @@ internal class IdentityService : IIdentityService
             return null;
 
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        if (user == null || user.LockoutEnd > _dateTime.Now)
             return null;
 
         var isValidPassword = await _userManager.CheckPasswordAsync(user, password);
@@ -136,5 +151,11 @@ internal class IdentityService : IIdentityService
     public async Task<AuthToken> RefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
     {
         return await _jwtService.RefreshTokenAsync(token, refreshToken, cancellationToken);
+    }
+
+    public async Task<bool> IsUserLockedAsync(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        return user?.LockoutEnd > _dateTime.Now;
     }
 }

@@ -2,7 +2,10 @@
 using EventManagement.Application.Common.Interfaces;
 using EventManagement.Application.Common.Models.Event;
 using EventManagement.Application.Common.Security;
+using EventManagement.Application.Common.Services.Documents;
+using EventManagement.Application.Common.Services.Search;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Entities.CommunityEvent;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,13 +26,16 @@ internal sealed class CreateEventCommandHandler
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IEventsSearchService _searchService;
 
     public CreateEventCommandHandler(
-        IApplicationDbContext dbContext, 
-        ICurrentUserAccessor currentUserAccessor)
+        IApplicationDbContext dbContext,
+        ICurrentUserAccessor currentUserAccessor,
+        IEventsSearchService searchService)
     {
         _context = dbContext;
         _currentUserAccessor = currentUserAccessor;
+        _searchService = searchService;
     }
 
     public async Task<CreateEventResultDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
@@ -52,6 +58,23 @@ internal sealed class CreateEventCommandHandler
             Status = AttendeeStatus.Confirmed,
         }, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+
+        var document = new EventIndexDocument(
+            entity.Id,
+            entity.Name,
+            entity.Description,
+            community.Id,
+            entity.StartDate,
+            entity.EndDate,
+            1,
+            entity.Venue switch
+            {
+                OfflineEventVenue offline => offline.Address.City,
+                OnlineEventVenue => "онлайн",
+                _ => throw new ArgumentException("Event type is not handled."),
+            });
+
+        await _searchService.IndexAsync(document, cancellationToken);
 
         return new CreateEventResultDto(entity.Id);
     }

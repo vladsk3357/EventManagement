@@ -1,17 +1,13 @@
-import PropTypes from 'prop-types';
 import { ReactNode, useMemo } from 'react';
-// @mui
 import { CssBaseline, ThemeOptions } from '@mui/material';
 import { ThemeProvider as MUIThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
-//
 import palette from './palette';
 import shadows from './shadows';
 import typography from './typography';
 import GlobalStyles from './globalStyles';
 import customShadows from './customShadows';
 import componentsOverride from './overrides';
-
-// ----------------------------------------------------------------------
+import { ukUA } from '@mui/x-data-grid/locales';
 
 type Props = {
   children: ReactNode;
@@ -28,7 +24,7 @@ const ThemeProvider = ({ children }: Props) => {
     }),
     []
   );
-  const theme = createTheme(themeOptions);
+  const theme = createTheme(themeOptions, ukUA);
   theme.components = componentsOverride(theme) as any;
 
   return (

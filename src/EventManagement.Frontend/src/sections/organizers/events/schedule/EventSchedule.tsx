@@ -1,15 +1,24 @@
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Box, CircularProgress, Typography, Paper, Tooltip, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "../../../../api";
 import { useGetEventQuery, useSpeakersList } from "../common";
 import AddSessionButton from "./AddSessionButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CurrentDateSelect from "./CurrentDateSelect";
 import moment from "moment";
 import { Session } from "./types";
 import EditSessionButton from "./EditSessionButton";
 import DeleteSessionButton from "./DeleteSessionButton";
+import WarningIcon from '@mui/icons-material/Warning';
+import { formatAsTime } from "../../../../utils/dateFormatters";
+
+const levels = new Map([
+  ['Beginner', 'Початковий'],
+  ['Intermediate', 'Середній'],
+  ['Advanced', 'Професійний'],
+  ['Expert', 'Експертний'],
+]);
 
 const EventSchedule = () => {
   const { eventId: eventIdParam } = useParams();
@@ -30,6 +39,61 @@ const EventSchedule = () => {
 
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(null);
 
+  const Rows = () => {
+    if (!isSessionsFetched || !sessions || !selectedDate)
+      return null;
+
+    const currentSessions = sessions.filter(s => isSelectedDate(s, selectedDate));
+
+    if (!currentSessions.length)
+      return (
+        <TableRow>
+          <TableCell colSpan={5} align="center">Доповіді ще не додано</TableCell>
+        </TableRow>
+      );
+
+    return (
+      <>
+        {currentSessions.map((session) => (
+          <TableRow
+            key={session.id}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
+            <TableCell component="th" scope="row">
+              <Stack direction="row">
+                {data && session.endTime.isAfter(moment(data.endDate)) && (
+                  <Tooltip title="Доповідь закінчується після кінця події. ЇЇ не показано в розкладі." placement="top">
+                    <Typography mr={1} color="orange"><WarningIcon /></Typography>
+                  </Tooltip>
+                )}
+                {session.title}
+              </Stack>
+            </TableCell>
+            <TableCell align="right">{formatAsTime(session.startTime)} - {formatAsTime(session.endTime)}</TableCell>
+            <TableCell align="right">{session.duration}</TableCell>
+            <TableCell>{levels.get(session.level)}</TableCell>
+            <TableCell>
+              {session.speakers.map(s => s.name).join(', ')}
+            </TableCell>
+            <TableCell align="right" sx={{ display: 'flex', justifyContent: 'end' }}>
+              <Stack spacing={2} direction="row" >
+                {isFetchedSpeakers && isFetched && speakersData && data && (
+                  <EditSessionButton
+                    speakers={speakersData.speakers}
+                    session={session}
+                    endDate={moment(data.endDate)}
+                    startDate={moment(data.startDate)}
+                  />
+                )}
+                <DeleteSessionButton session={session} />
+              </Stack>
+            </TableCell>
+          </TableRow>
+        ))}
+      </>
+    );
+  }
+
   return (
     <Box>
       <Box mb={3}>
@@ -47,10 +111,11 @@ const EventSchedule = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="right">Назва</TableCell>
+              <TableCell >Назва</TableCell>
               <TableCell align="right">Початок/Кінець</TableCell>
-              <TableCell align="right">Тривалість</TableCell>
-              <TableCell align="right">Спікери</TableCell>
+              <TableCell align="right">Тривалість, хв</TableCell>
+              <TableCell>Рівень</TableCell>
+              <TableCell>Спікери</TableCell>
               <TableCell align="right">Дія</TableCell>
             </TableRow>
           </TableHead>
@@ -60,39 +125,7 @@ const EventSchedule = () => {
                 <TableCell colSpan={5} align="center"><CircularProgress /></TableCell>
               </TableRow>
             )}
-            {isSessionsFetched && sessions && selectedDate && (sessions.length
-              ? sessions.filter(s => isSelectedDate(s, selectedDate)).map((session) => (
-                <TableRow
-                  key={session.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {session.title}
-                  </TableCell>
-                  <TableCell align="right">{session.startTime.format("kk:mm")} - {session.endTime.format("kk:mm")}</TableCell>
-                  <TableCell align="right">{session.duration}</TableCell>
-                  <TableCell align="right">
-                    {session.speakers.map(s => s.name).join(', ')}
-                  </TableCell>
-                  <TableCell align="right" sx={{ display: 'flex', justifyContent: 'end' }}>
-                    <Stack spacing={2} direction="row" >
-                      {isFetchedSpeakers && isFetched && speakersData && data && (
-                        <EditSessionButton
-                          speakers={speakersData.speakers}
-                          session={session}
-                          endDate={moment(data.endDate)}
-                          startDate={moment(data.startDate)}
-                        />
-                      )}
-                      <DeleteSessionButton session={session} />
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              )) : (
-                <TableRow>
-                  <TableCell colSpan={5} align="center">Доповіді ще не додано</TableCell>
-                </TableRow>
-              ))}
+            <Rows />
           </TableBody>
         </Table>
       </TableContainer>
@@ -141,5 +174,5 @@ type GetSessionsQueryResponse = {
 };
 
 function isSelectedDate(session: Session, selectedDate: moment.Moment) {
-  return session.startTime.isSame(selectedDate, 'day');
+  return selectedDate.isBetween(session.startTime, session.endTime, 'day', '[]');
 }

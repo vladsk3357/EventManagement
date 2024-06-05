@@ -10,26 +10,37 @@ axios.interceptors.request.use(config => {
   return config;
 });
 
-createAuthRefreshInterceptor(axios, failedRequest => {
-  const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-  const token = localStorage.getItem(ACCESS_TOKEN);
-  if (!refreshToken || !token)
-    return Promise.resolve();
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response.status === 401) {
+      localStorage.removeItem(ACCESS_TOKEN);
+      window.location.href = '/login';
+    }
 
-  return axios
-    .post("/api/profileuser/refresh-token", {
-      token,
-      refreshToken,
-    })
-    .then((tokenRefreshResponse) => {
-      const { token, refreshToken } = tokenRefreshResponse.data;
-      localStorage.setItem(ACCESS_TOKEN, token);
-      localStorage.setItem(REFRESH_TOKEN, refreshToken);
+    return Promise.reject(error);
+  });
 
-      failedRequest.response.config.headers.Authorization = createJwtHeader(token);
-      return Promise.resolve();
-    });
-});
+// createAuthRefreshInterceptor(axios, failedRequest => {
+//   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+//   const token = localStorage.getItem(ACCESS_TOKEN);
+//   if (!refreshToken || !token)
+//     return Promise.resolve();
+
+//   return axios
+//     .post("/api/profileuser/refresh-token", {
+//       token,
+//       refreshToken,
+//     })
+//     .then((tokenRefreshResponse) => {
+//       const { token, refreshToken } = tokenRefreshResponse.data;
+//       localStorage.setItem(ACCESS_TOKEN, token);
+//       localStorage.setItem(REFRESH_TOKEN, refreshToken);
+
+//       failedRequest.response.config.headers.Authorization = createJwtHeader(token);
+//       return Promise.resolve();
+//     });
+// });
 
 export default axios;
 

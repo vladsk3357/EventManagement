@@ -6,18 +6,12 @@ namespace EventManagement.Application.Events.Commands.CancelEventAttendance;
 
 public sealed record CancelEventAttendanceCommand(int EventId) : IRequest;
 
-internal sealed class CancelEventAttendanceCommandHandler : IRequestHandler<CancelEventAttendanceCommand>
+internal sealed class CancelEventAttendanceCommandHandler(
+    IApplicationDbContext context,
+    ICurrentUserAccessor currentUserAccessor) : IRequestHandler<CancelEventAttendanceCommand>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public CancelEventAttendanceCommandHandler(
-        IApplicationDbContext context,
-        ICurrentUserAccessor currentUserAccessor)
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-    }
+    private readonly IApplicationDbContext _context = context;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 
     public async Task Handle(CancelEventAttendanceCommand request, CancellationToken cancellationToken)
     {

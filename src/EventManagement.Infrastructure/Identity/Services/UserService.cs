@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManagement.Infrastructure.Identity.Services;
 
-internal class UserService : IUserService
+internal class UserService(UserManager<ApplicationUser> userManager) : IUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public UserService(UserManager<ApplicationUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
@@ -52,6 +47,7 @@ internal class UserService : IUserService
         storedUser.Location = updatedUser.Location;
         storedUser.Information = updatedUser.Information;
         storedUser.UserName = updatedUser.UserName;
+        storedUser.ProfileImage = updatedUser.ProfileImage;
     }
 
     public async Task<User?> GetUserByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -71,4 +67,13 @@ internal class UserService : IUserService
 
         return users.Select(u => u.ToEntity()).ToList();
     }
+
+    public Task<List<User>> GetUsersByEmailListAsync(IEnumerable<string> emails, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(emails);
+
+        return _userManager.Users.Where(u => emails.Contains(u.Email))
+            .Select(u => u.ToEntity())
+            .ToListAsync(cancellationToken);
+    }    
 }

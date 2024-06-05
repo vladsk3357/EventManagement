@@ -3,24 +3,28 @@ using EventManagement.Application.Profile.User.Commands.LoginUser;
 using EventManagement.Application.Profile.User.Commands.RefreshToken;
 using EventManagement.Application.Profile.User.Commands.RegisterUser;
 using EventManagement.Application.Profile.User.Commands.RequestResetPassword;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.WebApi.Controllers;
 
 public class ProfileUserController : ApiControllerBase
 {
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<RegisterUserResultData> Register(RegisterUserCommand command)
     {
         return await Mediator.Send(command);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<LoginUserResultData> Login(LoginUserCommand command)
     {
         return await Mediator.Send(command);
     }
 
+    [AllowAnonymous]
     [HttpPost("request-reset-password")]
     public async Task<ActionResult> RequestResetPassword(RequestResetPasswordCommand command)
     {

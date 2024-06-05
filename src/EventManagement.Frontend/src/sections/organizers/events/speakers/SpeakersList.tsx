@@ -26,9 +26,9 @@ const SpeakersList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="right">Ім'я</TableCell>
-              <TableCell align="right">Посада</TableCell>
-              <TableCell align="right">Компанія</TableCell>
+              <TableCell>Ім'я</TableCell>
+              <TableCell>Посада</TableCell>
+              <TableCell>Компанія</TableCell>
               <TableCell align="right">Дія</TableCell>
             </TableRow>
           </TableHead>
@@ -46,8 +46,8 @@ const SpeakersList = () => {
                 <TableCell component="th" scope="row">
                   {speaker.name}
                 </TableCell>
-                <TableCell align="right">{speaker.title}</TableCell>
-                <TableCell align="right">{speaker.company}</TableCell>
+                <TableCell>{speaker.title}</TableCell>
+                <TableCell>{speaker.company}</TableCell>
                 <TableCell align="right" sx={{ display: 'flex', justifyContent: 'end' }}>
                   <Stack spacing={2} direction="row" >
                     <EditSpeakerButton speaker={speaker} />
